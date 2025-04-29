@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'lumituneApp'
           slot-name: 'Production'
-          package: '${{ github.workspace }}/target/*.jar'
+          package: '*.jar'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_22A27797B766420C8A6FBAEEFF05D533 }}
