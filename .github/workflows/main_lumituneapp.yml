@@ -21,7 +21,7 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: 'java21'
+          java-version: '17'
           distribution: 'microsoft'
 
       - name: Build with Maven
@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'lumituneApp'
           slot-name: 'Production'
-          package: '*.jar'
+          package: '${{ github.workspace }}/target/*.jar'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_62B6E90D2E5248DEB66C945F95D37DB6 }}
