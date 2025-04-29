@@ -53,4 +53,4 @@ jobs:
           app-name: 'lumituneApp'
           slot-name: 'Production'
           package: '*.jar'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_22A27797B766420C8A6FBAEEFF05D533 }}
