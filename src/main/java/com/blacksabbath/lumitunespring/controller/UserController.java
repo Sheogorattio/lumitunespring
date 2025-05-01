@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.blacksabbath.lumitunespring.model.User;
+import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.service.UserService;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,9 +29,18 @@ public class UserController {
 	
 	
 	@PostMapping("/sign-up")
-	public ResponseEntity<User> createUser(@RequestBody User user, HttpServletResponse response){
-		User createdUser = userService.createUser(user);
-		return ResponseEntity.created(URI.create("/users/" + createdUser.getId())).body(createdUser);
+	public ResponseEntity<User> createUser(@RequestBody User user, HttpServletResponse response) {
+	    User createdUser = userService.createUserWithUserData(user);
+	    return ResponseEntity
+	            .created(URI.create("/users/" + createdUser.getId()))
+	            .body(createdUser);
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<List<User>> getAllUsers(HttpServletResponse response){
+		Optional<List<User>> users = userService.getAllUsers();
+		return users.map(ResponseEntity::ok)
+				.orElseGet(()-> ResponseEntity.notFound().build());
 	}
 	
 	@GetMapping("/{id}")
@@ -37,5 +48,10 @@ public class UserController {
 		Optional<User> user = userService.getById(id);
 		return user.map(ResponseEntity::ok)
 				.orElseGet(()-> ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/isunique/{nickname}")
+	public ResponseEntity<Boolean> isNicknameUnique (@PathVariable String nickname, HttpServletResponse response){
+		return ResponseEntity.ok(userService.isNicknameUnique(nickname));
 	}
 }

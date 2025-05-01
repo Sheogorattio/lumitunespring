@@ -2,6 +2,8 @@ package com.blacksabbath.lumitunespring.model;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 
@@ -22,9 +24,6 @@ public class User {
     private String avatarId;
 
     @Column(nullable = true)
-    private String dataId;
-
-    @Column(nullable = true)
     private String roleId;
 
     @Column(nullable = false)
@@ -32,14 +31,19 @@ public class User {
 
     @Column(nullable = false)
     private int accFollowings;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "data_id" , referencedColumnName = "id")
+    @JsonManagedReference
+    private UserData userData;
 
     public User() {}
 
-    public User(String username, String password, String avatarId, String dataId, String roleId, int accSubscribers, int accFollowings) {
+    public User(String username, String password, String avatarId, UserData userData, String roleId, int accSubscribers, int accFollowings) {
         this.username = username;
         this.password = password;
         this.avatarId = avatarId;
-        this.dataId = dataId;
+        this.userData = userData;
         this.roleId = roleId;
         this.accSubscribers = accSubscribers;
         this.accFollowings = accFollowings;
@@ -61,8 +65,8 @@ public class User {
         return avatarId;
     }
 
-    public String getDataId() {
-        return dataId;
+    public UserData getUserData() {
+        return userData;
     }
 
     public String getRoleId() {
@@ -93,8 +97,8 @@ public class User {
         this.avatarId = avatarId;
     }
 
-    public void setDataId(String dataId) {
-        this.dataId = dataId;
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 
     public void setRoleId(String roleId) {

@@ -1,5 +1,7 @@
 package com.blacksabbath.lumitunespring.service;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blacksabbath.lumitunespring.model.User;
+import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
 
 import jakarta.persistence.Column;
@@ -34,11 +37,11 @@ public class UserService {
 	}
 	
 	@Transactional
-	public User createUser(String username, String password, String avatarId, String dataId , String roleId , int accSubscribers,  int accFollowings) {
+	public User createUser(String username, String password, String avatarId, String dataId , String roleId , int accSubscribers,  int accFollowings, UserData data) {
 		User newUser = new User (username,
 								password,
 								avatarId != null ? avatarId : null,
-								dataId != null ? dataId : null,
+								data != null ? data : null,
 								roleId != null ? roleId : null,
 								accSubscribers != 0 ? accSubscribers : 0,
 								accFollowings != 0 ? accFollowings : 0
@@ -53,6 +56,14 @@ public class UserService {
 				.orElseThrow(() -> new IllegalArgumentException("User must not be null!"));
 	}
 	
+	 public User createUserWithUserData(User user) {
+	        UserData userData = user.getUserData();
+	        if (userData != null) {
+	            userData.setUser(user);
+	        }
+	        return userRepository.save(user);
+	    }
+	
 	@Transactional(readOnly=true)
 	public Optional<User> getById(String id) {
 		if (id == null || id.isBlank()) {
@@ -64,5 +75,25 @@ public class UserService {
 	    } catch (IllegalArgumentException ex) {
 	        return Optional.empty();
 	    }
+	}
+	
+	@Transactional(readOnly = true)
+	public Optional<List<User>> getAllUsers() {
+	    List<User> users = userRepository.findAll();
+	    return users.isEmpty() ? Optional.empty() : Optional.of(users);
+	}
+	
+	@Transactional(readOnly=true)
+	public boolean isNicknameUnique(String nickname) {
+		if(nickname == null) {
+			return false;
+		}
+		try {
+			return !userRepository.findByUsername(nickname).isEmpty();
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
 	}
 }
