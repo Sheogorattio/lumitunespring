@@ -7,31 +7,34 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import com.blacksabbath.lumitunespring.misc.IsDev;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.*;
+
+@OpenAPIDefinition(
+	    info = @Info(
+	        title = "LumiTune API",
+	        version = "1.0",
+	        description = "Документація до REST API"
+	    )
+	)
 @SpringBootApplication
-@RestController
 public class LumitunespringApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
 		
-		System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
-        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
-        System.setProperty("DB_ADDRESS", dotenv.get("DB_ADDRESS"));
-        System.setProperty("DB_NAME", dotenv.get("DB_NAME"));
-		
-		/*System.setProperty("DB_USERNAME", System.getenv("DB_USERNAME"));
-	    System.setProperty("DB_PASSWORD", System.getenv("DB_PASSWORD"));
-	    System.setProperty("DB_ADDRESS", System.getenv("DB_ADDRESS"));
-	    System.setProperty("DB_NAME", System.getenv("DB_NAME"));*/
+		IsDev _isDev = new IsDev();
+
+		System.setProperty("DB_USERNAME", _isDev.getEnv("DB_USERNAME"));
+        System.setProperty("DB_PASSWORD", _isDev.getEnv("DB_PASSWORD"));
+        System.setProperty("DB_ADDRESS", _isDev.getEnv("DB_ADDRESS"));
+        System.setProperty("DB_NAME", _isDev.getEnv("DB_NAME"));
+        System.setProperty("JWT_SECRET",_isDev.getEnv("JWT_SECRET"));
+
         
 		SpringApplication.run(LumitunespringApplication.class, args);
 	}
 	
-	@GetMapping("/**")
-	public Map<String, String> helloWorld(){
-		return Map.of("message", "Hello World!");
-	}
 
 }

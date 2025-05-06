@@ -1,7 +1,10 @@
 package com.blacksabbath.lumitunespring.model;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
+import com.blacksabbath.lumitunespring.misc.Roles;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -9,7 +12,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -24,7 +27,7 @@ public class User {
     private String avatarId;
 
     @Column(nullable = true)
-    private String roleId;
+    private Roles role;
 
     @Column(nullable = false)
     private int accSubscribers;
@@ -39,12 +42,12 @@ public class User {
 
     public User() {}
 
-    public User(String username, String password, String avatarId, UserData userData, String roleId, int accSubscribers, int accFollowings) {
+    public User(String username, String password, String avatarId, UserData userData, Roles role, int accSubscribers, int accFollowings) {
         this.username = username;
         this.password = password;
         this.avatarId = avatarId;
         this.userData = userData;
-        this.roleId = roleId;
+        this.role = role;
         this.accSubscribers = accSubscribers;
         this.accFollowings = accFollowings;
     }
@@ -69,8 +72,8 @@ public class User {
         return userData;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public Roles getRole() {
+        return this.role;
     }
 
     public int getAccSubscribers() {
@@ -101,8 +104,8 @@ public class User {
         this.userData = userData;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setRoleId(Roles role) {
+        this.role = role;
     }
 
     public void setAccSubscribers(int accSubscribers) {
@@ -112,4 +115,5 @@ public class User {
     public void setAccFollowings(int accFollowings) {
         this.accFollowings = accFollowings;
     }
+
 }

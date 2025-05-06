@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.blacksabbath.lumitunespring.misc.Roles;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
@@ -22,7 +23,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PersistenceContext;
 
 @Service
-public class UserService {
+public class UserService{
 	
 	@Autowired 
 	UserRepository userRepository;
@@ -37,12 +38,12 @@ public class UserService {
 	}
 	
 	@Transactional
-	public User createUser(String username, String password, String avatarId, String dataId , String roleId , int accSubscribers,  int accFollowings, UserData data) {
+	public User createUser(String username, String password, String avatarId, String dataId , Roles role , int accSubscribers,  int accFollowings, UserData data) {
 		User newUser = new User (username,
 								password,
 								avatarId != null ? avatarId : null,
 								data != null ? data : null,
-								roleId != null ? roleId : null,
+								role != null ? role : Roles.GUEST,
 								accSubscribers != 0 ? accSubscribers : 0,
 								accFollowings != 0 ? accFollowings : 0
 								);
@@ -56,13 +57,14 @@ public class UserService {
 				.orElseThrow(() -> new IllegalArgumentException("User must not be null!"));
 	}
 	
-	 public User createUserWithUserData(User user) {
-	        UserData userData = user.getUserData();
-	        if (userData != null) {
-	            userData.setUser(user);
-	        }
-	        return userRepository.save(user);
-	    }
+	@Transactional
+	public User createUserWithUserData(User user) {
+        UserData userData = user.getUserData();
+        if (userData != null) {
+            userData.setUser(user);
+        }
+        return userRepository.save(user);
+    }
 	
 	@Transactional(readOnly=true)
 	public Optional<User> getById(String id) {
@@ -89,11 +91,15 @@ public class UserService {
 			return false;
 		}
 		try {
-			return !userRepository.findByUsername(nickname).isEmpty();
+			return userRepository.findByUsername(nickname).isEmpty();
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
+	}
+
+	public Optional<User> findUserByUsername(String username) {
+		return userRepository.findByUsername(username);
 	}
 }
