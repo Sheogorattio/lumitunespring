@@ -16,7 +16,7 @@ public class IsDev {
 			System.out.println("Dotenv is null");
 		}
 	}
-	public String getEnv(String key) {
+	public static String getEnv(String key) {
 		return System.getenv(key);
 		//return (dotenv != null && dotenv.get(key) != null) ? dotenv.get(key) : System.getenv(key);
 	}

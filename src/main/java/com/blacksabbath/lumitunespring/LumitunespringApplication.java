@@ -24,13 +24,13 @@ public class LumitunespringApplication {
 
 	public static void main(String[] args) {
 		
-		IsDev _isDev = new IsDev();
+		//IsDev _isDev = new IsDev();
 
-		System.setProperty("DB_USERNAME", _isDev.getEnv("DB_USERNAME"));
-        System.setProperty("DB_PASSWORD", _isDev.getEnv("DB_PASSWORD"));
-        System.setProperty("DB_ADDRESS", _isDev.getEnv("DB_ADDRESS"));
-        System.setProperty("DB_NAME", _isDev.getEnv("DB_NAME"));
-        System.setProperty("JWT_SECRET",_isDev.getEnv("JWT_SECRET"));
+		System.setProperty("DB_USERNAME", IsDev.getEnv("DB_USERNAME"));
+        System.setProperty("DB_PASSWORD", IsDev.getEnv("DB_PASSWORD"));
+        System.setProperty("DB_ADDRESS", IsDev.getEnv("DB_ADDRESS"));
+        System.setProperty("DB_NAME", IsDev.getEnv("DB_NAME"));
+        System.setProperty("JWT_SECRET",IsDev.getEnv("JWT_SECRET"));
 
         
 		SpringApplication.run(LumitunespringApplication.class, args);
