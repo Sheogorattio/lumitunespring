@@ -1,9 +1,5 @@
 package com.blacksabbath.lumitunespring.misc;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class IsDev {
@@ -11,12 +7,17 @@ public class IsDev {
 	public IsDev() {
 		try {
 			dotenv = Dotenv.load();
+			if(dotenv != null)
+				System.out.println("Dotenv is not null");
+			else
+				System.out.println("Dotenv is null");
 		}
 		catch( Exception e){
-			
+			System.out.println("Dotenv is null");
 		}
 	}
 	public String getEnv(String key) {
-		return (dotenv != null && dotenv.get(key) != null) ? dotenv.get(key) : dotenv.get(key);//System.getenv(key);
+		return System.getenv(key);
+		//return (dotenv != null && dotenv.get(key) != null) ? dotenv.get(key) : System.getenv(key);
 	}
 }
