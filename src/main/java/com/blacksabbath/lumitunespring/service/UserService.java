@@ -1,6 +1,5 @@
 package com.blacksabbath.lumitunespring.service;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,17 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.blacksabbath.lumitunespring.dto.UserDto;
+import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.Roles;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.PersistenceContext;
 
 @Service
@@ -38,27 +35,21 @@ public class UserService{
 	}
 	
 	@Transactional
-	public User createUser(String username, String password, String avatarId, String dataId , Roles role , int accSubscribers,  int accFollowings, UserData data) {
+	public User createUser(String username, String password, String avatarId, Roles role , int accSubscribers,  int accFollowings, UserData data) {
 		User newUser = new User (username,
 								password,
-								avatarId != null ? avatarId : null,
-								data != null ? data : null,
+								avatarId,
+								data,
 								role != null ? role : Roles.GUEST,
-								accSubscribers != 0 ? accSubscribers : 0,
-								accFollowings != 0 ? accFollowings : 0
+								accSubscribers,
+								accFollowings
 								);
 		return userRepository.save(newUser);
 	}
 	
 	@Transactional
 	public User createUser(User user) {
-		return Optional.ofNullable(user)
-				.map(userRepository::save)
-				.orElseThrow(() -> new IllegalArgumentException("User must not be null!"));
-	}
-	
-	@Transactional
-	public User createUserWithUserData(User user) {
+		if (user == null) throw new IllegalArgumentException("User must not be null");
         UserData userData = user.getUserData();
         if (userData != null) {
             userData.setUser(user);
@@ -80,9 +71,8 @@ public class UserService{
 	}
 	
 	@Transactional(readOnly = true)
-	public Optional<List<User>> getAllUsers() {
-	    List<User> users = userRepository.findAll();
-	    return users.isEmpty() ? Optional.empty() : Optional.of(users);
+	public List<User> getAllUsers() {
+	    return userRepository.findAll();
 	}
 	
 	@Transactional(readOnly=true)
@@ -98,8 +88,20 @@ public class UserService{
 			return false;
 		}
 	}
-
-	public Optional<User> findUserByUsername(String username) {
+	
+	@Transactional(readOnly = true)
+	public Optional<User> findByUsername(String username) {
 		return userRepository.findByUsername(username);
+	}
+	
+	@Transactional
+	public Optional<User> editUserById(UserDto userDto){
+		if(userDto == null || userDto.getId() == null) {
+			return Optional.empty();
+		}
+		return userRepository.findById(userDto.getId()).map(user -> {
+			UserMapper.updateEntity(user, userDto);
+			return userRepository.save(user);
+		}); 
 	}
 }

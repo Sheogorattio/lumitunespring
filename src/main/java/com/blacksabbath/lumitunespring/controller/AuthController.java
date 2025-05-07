@@ -1,11 +1,10 @@
 package com.blacksabbath.lumitunespring.controller;
 
-import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.mapper.RegisterRequestMapper;
+import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.LoginRequestBody;
 import com.blacksabbath.lumitunespring.misc.RegisterRequestBody;
 import com.blacksabbath.lumitunespring.model.User;
@@ -94,8 +95,11 @@ public class AuthController {
 	    	)
 	})
 	public ResponseEntity<?> createUser(@RequestBody RegisterRequestBody user, HttpServletResponse response) {
+		
 		if(!userService.isNicknameUnique(user.getUsername())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nickname already exists"));
-	    User createdUser = userService.createUserWithUserData(RegisterRequestMapper.toUserEntity(user));
+		
+	    User createdUser = userService.createUser(RegisterRequestMapper.toUserEntity(user));
+	    
 	    return ResponseEntity
 	            .status(HttpStatus.CREATED)
 	            .body(createdUser);
@@ -118,10 +122,8 @@ public class AuthController {
         							value = """
         									{
 											  "user": {
-											    "username": "john_doe1",
-											    "password": "pass1234"
-											  },
-											  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huX2RvZTEiLCJpYXQiOjE3NDY1NTc2NzYsImV4cCI6MTc0NjU2MTI3Nn0.jed1Q5NT3E8CWdex-g5miIMADCmaA_SOnJrstVe5loA"
+											    "username": "john_doe1"
+											  }
 											}
         									"""
         							)
@@ -142,20 +144,39 @@ public class AuthController {
         					)
         )
     })
-	public ResponseEntity<?> login(@RequestBody LoginRequestBody user){
+	public ResponseEntity<?> login(@RequestBody LoginRequestBody user, HttpServletResponse response){
 		try {
-			boolean doesExists = userService.findUserByUsername(user.getUsername())
-									    	.map(u -> u.getPassword().equals(user.getPassword()))
-										    .orElse(false);
-			if(!doesExists) throw new Exception("Invalid credentials");
+			Optional<User> optionalUser = userService.findByUsername(user.getUsername());
+			
+			if(optionalUser.isEmpty() || !optionalUser.get().getPassword().equals(user.getPassword())) {
+				throw new Exception("Invalid credenials");
+			}
+			
+			User existingUser = optionalUser.get();
+			UserDto userDto = UserMapper.toDto(existingUser);
+			
+			String accessToken = jwt.generateAccessToken(userDto.getUsername(), userDto.getRole());
+			String refreshToken = jwt.generateRefreshToken(userDto.getUsername());
+			
+			addTokenToCookie(response, "accessToken", accessToken, 60 * 60);
+			addTokenToCookie(response, "refreshToken", refreshToken, 7 * 24 * 60 * 60);
+			
+			return ResponseEntity.ok(Map.of(
+					"user", Map.of(
+							"username", userDto.getUsername()
+							)
+					));
+		} 
+		catch(Exception ex) {
+			System.out.println(this.getClass().getName() + ":login: " + ex.getMessage());
+			return ResponseEntity.status(401).body(ex.getMessage());
 		}
-		catch(Exception e) {
-			System.out.println(this.getClass().getName() + ":login :" +  e.getMessage());
-			return ResponseEntity.status(401).body("Invalid credentials");
-		}
-		String token = jwt.genarateToken(user.getUsername());
-		return ResponseEntity.ok(Map.of("token", token, "user", user));
 	}
+	private void addTokenToCookie(HttpServletResponse response, String name, String token, int maxAge) {
+		String cookie = name+"="+token+"; HttpOnly; Secure; Path=/; Max-Age=" + maxAge;
+		response.addHeader("Set-Cookie", cookie);
+	}
+	
 	
 	@GetMapping("/isunique/{nickname}")
 	@Operation(

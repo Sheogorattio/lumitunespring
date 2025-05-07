@@ -1,7 +1,5 @@
 package com.blacksabbath.lumitunespring.model;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 import com.blacksabbath.lumitunespring.misc.Roles;

@@ -6,6 +6,9 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import com.blacksabbath.lumitunespring.misc.Roles;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -17,30 +20,39 @@ public class JwtUtil {
 	
 	
 	@SuppressWarnings("deprecation")
-	public String genarateToken(String nickname) {
-		System.out.println("genarateToken");
-		return Jwts.builder()
-				.subject(nickname)
-				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + 3600000))
-				.signWith(key)
-				.compact();
-	}
+	public String generateAccessToken(String nickname, Roles role) {
+        return Jwts.builder()
+                .subject(nickname)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .signWith(key)
+                .compact();
+    }
+
+    @SuppressWarnings("deprecation")
+	public String generateRefreshToken(String nickname) {
+        return Jwts.builder()
+                .subject(nickname)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000))
+                .signWith(key)
+                .compact();
+    }
 	
 	@SuppressWarnings("deprecation")
-	public String validateTokenAndGetUsername(String token) {
-		System.out.println("validateTokenAndGetUsername");
+	public Claims validateTokenAndGetClaims(String token) {
 		try {
 			return Jwts.parser()
 					.setSigningKey(key)
 					.build()
 					.parseClaimsJws(token)
-					.getBody()
-					.getSubject();
+					.getBody();
 		}
 		catch(JwtException e) {
 			return null;
 		}
 	}
+	
 }
  

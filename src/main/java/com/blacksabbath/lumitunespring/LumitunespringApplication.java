@@ -1,11 +1,8 @@
 package com.blacksabbath.lumitunespring;
 
-import java.util.Map;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.blacksabbath.lumitunespring.misc.IsDev;
 
@@ -15,7 +12,7 @@ import io.swagger.v3.oas.annotations.info.*;
 @OpenAPIDefinition(
 	    info = @Info(
 	        title = "LumiTune API",
-	        version = "1.0",
+	        version = "0.1",
 	        description = "Документація до REST API"
 	    )
 	)

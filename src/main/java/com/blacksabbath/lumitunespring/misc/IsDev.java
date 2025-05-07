@@ -3,7 +3,7 @@ package com.blacksabbath.lumitunespring.misc;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class IsDev {
-	Dotenv dotenv = null;
+	private static Dotenv dotenv = Dotenv.load();
 	public IsDev() {
 		try {
 			dotenv = Dotenv.load();
@@ -18,6 +18,7 @@ public class IsDev {
 	}
 	public static String getEnv(String key) {
 		return System.getenv(key);
+		//return dotenv.get(key);
 		//return (dotenv != null && dotenv.get(key) != null) ? dotenv.get(key) : System.getenv(key);
 	}
 }
