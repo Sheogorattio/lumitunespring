@@ -3,11 +3,21 @@ package com.blacksabbath.lumitunespring.dto;
 import java.time.LocalDate;
 
 public class UserDataDto {
+	private String id;
     private LocalDate birthDate;
     private String regionId;
     private Boolean isArtist;
     private String email;
 
+    
+    public String getId() {
+    	return id;
+    }
+    
+    public void setId(String id) {
+    	this.id = id;
+    }
+    
     public LocalDate getBirthDate() {
         return birthDate;
     }

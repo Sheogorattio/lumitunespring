@@ -1,24 +1,23 @@
 package com.blacksabbath.lumitunespring.dto;
 
-import java.util.UUID;
 
 import com.blacksabbath.lumitunespring.misc.Roles;
 
 public class UserDto {
-    private UUID id;
-    private String username;
-    private String password;
-    private String avatarId;
-    private Roles role;
-    private int accSubscribers;
-    private int accFollowings;
-    private UserDataDto userData;
+	public String id;
+	public String username;
+	public String password;
+	public String avatarId;
+	public Roles role;
+	public int accSubscribers;
+	public int accFollowings;
+	public UserDataDto userData;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -77,4 +76,19 @@ public class UserDto {
     public void setUserData(UserDataDto userData) {
         this.userData = userData;
     }
+    
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", avatarId='" + avatarId + '\'' +
+                ", role=" + role +
+                ", accSubscribers=" + accSubscribers +
+                ", accFollowings=" + accFollowings +
+                ", userData=" + userData +
+                '}';
+    }
+
 }

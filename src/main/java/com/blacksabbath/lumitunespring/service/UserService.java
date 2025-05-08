@@ -94,12 +94,11 @@ public class UserService{
 		return userRepository.findByUsername(username);
 	}
 	
-	@Transactional
 	public Optional<User> editUserById(UserDto userDto){
 		if(userDto == null || userDto.getId() == null) {
 			return Optional.empty();
 		}
-		return userRepository.findById(userDto.getId()).map(user -> {
+		return userRepository.findById(UUID.fromString(userDto.getId())).map(user -> {
 			UserMapper.updateEntity(user, userDto);
 			return userRepository.save(user);
 		}); 

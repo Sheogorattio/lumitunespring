@@ -1,5 +1,7 @@
 package com.blacksabbath.lumitunespring.mapper;
 
+import java.util.UUID;
+
 import com.blacksabbath.lumitunespring.dto.UserDataDto;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.model.User;
@@ -11,7 +13,7 @@ public class UserMapper {
 		if(user == null) return null;
 		
 		UserDto dto = new UserDto();
-		dto.setId(user.getId());
+		dto.setId(user.getId().toString());
 		dto.setUsername(user.getUsername());
 		dto.setPassword(user.getPassword());
 		dto.setAvatarId(user.getAvatarId());
@@ -21,6 +23,7 @@ public class UserMapper {
 		
 		if(user.getUserData() != null) {
 			UserDataDto dataDto = new UserDataDto();
+			dataDto.setId(user.getUserData().getId().toString());
 			dataDto.setBirthDate(user.getUserData().getBirthDate());
 			dataDto.setEmail(user.getUserData().getEmail());
 			dataDto.setIsArtist(user.getUserData().getIsArtist());
@@ -50,6 +53,7 @@ public class UserMapper {
 			UserData data = user.getUserData();
 			UserDataDto dataDto = dto.getUserData();
 			
+			data.setId(UUID.fromString(dataDto.getId()));
 			data.setBirthDate(dataDto.getBirthDate());
 			data.setRegionId(dataDto.getRegionId());
 			data.setEmail(dataDto.getEmail());
