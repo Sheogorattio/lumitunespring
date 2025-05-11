@@ -23,5 +23,4 @@ public class AccessChecker {
 
         return userNickname.equals(nickname);
     }
-	
 }
