@@ -1,17 +1,29 @@
 package com.blacksabbath.lumitunespring.mapper;
 
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.blacksabbath.lumitunespring.dto.UserDataDto;
 import com.blacksabbath.lumitunespring.misc.RegisterRequestBody;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
+import com.blacksabbath.lumitunespring.repository.RegionRepository;
 
+@Component
 public class RegisterRequestMapper {
-	 public static User toUserEntity(RegisterRequestBody request) {
+	
+	@Autowired
+	private RegionRepository regionRep;
+	
+	 public User toUserEntity(RegisterRequestBody request) {
 	        UserData userData = null;
 	        if (request.getUserData() != null) {
-	            RegisterRequestBody.UserDataDto dto = request.getUserData();
+	            UserDataDto dto = request.getUserData();
 	            userData = new UserData();
 	            userData.setBirthDate(dto.getBirthDate());
-	            userData.setRegionId(dto.getRegionId());
+	            userData.setRegion(regionRep.findById(UUID.fromString(dto.getRegionId())).orElse(null));
 	            userData.setIsArtist(dto.getIsArtist());
 	            userData.setEmail(dto.getEmail());
 	        }

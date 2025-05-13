@@ -29,9 +29,6 @@ public class UserData {
     private LocalDate birthDate;
 
     @Column(nullable = false)
-    private String regionId;
-
-    @Column(nullable = false)
     private Boolean isArtist;
 
     @Column(nullable = false)
@@ -43,6 +40,10 @@ public class UserData {
     @OneToOne(mappedBy = "userData")
     @JsonBackReference
     private User user;
+    
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    private Region region;
 
     public UUID getId() {
         return id;
@@ -60,12 +61,12 @@ public class UserData {
         this.birthDate = birthDate;
     }
 
-    public String getRegionId() {
-        return regionId;
+    public Region getRegion() {
+        return region;
     }
 
-    public void setRegionId(String regionId) {
-        this.regionId = regionId;
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     public Boolean getIsArtist() {

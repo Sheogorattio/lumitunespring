@@ -2,12 +2,18 @@ package com.blacksabbath.lumitunespring.mapper;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.blacksabbath.lumitunespring.dto.UserDataDto;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
+import com.blacksabbath.lumitunespring.repository.RegionRepository;
 
 public class UserMapper {
+	
+	@Autowired
+	static RegionRepository regionRep;
 	
 	public static UserDto toDto(User user) {
 		if(user == null) return null;
@@ -21,14 +27,15 @@ public class UserMapper {
 		dto.setAccSubscribers(user.getAccSubscribers());
 		dto.setAccFollowings(user.getAccFollowings());
 		
+		UserDataDto dataDto = new UserDataDto();
 		if(user.getUserData() != null) {
-			UserDataDto dataDto = new UserDataDto();
 			dataDto.setId(user.getUserData().getId().toString());
 			dataDto.setBirthDate(user.getUserData().getBirthDate());
 			dataDto.setEmail(user.getUserData().getEmail());
 			dataDto.setIsArtist(user.getUserData().getIsArtist());
-			dataDto.setRegionId(user.getUserData().getRegionId());
+			dataDto.setRegionId(user.getUserData().getRegion().getId().toString());
 		}
+		dto.setUserData(dataDto);
 		
 		return dto;
 	}
@@ -55,7 +62,7 @@ public class UserMapper {
 			
 			data.setId(UUID.fromString(dataDto.getId()));
 			data.setBirthDate(dataDto.getBirthDate());
-			data.setRegionId(dataDto.getRegionId());
+			data.setRegion(regionRep.findById(UUID.fromString(dataDto.getRegionId())).orElse(null));
 			data.setEmail(dataDto.getEmail());
 			data.setIsArtist(dataDto.getIsArtist());
 		}

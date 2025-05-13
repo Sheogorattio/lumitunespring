@@ -1,6 +1,9 @@
 package com.blacksabbath.lumitunespring.misc;
 
 import java.time.LocalDate;
+import java.util.UUID;
+
+import com.blacksabbath.lumitunespring.dto.UserDataDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -17,6 +20,9 @@ public class RegisterRequestBody {
 
     @Schema(description = "Роль користувача", example = "USER")
     private Roles role;
+    
+    @Schema(description = "Ідентифікатор регіона")
+    private UUID regionId;
 
     @Schema(description = "Кількість підписників", example = "0")
     private int accSubscribers;
@@ -47,35 +53,8 @@ public class RegisterRequestBody {
 
     public UserDataDto getUserData() { return userData; }
     public void setUserData(UserDataDto userData) { this.userData = userData; }
+    
+    public UUID getRegionId() {return regionId;}
+    public void setRegionId(UUID regionId) {this.regionId = regionId;}
 
-    // Внутрішній клас для userData
-    @Schema(description = "Особисті дані користувача")
-    public static class UserDataDto {
-
-        @Schema(description = "Дата народження", example = "1990-01-01")
-        private LocalDate birthDate;
-
-        @Schema(description = "ID регіону", example = "region001")
-        private String regionId;
-
-        @Schema(description = "Чи є користувач артистом", example = "true")
-        private Boolean isArtist;
-
-        @Schema(description = "Email користувача", example = "john.doe@example.com")
-        private String email;
-
-        // Геттери і сеттери
-
-        public LocalDate getBirthDate() { return birthDate; }
-        public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
-
-        public String getRegionId() { return regionId; }
-        public void setRegionId(String regionId) { this.regionId = regionId; }
-
-        public Boolean getIsArtist() { return isArtist; }
-        public void setIsArtist(Boolean isArtist) { this.isArtist = isArtist; }
-
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
-    }
 }

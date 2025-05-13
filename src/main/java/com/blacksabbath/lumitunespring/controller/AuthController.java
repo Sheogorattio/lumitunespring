@@ -39,6 +39,9 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired 
+	private RegisterRequestMapper registerRequestMapper;
+	
 	@Autowired
 	private JwtUtil jwt;
 	
@@ -98,11 +101,12 @@ public class AuthController {
 		
 		if(!userService.isNicknameUnique(user.getUsername())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nickname already exists"));
 		
-	    User createdUser = userService.createUser(RegisterRequestMapper.toUserEntity(user));
+	    User createdUser = userService.createUser(registerRequestMapper.toUserEntity(user));
 	    
+	    UserDto userDto = UserMapper.toDto(createdUser);
 	    return ResponseEntity
 	            .status(HttpStatus.CREATED)
-	            .body(createdUser);
+	            .body(userDto);
 	} 
 	
 	@PostMapping("/login")
