@@ -4,9 +4,6 @@ import java.util.UUID;
 
 import com.blacksabbath.lumitunespring.misc.RegionType;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class RegionDto {
 
 	private UUID id;
