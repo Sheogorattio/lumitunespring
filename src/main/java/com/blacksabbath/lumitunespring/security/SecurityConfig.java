@@ -41,9 +41,9 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.csrf(csrf -> csrf.disable())
-			.authorizeHttpRequests(
+			.authorizeHttpRequests( 
 					authorizeRequests -> authorizeRequests
-					.requestMatchers("/users/current", "/auth/login", "/auth/sign-up").permitAll()
+					.requestMatchers("/users/current", "/auth/login", "/auth/sign-up", "/users/username/").permitAll()
 					.anyRequest().authenticated())
 			.addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 		

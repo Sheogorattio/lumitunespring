@@ -18,6 +18,7 @@ public class ImageMapper {
 	private static UserRepository userRepo;
 
 	public static ImageDto toDto(Image entity) {
+		if(entity == null) return null;
 		ImageDto dto = new ImageDto();
 		dto.setId(entity.getId().toString());
 		dto.setUrl(entity.getUrl());
@@ -34,6 +35,7 @@ public class ImageMapper {
 	}
 	
 	public static Image toEntity(ImageDto dto) throws Exception {
+		if(dto == null) return null;
 		if(dto.getId() == null || dto.getUrl() == null) {
 			throw new Exception(ImageMapper.class.getName() + "::toEntity" + " : invalid ImageDto instance. Dto.id or Dto.url is null.");
 		}

@@ -27,14 +27,8 @@ public class UserMapper {
 		dto.setId(user.getId().toString());
 		dto.setUsername(user.getUsername());
 		dto.setPassword(user.getPassword());
-		
-		if(user.getAvatar() == null) {
-			dto.setAvatar(null);
-		}
-		else {
-			dto.setAvatar(ImageMapper.toDto(user.getAvatar()));
-		}
-		
+		dto.setAvatar(ImageMapper.toDto(user.getAvatar()));
+		dto.setImages(ImageMapper.toDto(user.getImages()));		
 		dto.setRole(user.getRole());
 		dto.setAccSubscribers(user.getAccSubscribers());
 		dto.setAccFollowings(user.getAccFollowings());
@@ -61,10 +55,16 @@ public class UserMapper {
 		user.setPassword(dto.getPassword());
 		
 		try {
-			if(dto.getAvatar() == null || dto.getAvatar().size() == 0) {
-				user.setAvatar(null);
-			}
 			user.setAvatar(ImageMapper.toEntity(dto.getAvatar()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			if(dto.getImages() == null || dto.getImages().size() == 0) {
+				user.setImages(null);
+			}
+			user.setImages(ImageMapper.toEntity(dto.getImages()));
 		}
 		catch(Exception e) {
 			user.setAvatar(null);

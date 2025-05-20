@@ -40,7 +40,8 @@ public class UserService{
 								data,
 								role != null ? role : Roles.GUEST,
 								accSubscribers,
-								accFollowings
+								accFollowings,
+								null
 								);
 		return userRepository.save(newUser);
 	}

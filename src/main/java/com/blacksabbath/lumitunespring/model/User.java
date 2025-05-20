@@ -24,7 +24,11 @@ public class User{
     private String password;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner", orphanRemoval = true)
-    private List<Image> avatar;
+    private List<Image> images;
+    
+    @OneToOne
+    @JoinColumn(name = "avatar_id")
+    private Image avatar;
 
     @Column(nullable = true)
     private Roles role;
@@ -42,14 +46,15 @@ public class User{
 
     public User() {}
 
-    public User(String username, String password, List<Image> avatar, UserData userData, Roles role, int accSubscribers, int accFollowings) {
+    public User(String username, String password, List<Image> images, UserData userData, Roles role, int accSubscribers, int accFollowings, Image avatar) {
         this.username = username;
         this.password = password;
-        this.avatar = avatar;
+        this.images = images;
         this.userData = userData;
         this.role = role;
         this.accSubscribers = accSubscribers;
         this.accFollowings = accFollowings;
+        this.avatar = avatar;
     }
 
     public UUID getId() {
@@ -64,8 +69,8 @@ public class User{
         return password;
     }
 
-    public List<Image> getAvatar() {
-        return avatar;
+    public List<Image> getImages() {
+        return images;
     }
 
     public UserData getUserData() {
@@ -96,8 +101,8 @@ public class User{
         this.password = password;
     }
 
-    public void setAvatar(List<Image> avatar) {
-        this.avatar = avatar;
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     public void setUserData(UserData userData) {
@@ -114,6 +119,14 @@ public class User{
 
     public void setAccFollowings(int accFollowings) {
         this.accFollowings = accFollowings;
+    }
+    
+    public Image getAvatar() {
+    	return this.avatar;
+    }
+    
+    public void setAvatar(Image avatar) {
+    	this.avatar = avatar;
     }
 
 }

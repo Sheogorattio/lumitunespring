@@ -9,7 +9,8 @@ public class UserDto {
 	public String id;
 	public String username;
 	public String password;
-	public List<ImageDto> avatar;
+	public List<ImageDto> images;
+	public ImageDto avatar;
 	public Roles role;
 	public int accSubscribers;
 	public int accFollowings;
@@ -39,12 +40,12 @@ public class UserDto {
         this.password = password;
     }
 
-    public List<ImageDto> getAvatar() {
-        return avatar;
+    public List<ImageDto> getImages() {
+        return images;
     }
 
-    public void setAvatar(List<ImageDto> avatar) {
-        this.avatar = avatar;
+    public void setImages(List<ImageDto> images) {
+        this.images = images;
     }
 
     public Roles getRole() {
@@ -77,6 +78,14 @@ public class UserDto {
 
     public void setUserData(UserDataDto userData) {
         this.userData = userData;
+    }
+    
+    public void setAvatar(ImageDto avatar) {
+    	this.avatar = avatar;
+    }
+    
+    public ImageDto getAvatar() {
+    	return this.avatar;
     }
     
     @Override

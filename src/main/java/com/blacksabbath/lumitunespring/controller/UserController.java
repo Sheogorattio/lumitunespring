@@ -245,7 +245,7 @@ public class UserController {
 								)
 		    )
 		})
-	public ResponseEntity<User> getByUsername(@PathVariable  String username, HttpServletRequest request, HttpServletResponse response){
+	public ResponseEntity<?> getByUsername(@PathVariable  String username, HttpServletRequest request, HttpServletResponse response){
 		Optional<User> user = userService.findByUsername(username);
 		
 		if(!user.isPresent()) {
@@ -257,7 +257,7 @@ public class UserController {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 		
-		return ResponseEntity.ok(existingUser);
+		return ResponseEntity.ok(UserMapper.toDto(existingUser));
 	}
 	
 	@PutMapping("/edit")
@@ -332,7 +332,7 @@ public class UserController {
 		}
 		User editedUser = editedUserOpt.get();
 		 
-		return ResponseEntity.ok(editedUser); 
+		return ResponseEntity.ok(UserMapper.toDto(editedUser)); 
 	}
 	
 	@PostMapping("/logout")
