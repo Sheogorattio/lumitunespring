@@ -2,6 +2,7 @@ package com.blacksabbath.lumitunespring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +36,21 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/api/users")
 @CrossOrigin
+
 @Tag(name = "User related operations", description = "Операції над користувачами")
 public class UserController {
-	@Autowired
-	private UserService userService;
+
+	private final UserService userService;
+	
+	private final AccessChecker accessChecker;
+	
+	public UserController(UserService userService, AccessChecker accessChecker) {
+		this.userService = userService;
+		this.accessChecker = accessChecker;
+	}
 
 	@GetMapping("/all")
+	@PreAuthorize("hasRole('ADMIN')")
 	@Operation(
 			summary = "Отримання всіх користувачів",
 			description = "Доступно тільки з обліковки адміна"
@@ -113,17 +123,22 @@ public class UserController {
 								)
 						)
 			})	
-	public ResponseEntity<List<User>> getAllUsers(HttpServletRequest request, HttpServletResponse response){
+	public ResponseEntity<List<UserDto>> getAllUsers(HttpServletRequest request, HttpServletResponse response){
 		
-		if(!AccessChecker.Check(request, "")) {
+		if(!accessChecker.Check(request, "")) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 		
-		List<User> users = userService.getAllUsers();
-		if(users.isEmpty()) {
+		List<UserDto> userDtos = userService.getAllUsers().stream()
+			    .map(UserMapper::toDto)
+			    .toList();
+		System.out.println("Returning users: " + userDtos);
+
+		if(userDtos.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		} 
-		return ResponseEntity.ok(users); 
+		return ResponseEntity.ok(userDtos);
+		
 	}
 	
 	@GetMapping("/id/{id}")
@@ -179,7 +194,7 @@ public class UserController {
 		
 		User existingUser = user.get();
 		UserDto userDto = UserMapper.toDto(existingUser);
-		if(!AccessChecker.Check(request, userDto.getUsername())) {
+		if(!accessChecker.Check(request, userDto.getUsername())) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 		
@@ -238,7 +253,7 @@ public class UserController {
 		}
 		
 		User existingUser = user.get();
-		if(!AccessChecker.Check(request, username)) {
+		if(!accessChecker.Check(request, username)) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 		
@@ -305,7 +320,7 @@ public class UserController {
 		
 		User _user = userOpt.get();
 		
-		if(!AccessChecker.Check(request, user.getUsername())) {
+		if(!accessChecker.Check(request, user.getUsername())) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 		

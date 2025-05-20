@@ -9,6 +9,7 @@ import com.blacksabbath.lumitunespring.dto.UserDataDto;
 import com.blacksabbath.lumitunespring.misc.RegisterRequestBody;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
+import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import com.blacksabbath.lumitunespring.repository.RegionRepository;
 
 @Component
@@ -16,6 +17,9 @@ public class RegisterRequestMapper {
 	
 	@Autowired
 	private RegionRepository regionRep;
+	
+	@Autowired
+	private ImageRepository imageRep;
 	
 	 public User toUserEntity(RegisterRequestBody request) {
 	        UserData userData = null;
@@ -31,7 +35,15 @@ public class RegisterRequestMapper {
 	        User user = new User();
 	        user.setUsername(request.getUsername());
 	        user.setPassword(request.getPassword());
-	        user.setAvatarId(request.getAvatarId());
+	        //UUID avatarId;
+	        try {
+	        	//avatarId = UUID.fromString(request.getAvatarId());
+	        	user.setAvatar(null);
+	        }
+	        catch(IllegalArgumentException e) {
+	        	//avatarId = null;
+	        	user.setAvatar(null);
+	        }   
 	        user.setRoleId(request.getRole());
 	        user.setAccSubscribers(request.getAccSubscribers());
 	        user.setAccFollowings(request.getAccFollowings());

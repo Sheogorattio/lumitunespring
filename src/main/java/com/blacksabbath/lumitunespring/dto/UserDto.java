@@ -1,13 +1,15 @@
 package com.blacksabbath.lumitunespring.dto;
 
 
+import java.util.List;
+
 import com.blacksabbath.lumitunespring.misc.Roles;
 
 public class UserDto {
 	public String id;
 	public String username;
 	public String password;
-	public String avatarId;
+	public List<ImageDto> avatar;
 	public Roles role;
 	public int accSubscribers;
 	public int accFollowings;
@@ -37,12 +39,12 @@ public class UserDto {
         this.password = password;
     }
 
-    public String getAvatarId() {
-        return avatarId;
+    public List<ImageDto> getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarId(String avatarId) {
-        this.avatarId = avatarId;
+    public void setAvatar(List<ImageDto> avatar) {
+        this.avatar = avatar;
     }
 
     public Roles getRole() {
@@ -83,7 +85,7 @@ public class UserDto {
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", avatarId='" + avatarId + '\'' +
+                ", avatar='" + avatar + '\'' +
                 ", role=" + role +
                 ", accSubscribers=" + accSubscribers +
                 ", accFollowings=" + accFollowings +

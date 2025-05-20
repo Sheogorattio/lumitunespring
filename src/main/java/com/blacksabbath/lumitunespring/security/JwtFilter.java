@@ -1,124 +1,62 @@
 package com.blacksabbath.lumitunespring.security;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.blacksabbath.lumitunespring.dto.UserDto;
-import com.blacksabbath.lumitunespring.mapper.UserMapper;
-import com.blacksabbath.lumitunespring.misc.Roles;
-import com.blacksabbath.lumitunespring.service.UserService;
+import com.blacksabbath.lumitunespring.model.User;
+import com.blacksabbath.lumitunespring.repository.UserRepository;
 
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.persistence.EntityNotFoundException;
 
 @Component
-public class JwtFilter implements Filter {
-
-    @Autowired
-    private JwtUtil jwt;
-
-    @Autowired
-    private UserService userService;
-    
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-    	try {
-	        HttpServletRequest httpRequest = (HttpServletRequest) request;
-	        HttpServletResponse httpResponse = (HttpServletResponse) response;
+public class JwtFilter extends OncePerRequestFilter {
 	
-	        String token = extractAccessToken(httpRequest);
-	        System.out.println("Access token is " + token);
-	        if(token != null) {
-	        	Claims claims = jwt.validateTokenAndGetClaims(token);
-	        	
-		        if (claims != null) {
-		            setAttributesAndContinue(request, response, chain, claims);
-		            return;
-		        }
-	        }
-	        
+	private final JwtUtil jwtUtil;
 	
-	        String refreshToken = extractCookie(httpRequest, "refreshToken");
-	        System.out.println("Refresh token is " + refreshToken);
-	        if(refreshToken == null) {
-	        	sendUnnauthorizedResponse(httpResponse);
-	        }
-	        Claims refreshClaims = jwt.validateTokenAndGetClaims(refreshToken);
-	        System.out.println("Refresh claims are: " + refreshClaims.toString());
+	private final UserRepository userRepository;
 	
-	        if (refreshClaims != null) {
-	            String username = refreshClaims.getSubject();
-	            Roles role = userService.findByUsername(username)
-		            	    .map(UserMapper::toDto)
-		            	    .map(UserDto::getRole)
-		            	    .orElse(Roles.GUEST);
-	            System.out.println("New role is: " + role);
-	
-	            String newAccessToken = jwt.generateAccessToken(username, role);
-	            System.out.println("New access token is " + newAccessToken);
-	            if(newAccessToken == null) {
-		        	sendUnnauthorizedResponse(httpResponse);
-		        }
-	            setAccessTokenCookie(httpResponse, newAccessToken);
-	
-	            setAttributesAndContinue(request, response, chain, jwt.validateTokenAndGetClaims(newAccessToken));
-	            return;
-	        }
-    	}
-    	catch(Exception ex) {
-    		System.out.println(ex.getMessage());
-    		return;
-    	}
-    }
-    
-    private void sendUnnauthorizedResponse(HttpServletResponse response) throws IOException {
-    	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    	response.setContentType("application/json");
-    	response.getWriter().write("{\"error\":\"Unauthorized\"}");
-    	response.getWriter().flush();
-    }
+	public JwtFilter(JwtUtil jwtUtil, UserRepository userRepository) {
+		this.jwtUtil = jwtUtil;
+		this.userRepository = userRepository;
+	}
 
-    private void setAttributesAndContinue(ServletRequest request, ServletResponse response, FilterChain chain, Claims claims)
-            throws IOException, ServletException {
-        request.setAttribute("username", claims.getSubject());
-        request.setAttribute("role", Roles.valueOf((String) claims.get("role")));
-        chain.doFilter(request, response);
-    }
-
-    private String extractAccessToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return extractCookie(request, "accessToken");
-    }
-
-    private String extractCookie(HttpServletRequest request, String name) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals(name)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    private void setAccessTokenCookie(HttpServletResponse response, String token) {
-        String cookie = "accessToken=" + token +
-                "; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600";
-        response.addHeader("Set-Cookie", cookie);
-    }
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+				String token = null;
+				
+				if(request.getCookies() != null) {
+					for(Cookie cookie: request.getCookies()) {
+						if("jwt".equals(cookie.getName())) {
+							token = cookie.getValue();
+							break;
+						}
+					}
+				}
+				
+				if(token!=null & jwtUtil.isTokenValid(token)) {
+					String username = jwtUtil.getSubject(token);
+					User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException());
+					
+					SecurityContextHolder.getContext().setAuthentication(
+							new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(jwtUtil.getRole(token))))
+							);
+				}
+				
+				filterChain.doFilter(request, response);
+	}
 
 }

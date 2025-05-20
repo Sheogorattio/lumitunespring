@@ -1,31 +1,60 @@
-/*package com.blacksabbath.lumitunespring.model;
+package com.blacksabbath.lumitunespring.model;
 
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "images")
+@Table(name = "Images")
 public class Image {
 	@Id
-	UUID id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 	
 	@Column(nullable = false)
-	String originalName;
+	private String url;
 	
-	@OneToOne
-	@Column(nullable = false)
-	UUID uploadedBy;
+	@ManyToOne (optional = false)
+	@JoinColumn(name = "owner_id", unique= false)
+	private User owner;
 	
-	@Column(nullable = false)
-	String mimType;
+	public Image() {}
 	
-	@Column(nullable = false)
-	int originalSize;
+	public Image(UUID id, String url, User owner) {
+		this.id = id;
+		this.url = url;
+		this.owner = owner;
+	}
 	
+	public UUID getId() {
+		return this.id;
+	}
+	
+	public void setId(UUID id) {
+		this.id = id;
+	}
+	
+	public String getUrl() {
+		return this.url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	public User getOwner() {
+		return this.owner;
+	}
+	
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
 }
-*/

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.blacksabbath.lumitunespring.dto.RegionDto;
-import com.blacksabbath.lumitunespring.mapper.RegionMapper;
-import com.blacksabbath.lumitunespring.model.Region;
 import com.blacksabbath.lumitunespring.service.RegionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -98,10 +97,8 @@ public class RegionController {
 	        @ApiResponse(responseCode = "200", description = "Успішно створено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegionDto.class))),
 	        @ApiResponse(responseCode = "500", description = "Помилка при створенні регіону")
 	    })
-		public ResponseEntity<RegionDto> createRegion(@RequestBody RegionDto dto, HttpServletRequest request, HttpServletResponse response){
-			//dto.setId(UUID.randomUUID());
-
-			
+		@PreAuthorize("hasRole('ADMIN')")
+		public ResponseEntity<?> createRegion(@RequestBody RegionDto dto, HttpServletRequest request, HttpServletResponse response){
 			return ResponseEntity.ok(service.save(dto));
 		}
 		
@@ -111,6 +108,7 @@ public class RegionController {
 	        @ApiResponse(responseCode = "200", description = "Успішно видалено"),
 	        @ApiResponse(responseCode = "500", description = "Помилка при видаленні регіону")
 	    })
+		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<?> deleteRegion(@RequestBody RegionDto dto, HttpServletRequest request, HttpServletResponse response){
 			service.delete(dto);
 			return ResponseEntity.status(HttpServletResponse.SC_OK).build();
@@ -126,6 +124,7 @@ public class RegionController {
 	            examples = @ExampleObject(value = "{\"error\": \"Failed to update region\"}")
 	        ))
 	    })
+		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<?> editRegion(@RequestBody RegionDto dto, HttpServletRequest request, HttpServletResponse response){		
 			RegionDto updatedDto = service.update(dto).orElse(null);
 			if(updatedDto == null) {

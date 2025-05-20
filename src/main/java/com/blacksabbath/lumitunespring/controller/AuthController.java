@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -101,7 +102,17 @@ public class AuthController {
 		
 		if(!userService.isNicknameUnique(user.getUsername())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nickname already exists"));
 		
-	    User createdUser = userService.createUser(registerRequestMapper.toUserEntity(user));
+		User createdUser;
+		try {
+			createdUser = userService.createUser(registerRequestMapper.toUserEntity(user));
+		}
+		catch(Exception e) {
+			System.out.println(e.getCause());
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST)
+		            .body("Invalid data");
+		}
+	    
 	    
 	    UserDto userDto = UserMapper.toDto(createdUser);
 	    return ResponseEntity
@@ -159,11 +170,17 @@ public class AuthController {
 			User existingUser = optionalUser.get();
 			UserDto userDto = UserMapper.toDto(existingUser);
 			
-			String accessToken = jwt.generateAccessToken(userDto.getUsername(), userDto.getRole());
-			String refreshToken = jwt.generateRefreshToken(userDto.getUsername());
 			
-			addTokenToCookie(response, "accessToken", accessToken, 60 * 60);
-			addTokenToCookie(response, "refreshToken", refreshToken, 7 * 24 * 60 * 60);
+			String token = jwt.generateToken(existingUser);
+			
+			Cookie cookie = new Cookie("jwt", token);
+			cookie.setHttpOnly(true);
+			cookie.setSecure(true);
+			cookie.setPath("/");
+			cookie.setMaxAge(Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000);
+			cookie.setAttribute("SameSite", "None");
+			response.addCookie(cookie);
+		
 			
 			return ResponseEntity.ok(Map.of(
 					"user", Map.of(
@@ -173,12 +190,8 @@ public class AuthController {
 		} 
 		catch(Exception ex) {
 			System.out.println(this.getClass().getName() + ":login: " + ex.getMessage());
-			return ResponseEntity.status(401).body(ex.getMessage());
+			return ResponseEntity.status(500).body(ex.getMessage());
 		}
-	}
-	private void addTokenToCookie(HttpServletResponse response, String name, String token, int maxAge) {
-		String cookie = name+"="+token+"; HttpOnly; Secure; Path=/; Max-Age=" + maxAge;
-		response.addHeader("Set-Cookie", cookie);
 	}
 	
 	

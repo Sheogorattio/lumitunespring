@@ -1,9 +1,11 @@
 package com.blacksabbath.lumitunespring.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.blacksabbath.lumitunespring.misc.Roles;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 import jakarta.persistence.*;
 
@@ -21,8 +23,8 @@ public class User{
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
-    private String avatarId;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner", orphanRemoval = true)
+    private List<Image> avatar;
 
     @Column(nullable = true)
     private Roles role;
@@ -40,10 +42,10 @@ public class User{
 
     public User() {}
 
-    public User(String username, String password, String avatarId, UserData userData, Roles role, int accSubscribers, int accFollowings) {
+    public User(String username, String password, List<Image> avatar, UserData userData, Roles role, int accSubscribers, int accFollowings) {
         this.username = username;
         this.password = password;
-        this.avatarId = avatarId;
+        this.avatar = avatar;
         this.userData = userData;
         this.role = role;
         this.accSubscribers = accSubscribers;
@@ -62,8 +64,8 @@ public class User{
         return password;
     }
 
-    public String getAvatarId() {
-        return avatarId;
+    public List<Image> getAvatar() {
+        return avatar;
     }
 
     public UserData getUserData() {
@@ -94,8 +96,8 @@ public class User{
         this.password = password;
     }
 
-    public void setAvatarId(String avatarId) {
-        this.avatarId = avatarId;
+    public void setAvatar(List<Image> avatar) {
+        this.avatar = avatar;
     }
 
     public void setUserData(UserData userData) {

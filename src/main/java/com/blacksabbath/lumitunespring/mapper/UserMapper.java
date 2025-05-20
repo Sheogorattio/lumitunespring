@@ -1,5 +1,6 @@
 package com.blacksabbath.lumitunespring.mapper;
 
+import java.awt.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,16 @@ import com.blacksabbath.lumitunespring.dto.UserDataDto;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
+import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import com.blacksabbath.lumitunespring.repository.RegionRepository;
 
 public class UserMapper {
 	
 	@Autowired
 	static RegionRepository regionRep;
+	
+	@Autowired
+	static ImageRepository imageRep;
 	
 	public static UserDto toDto(User user) {
 		if(user == null) return null;
@@ -22,7 +27,14 @@ public class UserMapper {
 		dto.setId(user.getId().toString());
 		dto.setUsername(user.getUsername());
 		dto.setPassword(user.getPassword());
-		dto.setAvatarId(user.getAvatarId());
+		
+		if(user.getAvatar() == null) {
+			dto.setAvatar(null);
+		}
+		else {
+			dto.setAvatar(ImageMapper.toDto(user.getAvatar()));
+		}
+		
 		dto.setRole(user.getRole());
 		dto.setAccSubscribers(user.getAccSubscribers());
 		dto.setAccFollowings(user.getAccFollowings());
@@ -47,7 +59,20 @@ public class UserMapper {
 		
 		user.setUsername(dto.getUsername());
 		user.setPassword(dto.getPassword());
-		user.setAvatarId(dto.getAvatarId());
+		
+		try {
+			if(dto.getAvatar() == null || dto.getAvatar().size() == 0) {
+				user.setAvatar(null);
+			}
+			user.setAvatar(ImageMapper.toEntity(dto.getAvatar()));
+		}
+		catch(Exception e) {
+			user.setAvatar(null);
+			e.printStackTrace();
+		}
+		
+		
+		
 		user.setRoleId(dto.getRole());
 		user.setAccSubscribers(dto.getAccSubscribers());
 		user.setAccFollowings(dto.getAccFollowings());

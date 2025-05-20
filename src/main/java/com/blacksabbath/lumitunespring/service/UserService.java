@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.Roles;
+import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 
@@ -25,8 +25,6 @@ public class UserService{
 	@Autowired 
 	UserRepository userRepository;
 	
-	@PersistenceContext
-	private EntityManager entityManager;
 	
 	@Transactional(readOnly=true)
 	public User findUserById(UUID id) {
@@ -35,10 +33,10 @@ public class UserService{
 	}
 	
 	@Transactional
-	public User createUser(String username, String password, String avatarId, Roles role , int accSubscribers,  int accFollowings, UserData data) {
+	public User createUser(String username, String password, List<Image> avatar, Roles role , int accSubscribers,  int accFollowings, UserData data) {
 		User newUser = new User (username,
 								password,
-								avatarId,
+								avatar,
 								data,
 								role != null ? role : Roles.GUEST,
 								accSubscribers,
