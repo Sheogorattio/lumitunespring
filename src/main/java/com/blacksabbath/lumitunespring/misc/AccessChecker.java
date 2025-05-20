@@ -13,50 +13,50 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class AccessChecker {
-	
+
 	private final UserRepository userRepo;
-	
+
 	private final JwtUtil jwtUtil;
-	
+
 	public AccessChecker(UserRepository userRepo, JwtUtil jwtUtil) {
-		this.userRepo= userRepo;
+		this.userRepo = userRepo;
 		this.jwtUtil = jwtUtil;
 	}
 
 	public boolean Check(HttpServletRequest request, String nickname) {
 		String token = null;
-		
-		if(request.getCookies() != null) {
-			for(Cookie cookie: request.getCookies()) {
-				if("jwt".equals(cookie.getName())) {
+
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if ("jwt".equals(cookie.getName())) {
 					token = cookie.getValue();
 					break;
 				}
 			}
 		}
-        String roleAttr = jwtUtil.getRole(token);
-        String nameAttr = jwtUtil.getSubject(token);
+		String roleAttr = jwtUtil.getRole(token);
+		String nameAttr = jwtUtil.getSubject(token);
 
-        if (roleAttr == null || nameAttr == null) {
-            return false;
-        }
+		if (roleAttr == null || nameAttr == null) {
+			return false;
+		}
 
-        String role = roleAttr.toString();
-        String userNickname = nameAttr.toString();
-        
-        System.out.println(AccessChecker.class.getName() + ":Check: role attribute is: " + role);
+		String role = roleAttr.toString();
+		String userNickname = nameAttr.toString();
 
-        if (role.equals("ROLE_"+Roles.ADMIN.toString())) {
-            return true;
-        }
+		System.out.println(AccessChecker.class.getName() + ":Check: role attribute is: " + role);
 
-        return userNickname.equals(nickname);
-    }
-	
+		if (role.equals("ROLE_" + Roles.ADMIN.toString())) {
+			return true;
+		}
+
+		return userNickname.equals(nickname);
+	}
+
 	public boolean Check(HttpServletRequest request, UUID userId) {
 		String userNickname = userRepo.findById(userId).map(u -> u.getUsername()).orElse(null);
-		if(userNickname == null) return false;
+		if (userNickname == null)
+			return false;
 		return Check(request, userNickname);
 	}
 }
- 

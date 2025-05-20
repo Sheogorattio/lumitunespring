@@ -4,49 +4,48 @@ import java.time.LocalDate;
 
 public class UserDataDto {
 	private String id;
-    private LocalDate birthDate;
-    private String regionId;
-    private Boolean isArtist;
-    private String email;
+	private LocalDate birthDate;
+	private String regionId;
+	private Boolean isArtist;
+	private String email;
 
-    
-    public String getId() {
-    	return id;
-    }
-    
-    public void setId(String id) {
-    	this.id = id;
-    }
-    
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getRegionId() {
-        return regionId;
-    }
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
 
-    public void setRegionId(String regionId) {
-        this.regionId = regionId;
-    }
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
 
-    public Boolean getIsArtist() {
-        return isArtist;
-    }
+	public String getRegionId() {
+		return regionId;
+	}
 
-    public void setIsArtist(Boolean isArtist) {
-        this.isArtist = isArtist;
-    }
+	public void setRegionId(String regionId) {
+		this.regionId = regionId;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public Boolean getIsArtist() {
+		return isArtist;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setIsArtist(Boolean isArtist) {
+		this.isArtist = isArtist;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

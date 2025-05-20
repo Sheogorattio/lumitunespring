@@ -22,47 +22,47 @@ public class Region {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
-	
+
 	@Column(nullable = false)
 	private String name;
-	
+
 	@Enumerated(EnumType.STRING)
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private RegionType type;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	private Region parent;
-	
-    public UUID getId() {
-        return id;
-    }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(UUID id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public RegionType getType() {
-        return type;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setType(RegionType type) {
-        this.type = type;
-    }
+	public RegionType getType() {
+		return type;
+	}
 
-    public Region getParent() {
-        return parent;
-    }
+	public void setType(RegionType type) {
+		this.type = type;
+	}
 
-    public void setParent(Region parent) {
-        this.parent = parent;
-    }
+	public Region getParent() {
+		return parent;
+	}
+
+	public void setParent(Region parent) {
+		this.parent = parent;
+	}
 }

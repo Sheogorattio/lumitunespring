@@ -1,6 +1,5 @@
 package com.blacksabbath.lumitunespring.dto;
 
-
 import java.util.List;
 
 import com.blacksabbath.lumitunespring.misc.Roles;
@@ -16,90 +15,83 @@ public class UserDto {
 	public int accFollowings;
 	public UserDataDto userData;
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public List<ImageDto> getImages() {
-        return images;
-    }
+	public List<ImageDto> getImages() {
+		return images;
+	}
 
-    public void setImages(List<ImageDto> images) {
-        this.images = images;
-    }
+	public void setImages(List<ImageDto> images) {
+		this.images = images;
+	}
 
-    public Roles getRole() {
-        return role;
-    }
+	public Roles getRole() {
+		return role;
+	}
 
-    public void setRole(Roles role) {
-        this.role = role;
-    }
+	public void setRole(Roles role) {
+		this.role = role;
+	}
 
-    public int getAccSubscribers() {
-        return accSubscribers;
-    }
+	public int getAccSubscribers() {
+		return accSubscribers;
+	}
 
-    public void setAccSubscribers(int accSubscribers) {
-        this.accSubscribers = accSubscribers;
-    }
+	public void setAccSubscribers(int accSubscribers) {
+		this.accSubscribers = accSubscribers;
+	}
 
-    public int getAccFollowings() {
-        return accFollowings;
-    }
+	public int getAccFollowings() {
+		return accFollowings;
+	}
 
-    public void setAccFollowings(int accFollowings) {
-        this.accFollowings = accFollowings;
-    }
+	public void setAccFollowings(int accFollowings) {
+		this.accFollowings = accFollowings;
+	}
 
-    public UserDataDto getUserData() {
-        return userData;
-    }
+	public UserDataDto getUserData() {
+		return userData;
+	}
 
-    public void setUserData(UserDataDto userData) {
-        this.userData = userData;
-    }
-    
-    public void setAvatar(ImageDto avatar) {
-    	this.avatar = avatar;
-    }
-    
-    public ImageDto getAvatar() {
-    	return this.avatar;
-    }
-    
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", role=" + role +
-                ", accSubscribers=" + accSubscribers +
-                ", accFollowings=" + accFollowings +
-                ", userData=" + userData +
-                '}';
-    }
+	public void setUserData(UserDataDto userData) {
+		this.userData = userData;
+	}
+
+	public void setAvatar(ImageDto avatar) {
+		this.avatar = avatar;
+	}
+
+	public ImageDto getAvatar() {
+		return this.avatar;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDto{" + "id='" + id + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
+				+ ", avatar='" + avatar + '\'' + ", role=" + role + ", accSubscribers=" + accSubscribers
+				+ ", accFollowings=" + accFollowings + ", userData=" + userData + '}';
+	}
 
 }

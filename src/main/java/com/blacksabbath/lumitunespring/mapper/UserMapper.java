@@ -13,28 +13,29 @@ import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import com.blacksabbath.lumitunespring.repository.RegionRepository;
 
 public class UserMapper {
-	
+
 	@Autowired
 	static RegionRepository regionRep;
-	
+
 	@Autowired
 	static ImageRepository imageRep;
-	
+
 	public static UserDto toDto(User user) {
-		if(user == null) return null;
-		
+		if (user == null)
+			return null;
+
 		UserDto dto = new UserDto();
 		dto.setId(user.getId().toString());
 		dto.setUsername(user.getUsername());
 		dto.setPassword(user.getPassword());
 		dto.setAvatar(ImageMapper.toDto(user.getAvatar()));
-		dto.setImages(ImageMapper.toDto(user.getImages()));		
+		dto.setImages(ImageMapper.toDto(user.getImages()));
 		dto.setRole(user.getRole());
 		dto.setAccSubscribers(user.getAccSubscribers());
 		dto.setAccFollowings(user.getAccFollowings());
-		
+
 		UserDataDto dataDto = new UserDataDto();
-		if(user.getUserData() != null) {
+		if (user.getUserData() != null) {
 			dataDto.setId(user.getUserData().getId().toString());
 			dataDto.setBirthDate(user.getUserData().getBirthDate());
 			dataDto.setEmail(user.getUserData().getEmail());
@@ -42,49 +43,46 @@ public class UserMapper {
 			dataDto.setRegionId(user.getUserData().getRegion().getId().toString());
 		}
 		dto.setUserData(dataDto);
-		
+
 		return dto;
 	}
-	
+
 	public static void updateEntity(User user, UserDto dto) {
-		if(user == null || dto == null) {
+		if (user == null || dto == null) {
 			return;
 		}
-		
+
 		user.setUsername(dto.getUsername());
 		user.setPassword(dto.getPassword());
-		
+
 		try {
 			user.setAvatar(ImageMapper.toEntity(dto.getAvatar()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
-			if(dto.getImages() == null || dto.getImages().size() == 0) {
+			if (dto.getImages() == null || dto.getImages().size() == 0) {
 				user.setImages(null);
 			}
 			user.setImages(ImageMapper.toEntity(dto.getImages()));
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			user.setAvatar(null);
 			e.printStackTrace();
 		}
-		
-		
-		
+
 		user.setRoleId(dto.getRole());
 		user.setAccSubscribers(dto.getAccSubscribers());
 		user.setAccFollowings(dto.getAccFollowings());
-		
-		if( dto.getUserData() != null) {
-			if(user.getUserData() == null) {
+
+		if (dto.getUserData() != null) {
+			if (user.getUserData() == null) {
 				user.setUserData(new UserData());
 			}
-			
+
 			UserData data = user.getUserData();
 			UserDataDto dataDto = dto.getUserData();
-			
+
 			data.setId(UUID.fromString(dataDto.getId()));
 			data.setBirthDate(dataDto.getBirthDate());
 			data.setRegion(regionRep.findById(UUID.fromString(dataDto.getRegionId())).orElse(null));

@@ -41,9 +41,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserController {
 
 	private final UserService userService;
-	
+
 	private final AccessChecker accessChecker;
-	
+
 	public UserController(UserService userService, AccessChecker accessChecker) {
 		this.userService = userService;
 		this.accessChecker = accessChecker;
@@ -51,324 +51,185 @@ public class UserController {
 
 	@GetMapping("/all")
 	@PreAuthorize("hasRole('ADMIN')")
-	@Operation(
-			summary = "Отримання всіх користувачів",
-			description = "Доступно тільки з обліковки адміна"
-			)
-	@ApiResponses( value = 
-			{
-				@ApiResponse(
-						responseCode = "200",
-						description = "Успішне отримання користувачів",
-						content = @Content(
-								mediaType = "application/json",
-								schema = @Schema(implementation = Map.class),
-								examples = @ExampleObject(
-										name = "Успішно виконаний запит",
-										value = """
-												[
-												    {
-												        "id": "7360a2a6-1bb8-4dd4-aba1-c361c6f09fde",
-												        "username": "john_doew",
-												        "password": "pass1234",
-												        "avatarId": "avatar1223",
-												        "role": "USER",
-												        "accSubscribers": 0,
-												        "accFollowings": 0,
-												        "userData": {
-												            "id": "e6d12419-526a-4840-adef-79cdb04ba957",
-												            "birthDate": "1990-01-01",
-												            "regionId": "region001",
-												            "isArtist": true,
-												            "email": "john.doe!!!!!!!!!!!!!!!!!!!!@example.com",
-												            "deleteDate": null
-												        }
-												    },
-												    {
-												        "id": "ff9fd472-82f9-4ee3-aaf8-e4055a2bf4f7",
-												        "username": "admin",
-												        "password": "admin",
-												        "avatarId": "avatar123",
-												        "role": "ADMIN",
-												        "accSubscribers": 0,
-												        "accFollowings": 0,
-												        "userData": {
-												            "id": "88f992f7-9125-445d-ae30-34c5d52cb871",
-												            "birthDate": "1990-01-01",
-												            "regionId": "region001",
-												            "isArtist": true,
-												            "email": "admin@example.com",
-												            "deleteDate": null
-												        }
-												    }
-												]
-												"""
-										)
-								)
-						),
-				@ApiResponse(
-						responseCode = "403",
-						description = "Спроба виконати запит не як адміністратор",
-						content = @Content(
-								mediaType = "application/json",
-								schema = @Schema(implementation = Map.class),
-								examples = @ExampleObject(
-										name = "Немає прав доступу",
-										value = """
-												{
-												  "error": "Unauthorized"
-												}
-												"""
-										)
-								)
-						)
-			})	
-	public ResponseEntity<List<UserDto>> getAllUsers(HttpServletRequest request, HttpServletResponse response){
-		
-		if(!accessChecker.Check(request, "")) {
+	@Operation(summary = "Отримання всіх користувачів", description = "Доступно тільки з обліковки адміна")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Успішне отримання користувачів", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Успішно виконаний запит", value = """
+					[
+					    {
+					        "id": "7360a2a6-1bb8-4dd4-aba1-c361c6f09fde",
+					        "username": "john_doew",
+					        "password": "pass1234",
+					        "avatarId": "avatar1223",
+					        "role": "USER",
+					        "accSubscribers": 0,
+					        "accFollowings": 0,
+					        "userData": {
+					            "id": "e6d12419-526a-4840-adef-79cdb04ba957",
+					            "birthDate": "1990-01-01",
+					            "regionId": "region001",
+					            "isArtist": true,
+					            "email": "john.doe!!!!!!!!!!!!!!!!!!!!@example.com",
+					            "deleteDate": null
+					        }
+					    },
+					    {
+					        "id": "ff9fd472-82f9-4ee3-aaf8-e4055a2bf4f7",
+					        "username": "admin",
+					        "password": "admin",
+					        "avatarId": "avatar123",
+					        "role": "ADMIN",
+					        "accSubscribers": 0,
+					        "accFollowings": 0,
+					        "userData": {
+					            "id": "88f992f7-9125-445d-ae30-34c5d52cb871",
+					            "birthDate": "1990-01-01",
+					            "regionId": "region001",
+					            "isArtist": true,
+					            "email": "admin@example.com",
+					            "deleteDate": null
+					        }
+					    }
+					]
+					"""))),
+			@ApiResponse(responseCode = "403", description = "Спроба виконати запит не як адміністратор", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Немає прав доступу", value = """
+					{
+					  "error": "Unauthorized"
+					}
+					"""))) })
+	public ResponseEntity<List<UserDto>> getAllUsers(HttpServletRequest request, HttpServletResponse response) {
+
+		if (!accessChecker.Check(request, "")) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
-		
-		List<UserDto> userDtos = userService.getAllUsers().stream()
-			    .map(UserMapper::toDto)
-			    .toList();
+
+		List<UserDto> userDtos = userService.getAllUsers().stream().map(UserMapper::toDto).toList();
 		System.out.println("Returning users: " + userDtos);
 
-		if(userDtos.isEmpty()) {
+		if (userDtos.isEmpty()) {
 			return ResponseEntity.noContent().build();
-		} 
+		}
 		return ResponseEntity.ok(userDtos);
-		
+
 	}
-	
+
 	@GetMapping("/id/{id}")
-	@Operation(
-		    summary = "Отримати користувача за ID",
-		    description = "Доступно власнику облікового запису або адміну"
-		)
-		@ApiResponses({
-		    @ApiResponse(
-		        responseCode = "200",
-		        description = "Користувача знайдено",
-		        content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
-		    ),
-		    @ApiResponse(
-		        responseCode = "403",
-		        description = "Немає прав доступу",
-		        		content = @Content(
-								mediaType = "application/json",
-								schema = @Schema(implementation = Map.class),
-								examples = @ExampleObject(
-										name = "Немає прав доступу",
-										value = """
-												{
-												  "error": "Unauthorized"
-												}
-												"""
-										)
-								)
-		    ),
-		    @ApiResponse(
-			        responseCode = "404",
-			        description = "Користувача не знайдено",
-			        		content = @Content(
-									mediaType = "application/json",
-									schema = @Schema(implementation = Map.class),
-									examples = @ExampleObject(
-											name = "Об'єект не знайдено",
-											value = """
-													{
-													  "Error: response status is 404"
-													}
-													"""
-											)
-									)
-			    )
-		})
-	public ResponseEntity<User> getById(@PathVariable  String id, HttpServletRequest request, HttpServletResponse response){
+	@Operation(summary = "Отримати користувача за ID", description = "Доступно власнику облікового запису або адміну")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Користувача знайдено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+			@ApiResponse(responseCode = "403", description = "Немає прав доступу", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Немає прав доступу", value = """
+					{
+					  "error": "Unauthorized"
+					}
+					"""))),
+			@ApiResponse(responseCode = "404", description = "Користувача не знайдено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Об'єект не знайдено", value = """
+					{
+					  "Error: response status is 404"
+					}
+					"""))) })
+	public ResponseEntity<User> getById(@PathVariable String id, HttpServletRequest request,
+			HttpServletResponse response) {
 		Optional<User> user = userService.getById(id);
-		
-		if(!user.isPresent()) {
+
+		if (!user.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		User existingUser = user.get();
 		UserDto userDto = UserMapper.toDto(existingUser);
-		if(!accessChecker.Check(request, userDto.getUsername())) {
+		if (!accessChecker.Check(request, userDto.getUsername())) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
-		
+
 		return ResponseEntity.ok(existingUser);
 	}
-	
+
 	@GetMapping("/username/{username}")
-	@Operation(
-		    summary = "Отримати користувача за username",
-		    description = "Доступно власнику облікового запису або адміну"
-		)
-		@ApiResponses({
-		    @ApiResponse(
-		        responseCode = "200",
-		        description = "Користувача знайдено",
-		        content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
-		    ),
-		    @ApiResponse(
-		        responseCode = "403",
-		        description = "Немає прав доступу",
-		        		content = @Content(
-								mediaType = "application/json",
-								schema = @Schema(implementation = Map.class),
-								examples = @ExampleObject(
-										name = "Немає прав доступу",
-										value = """
-												{
-												  "error": "Unauthorized"
-												}
-												"""
-										)
-								)
-		    ),
-		    @ApiResponse(
-		        responseCode = "404",
-		        description = "Користувача не знайдено",
-		        		content = @Content(
-								mediaType = "application/json",
-								schema = @Schema(implementation = Map.class),
-								examples = @ExampleObject(
-										name = "Об'єект не знайдено",
-										value = """
-												{
-												  "Error: response status is 404"
-												}
-												"""
-										)
-								)
-		    )
-		})
-	public ResponseEntity<?> getByUsername(@PathVariable  String username, HttpServletRequest request, HttpServletResponse response){
+	@Operation(summary = "Отримати користувача за username", description = "Доступно власнику облікового запису або адміну")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Користувача знайдено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+			@ApiResponse(responseCode = "403", description = "Немає прав доступу", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Немає прав доступу", value = """
+					{
+					  "error": "Unauthorized"
+					}
+					"""))),
+			@ApiResponse(responseCode = "404", description = "Користувача не знайдено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Об'єект не знайдено", value = """
+					{
+					  "Error: response status is 404"
+					}
+					"""))) })
+	public ResponseEntity<?> getByUsername(@PathVariable String username, HttpServletRequest request,
+			HttpServletResponse response) {
 		Optional<User> user = userService.findByUsername(username);
-		
-		if(!user.isPresent()) {
+
+		if (!user.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		User existingUser = user.get();
-		if(!accessChecker.Check(request, username)) {
+		if (!accessChecker.Check(request, username)) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
-		
+
 		return ResponseEntity.ok(UserMapper.toDto(existingUser));
 	}
-	
+
 	@PutMapping("/edit")
-	@Operation(
-		    summary = "Редагувати дані користувача",
-		    description = "Доступно власнику облікового запису або адміну"
-		)
-		@ApiResponses({
-		    @ApiResponse(
-		        responseCode = "200",
-		        description = "Користувача успішно змінено",
-		        content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
-		    ),
-		    @ApiResponse(
-		        responseCode = "403",
-		        description = "Немає прав доступу",
-		        		content = @Content(
-								mediaType = "application/json",
-								schema = @Schema(implementation = Map.class),
-								examples = @ExampleObject(
-										name = "Немає прав доступу",
-										value = """
-												{
-												  "error": "Unauthorized"
-												}
-												"""
-										)
-								)
-		    ),
-		    @ApiResponse(
-			        responseCode = "404",
-			        description = "Користувача не знайдено",
-			        		content = @Content(
-									mediaType = "application/json",
-									schema = @Schema(implementation = Map.class),
-									examples = @ExampleObject(
-											name = "Об'єект не знайдено",
-											value = """
-													{
-													  "Error: response status is 404"
-													}
-													"""
-											)
-									)
-			    ),
-		    @ApiResponse(
-		        responseCode = "500",
-		        description = "Помилка при зміні користувача"
-		    )
-		})
-	public ResponseEntity<?> editById(@RequestBody UserDto user, HttpServletRequest request, HttpServletResponse response){
-		
+	@Operation(summary = "Редагувати дані користувача", description = "Доступно власнику облікового запису або адміну")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Користувача успішно змінено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+			@ApiResponse(responseCode = "403", description = "Немає прав доступу", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Немає прав доступу", value = """
+					{
+					  "error": "Unauthorized"
+					}
+					"""))),
+			@ApiResponse(responseCode = "404", description = "Користувача не знайдено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Об'єект не знайдено", value = """
+					{
+					  "Error: response status is 404"
+					}
+					"""))),
+			@ApiResponse(responseCode = "500", description = "Помилка при зміні користувача") })
+	public ResponseEntity<?> editById(@RequestBody UserDto user, HttpServletRequest request,HttpServletResponse response) {
+
 		System.out.println(user.toString());
-		
+
 		Optional<User> userOpt = userService.getById(user.getId().toString());
-		
-		if(!userOpt.isPresent()) {
+
+		if (!userOpt.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		User _user = userOpt.get();
-		
-		if(!accessChecker.Check(request, user.getUsername())) {
+
+		if (!accessChecker.Check(request, user.getUsername())) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
-		
+
 		UserMapper.updateEntity(_user, user);
-		
+
 		Optional<User> editedUserOpt = userService.editUserById(UserMapper.toDto(_user));
-		if(!editedUserOpt.isPresent()) {
+		if (!editedUserOpt.isPresent()) {
 			return ResponseEntity.status(500).body("Somesing went wrong. Try later.");
 		}
 		User editedUser = editedUserOpt.get();
-		 
-		return ResponseEntity.ok(UserMapper.toDto(editedUser)); 
+
+		return ResponseEntity.ok(UserMapper.toDto(editedUser));
 	}
-	
+  
 	@PostMapping("/logout")
-	@Operation(
-		    summary = "Вийти з акаунту (очистити куки)",
-		    description = "Видаляє refresh та access токени з браузера"
-		)
-		@ApiResponses({
-		    @ApiResponse(
-		        responseCode = "200",
-		        description = "Успішний вихід"
-		    ),
-		    @ApiResponse(
-			        responseCode = "403",
-			        description = "Немає прав доступу",
-			        		content = @Content(
-									mediaType = "application/json",
-									schema = @Schema(implementation = Map.class),
-									examples = @ExampleObject(
-											name = "Немає прав доступу",
-											value = """
-													{
-													  "error": "Unauthorized"
-													}
-													"""
-											)
-									)
-			    )
-		})
+	@Operation(summary = "Вийти з акаунту (очистити куки)", description = "Видаляє refresh та access токени з браузера")
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "Успішний вихід"),
+			@ApiResponse(responseCode = "403", description = "Немає прав доступу", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Немає прав доступу", value = """
+					{
+					  "error": "Unauthorized"
+					}
+					"""))) })
 	public void logout(HttpServletRequest request, HttpServletResponse response) {
-	    Arrays.stream(request.getCookies())
-	    .filter(cookie -> cookie.getName().equals("refreshToken") || cookie.getName().equals("accessToken"))
-	    .forEach(cookie -> {
-	    	cookie.setMaxAge(0);
-	    	cookie.setPath("/");
-	    	response.addCookie(cookie);
-	    });
+		Arrays.stream(request.getCookies())
+				.filter(cookie -> cookie.getName().equals("refreshToken") || cookie.getName().equals("accessToken"))
+				.forEach(cookie -> {
+					cookie.setMaxAge(0);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				});
 	}
 }

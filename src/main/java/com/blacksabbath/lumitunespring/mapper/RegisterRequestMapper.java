@@ -14,45 +14,44 @@ import com.blacksabbath.lumitunespring.repository.RegionRepository;
 
 @Component
 public class RegisterRequestMapper {
-	
+
 	@Autowired
 	private RegionRepository regionRep;
-	
+
 	@Autowired
 	private ImageRepository imageRep;
-	
-	 public User toUserEntity(RegisterRequestBody request) {
-	        UserData userData = null;
-	        if (request.getUserData() != null) {
-	            UserDataDto dto = request.getUserData();
-	            userData = new UserData();
-	            userData.setBirthDate(dto.getBirthDate());
-	            userData.setRegion(regionRep.findById(UUID.fromString(dto.getRegionId())).orElse(null));
-	            userData.setIsArtist(dto.getIsArtist());
-	            userData.setEmail(dto.getEmail());
-	        }
 
-	        User user = new User();
-	        user.setUsername(request.getUsername());
-	        user.setPassword(request.getPassword());
-	        //UUID avatarId;
-	        try {
-	        	//avatarId = UUID.fromString(request.getAvatarId());
-	        	user.setAvatar(null);
-	        }
-	        catch(IllegalArgumentException e) {
-	        	//avatarId = null;
-	        	user.setAvatar(null);
-	        }   
-	        user.setRoleId(request.getRole());
-	        user.setAccSubscribers(request.getAccSubscribers());
-	        user.setAccFollowings(request.getAccFollowings());
-	        user.setUserData(userData);
+	public User toUserEntity(RegisterRequestBody request) {
+		UserData userData = null;
+		if (request.getUserData() != null) {
+			UserDataDto dto = request.getUserData();
+			userData = new UserData();
+			userData.setBirthDate(dto.getBirthDate());
+			userData.setRegion(regionRep.findById(UUID.fromString(dto.getRegionId())).orElse(null));
+			userData.setIsArtist(dto.getIsArtist());
+			userData.setEmail(dto.getEmail());
+		}
 
-	        if (userData != null) {
-	            userData.setUser(user);
-	        }
+		User user = new User();
+		user.setUsername(request.getUsername());
+		user.setPassword(request.getPassword());
+		// UUID avatarId;
+		try {
+			// avatarId = UUID.fromString(request.getAvatarId());
+			user.setAvatar(null);
+		} catch (IllegalArgumentException e) {
+			// avatarId = null;
+			user.setAvatar(null);
+		}
+		user.setRoleId(request.getRole());
+		user.setAccSubscribers(request.getAccSubscribers());
+		user.setAccFollowings(request.getAccFollowings());
+		user.setUserData(userData);
 
-	        return user;
-	    }
+		if (userData != null) {
+			userData.setUser(user);
+		}
+
+		return user;
+	}
 }

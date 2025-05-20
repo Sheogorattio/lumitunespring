@@ -22,60 +22,54 @@ public class JwtUtil {
 
 	@Value("${JWT_SECRET}")
 	private String jwtSecret;
-	
+
 	@Value("${JWT_EXP_MS}")
 	private int expirationMs;
-	
-	public String generateToken(User user) { 
+
+	public String generateToken(User user) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("role", "ROLE_"+user.getRole().name().toUpperCase());
+		claims.put("role", "ROLE_" + user.getRole().name().toUpperCase());
 		return Jwts.builder()
 				.claims(claims)
 				.subject(user.getUsername())
 				.issuedAt(new Date())
 				.expiration(new Date(System.currentTimeMillis() + expirationMs))
-				.signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
-				.compact();
+				.signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).compact();
 	}
-	
+
 	public Claims extractAllClaims(String token) {
 		SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-		return Jwts.parser()
-				.verifyWith(key)
-				.build()
-				.parseSignedClaims(token)
-				.getPayload();
+		return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
 	}
-	
+
 	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-	
+		final Claims claims = extractAllClaims(token);
+		return claimsResolver.apply(claims);
+	}
+
 	public Date getExpirationDate(String token) {
 		return extractClaim(token, Claims::getExpiration);
 	}
-	
+
 	public String getSubject(String token) {
 		return extractClaim(token, Claims::getSubject);
 	}
-	
+
 	public String getRole(String token) {
-		return extractClaim(token, claims-> claims.get("role", String.class));
+		return extractClaim(token, claims -> claims.get("role", String.class));
 	}
-	
+
 	public Boolean isTokenExpired(String token) {
 		return getExpirationDate(token).before(new Date());
 	}
-	
+
 	public Boolean isTokenValid(String token) {
-		try{
+		try {
 			extractAllClaims(token);
 			return !isTokenExpired(token);
-		}
-		catch(JwtException | IllegalArgumentException ex) {
+		} catch (JwtException | IllegalArgumentException ex) {
 			return false;
 		}
 	}
-	
-} 
+
+}

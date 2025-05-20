@@ -1,7 +1,5 @@
 package com.blacksabbath.lumitunespring.misc;
 
 public enum Roles {
-	ADMIN,
-	USER,
-	GUEST
+	ADMIN, USER, GUEST
 }

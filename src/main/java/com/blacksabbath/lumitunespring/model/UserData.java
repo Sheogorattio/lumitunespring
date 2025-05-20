@@ -21,83 +21,83 @@ import jakarta.persistence.Table;
 @Table(name = "UserData")
 public class UserData {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 
-    @Column(nullable = false)
-    private LocalDate birthDate;
+	@Column(nullable = false)
+	private LocalDate birthDate;
 
-    @Column(nullable = false)
-    private Boolean isArtist;
+	@Column(nullable = false)
+	private Boolean isArtist;
 
-    @Column(nullable = false)
-    private String email;
+	@Column(nullable = false)
+	private String email;
 
-    @Column(nullable = true)
-    private LocalDate deleteDate;
+	@Column(nullable = true)
+	private LocalDate deleteDate;
 
-    @OneToOne(mappedBy = "userData")
-    @JsonBackReference
-    private User user;
-    
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
+	@OneToOne(mappedBy = "userData")
+	@JsonBackReference
+	private User user;
 
-    public UUID getId() {
-        return id;
-    }
+	@ManyToOne
+	@JoinColumn(name = "region_id")
+	private Region region;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
+	public void setId(UUID id) {
+		this.id = id;
+	}
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
 
-    public Region getRegion() {
-        return region;
-    }
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
 
-    public void setRegion(Region region) {
-        this.region = region;
-    }
+	public Region getRegion() {
+		return region;
+	}
 
-    public Boolean getIsArtist() {
-        return isArtist;
-    }
+	public void setRegion(Region region) {
+		this.region = region;
+	}
 
-    public void setIsArtist(Boolean isArtist) {
-        this.isArtist = isArtist;
-    }
+	public Boolean getIsArtist() {
+		return isArtist;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setIsArtist(Boolean isArtist) {
+		this.isArtist = isArtist;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public LocalDate getDeleteDate() {
-        return deleteDate;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setDeleteDate(LocalDate deleteDate) {
-        this.deleteDate = deleteDate;
-    }
+	public LocalDate getDeleteDate() {
+		return deleteDate;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public void setDeleteDate(LocalDate deleteDate) {
+		this.deleteDate = deleteDate;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

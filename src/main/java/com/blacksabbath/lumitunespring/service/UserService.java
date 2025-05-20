@@ -20,86 +20,78 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 
 @Service
-public class UserService{
-	
-	@Autowired 
+public class UserService {
+
+	@Autowired
 	UserRepository userRepository;
-	
-	
-	@Transactional(readOnly=true)
+
+	@Transactional(readOnly = true)
 	public User findUserById(UUID id) {
-		return userRepository.findById(id)
-				.orElseThrow(()->new EntityNotFoundException("User not found: " + id));
+		return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
 	}
-	
+
 	@Transactional
-	public User createUser(String username, String password, List<Image> avatar, Roles role , int accSubscribers,  int accFollowings, UserData data) {
-		User newUser = new User (username,
-								password,
-								avatar,
-								data,
-								role != null ? role : Roles.GUEST,
-								accSubscribers,
-								accFollowings,
-								null
-								);
+	public User createUser(String username, String password, List<Image> avatar, Roles role, int accSubscribers,
+			int accFollowings, UserData data) {
+		User newUser = new User(username, password, avatar, data, role != null ? role : Roles.GUEST, accSubscribers,
+				accFollowings, null);
 		return userRepository.save(newUser);
 	}
-	
+
 	@Transactional
 	public User createUser(User user) {
-		if (user == null) throw new IllegalArgumentException("User must not be null");
-        UserData userData = user.getUserData();
-        if (userData != null) {
-            userData.setUser(user);
-        }
-        return userRepository.save(user);
-    }
-	
-	@Transactional(readOnly=true)
+		if (user == null)
+			throw new IllegalArgumentException("User must not be null");
+		UserData userData = user.getUserData();
+		if (userData != null) {
+			userData.setUser(user);
+		}
+		return userRepository.save(user);
+	}
+
+	@Transactional(readOnly = true)
 	public Optional<User> getById(String id) {
 		if (id == null || id.isBlank()) {
-	        return Optional.empty();
-	    }
-	    try {
-	        UUID uuid = UUID.fromString(id);
-	        return userRepository.findById(uuid);
-	    } catch (IllegalArgumentException ex) {
-	        return Optional.empty();
-	    }
+			return Optional.empty();
+		}
+		try {
+			UUID uuid = UUID.fromString(id);
+			return userRepository.findById(uuid);
+		} catch (IllegalArgumentException ex) {
+			return Optional.empty();
+		}
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<User> getAllUsers() {
-	    return userRepository.findAll();
+		return userRepository.findAll();
 	}
-	
-	@Transactional(readOnly=true)
+
+	@Transactional(readOnly = true)
 	public boolean isNicknameUnique(String nickname) {
-		if(nickname == null) {
+		if (nickname == null) {
 			return false;
 		}
 		try {
 			return userRepository.findByUsername(nickname).isEmpty();
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
 	}
-	
+
 	@Transactional(readOnly = true)
 	public Optional<User> findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
-	
-	public Optional<User> editUserById(UserDto userDto){
-		if(userDto == null || userDto.getId() == null) {
+
+	public Optional<User> editUserById(UserDto userDto) {
+		if (userDto == null || userDto.getId() == null) {
 			return Optional.empty();
 		}
 		return userRepository.findById(UUID.fromString(userDto.getId())).map(user -> {
 			UserMapper.updateEntity(user, userDto);
 			return userRepository.save(user);
-		}); 
+		});
 	}
 }

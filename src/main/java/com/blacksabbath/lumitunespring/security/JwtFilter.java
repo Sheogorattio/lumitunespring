@@ -23,11 +23,11 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-	
+
 	private final JwtUtil jwtUtil;
-	
+
 	private final UserRepository userRepository;
-	
+
 	public JwtFilter(JwtUtil jwtUtil, UserRepository userRepository) {
 		this.jwtUtil = jwtUtil;
 		this.userRepository = userRepository;
@@ -36,27 +36,26 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-				String token = null;
-				
-				if(request.getCookies() != null) {
-					for(Cookie cookie: request.getCookies()) {
-						if("jwt".equals(cookie.getName())) {
-							token = cookie.getValue();
-							break;
-						}
-					}
+		String token = null;
+
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if ("jwt".equals(cookie.getName())) {
+					token = cookie.getValue();
+					break;
 				}
-				
-				if(token!=null & jwtUtil.isTokenValid(token)) {
-					String username = jwtUtil.getSubject(token);
-					User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException());
-					
-					SecurityContextHolder.getContext().setAuthentication(
-							new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(jwtUtil.getRole(token))))
-							);
-				}
-				
-				filterChain.doFilter(request, response);
+			}
+		}
+
+		if (token != null & jwtUtil.isTokenValid(token)) {
+			String username = jwtUtil.getSubject(token);
+			User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException());
+
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null,
+					List.of(new SimpleGrantedAuthority(jwtUtil.getRole(token)))));
+		}
+
+		filterChain.doFilter(request, response);
 	}
 
 }
