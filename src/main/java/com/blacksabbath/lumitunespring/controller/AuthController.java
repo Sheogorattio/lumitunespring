@@ -83,6 +83,14 @@ public class AuthController {
 			System.out.println(e.getCause());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 		}
+		
+		String token = jwt.generateToken(createdUser);
+		int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;
+
+		String cookieHeader = "jwt=" + token + "; Max-Age=" + maxAge + "; Path=/" + "; HttpOnly" + "; Secure"
+				+ "; SameSite=None";
+
+		response.setHeader("Set-Cookie", cookieHeader);
 
 		UserDto userDto = UserMapper.toDto(createdUser);
 		return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
