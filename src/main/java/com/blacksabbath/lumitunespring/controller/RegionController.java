@@ -85,7 +85,7 @@ public class RegionController {
 		return ResponseEntity.ok(region);
 	}
 
-	@PostMapping("/api/create")
+	@PostMapping("/create")
 	@Operation(summary = "Створити регіон", description = "Створює новий регіон")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Успішно створено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegionDto.class))),
@@ -96,7 +96,7 @@ public class RegionController {
 		return ResponseEntity.ok(service.save(dto));
 	}
 
-	@PostMapping("/api/delete")
+	@PostMapping("/delete")
 	@Operation(summary = "Видалити регіон", description = "Видаляє регіон та його дочірні елементи")
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "Успішно видалено"),
 			@ApiResponse(responseCode = "500", description = "Помилка при видаленні регіону") })
@@ -107,7 +107,7 @@ public class RegionController {
 		return ResponseEntity.status(HttpServletResponse.SC_OK).build();
 	}
 
-	@PutMapping("/api/edit")
+	@PutMapping("/edit")
 	@Operation(summary = "Редагувати регіон", description = "Оновлює існуючий регіон за його ID")
 	@ApiResponses({
 			@ApiResponse(responseCode = "200", description = "Успішно оновлено", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegionDto.class))),

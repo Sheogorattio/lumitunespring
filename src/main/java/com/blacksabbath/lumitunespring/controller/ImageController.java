@@ -33,7 +33,7 @@ public class ImageController {
 		this.accessChecker = accessChecker;
 	}
 
-	@PostMapping("/api/upload")
+	@PostMapping("/upload")
 	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
@@ -67,7 +67,7 @@ public class ImageController {
 		return ResponseEntity.ok(image);
 	}
 
-	@PostMapping("/api/delete/{id}")
+	@PostMapping("/delete/{id}")
 	public ResponseEntity<?> delete(@RequestParam String id, HttpServletRequest request, HttpServletResponse response) {
 		UUID ownerId = azureBlobService.getById(id).map(p -> UUID.fromString(p.getOwner())).orElse(null);
 		if (!accessChecker.Check(request, ownerId)) {
@@ -81,7 +81,7 @@ public class ImageController {
 		return ResponseEntity.ok(image);
 	}
 
-	@PutMapping("/api/update")
+	@PutMapping("/update")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> update(@RequestBody ImageDto dto, HttpServletRequest request) {
 		ImageDto res = azureBlobService.update(dto).orElse(null);
