@@ -15,7 +15,11 @@ import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
+import io.swagger.v3.core.util.Json;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 
@@ -39,9 +43,11 @@ public class UserService {
 	}
 
 	@Transactional
-	public User createUser(User user) {
-		if (user == null)
+	public User createUser(User user) throws JsonProcessingException {
+		if (user == null) {
+			System.out.println("User is null");
 			throw new IllegalArgumentException("User must not be null");
+		}
 		UserData userData = user.getUserData();
 		if (userData != null) {
 			userData.setUser(user);

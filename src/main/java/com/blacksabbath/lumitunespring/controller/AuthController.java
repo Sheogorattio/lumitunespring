@@ -72,15 +72,15 @@ public class AuthController {
 					}
 					"""))) })
 	public ResponseEntity<?> createUser(@RequestBody RegisterRequestBody user, HttpServletResponse response) {
-
+		System.out.println("Entered user creation process");
 		if (!userService.isNicknameUnique(user.getUsername()))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nickname already exists"));
-
+		System.out.println("Username is valid");
 		User createdUser;
 		try {
 			createdUser = userService.createUser(registerRequestMapper.toUserEntity(user));
 		} catch (Exception e) {
-			System.out.println(e.getCause());
+			System.out.println(e.fillInStackTrace());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 		}
 		

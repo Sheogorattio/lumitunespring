@@ -39,7 +39,7 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-						.requestMatchers("/auth/login", "/auth/sign-up", "/users/username/", "/swagger-ui/index.html", "/users/username/", "/regions/countries", "/regions/cities", "/regions/parent", "/regions")
+						.requestMatchers("/auth/**", "/users/username/", "/swagger-ui/index.html", "/users/username/", "/regions/countries", "/regions/cities", "/regions/parent/*", "/regions", "/v3/api-docs")
 						.permitAll().anyRequest().authenticated())
 				.addFilterBefore(jwtFilter,
 						org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);

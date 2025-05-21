@@ -47,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			}
 		}
 
-		if (token != null & jwtUtil.isTokenValid(token)) {
+		if (token != null && jwtUtil.isTokenValid(token)) {
 			String username = jwtUtil.getSubject(token);
 			User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException());
 
