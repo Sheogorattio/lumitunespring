@@ -3,6 +3,7 @@ package com.blacksabbath.lumitunespring.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -223,13 +224,43 @@ public class UserController {
 					  "error": "Unauthorized"
 					}
 					"""))) })
-	public void logout(HttpServletRequest request, HttpServletResponse response) {
-		Arrays.stream(request.getCookies())
-				.filter(cookie -> cookie.getName().equals("refreshToken") || cookie.getName().equals("accessToken"))
-				.forEach(cookie -> {
-					cookie.setMaxAge(0);
-					cookie.setPath("/");
-					response.addCookie(cookie);
-				});
+	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Arrays.stream(request.getCookies())
+			.filter(cookie -> cookie.getName().equals("jwt"))
+			.forEach(cookie -> {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+			});
+			SecurityContextHolder.getContext().setAuthentication(null);
+			return ResponseEntity.ok().build();
+		}
+		catch(Exception e) {
+			System.out.println("'UserController.logout':"+e.getMessage());
+			return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@GetMapping("/current") 
+	@Operation(summary = "Отримати поточного користувача")
+	public ResponseEntity<?> current(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Object p = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(p == null) {
+				return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized. Principal is not present.");
+			}
+			User user = ((User)p);
+			user = userService.getById(user.getId().toString()).orElse(null);
+			if(user == null) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).body("Invalid user data.");
+			}
+			UserDto dto = UserMapper.toDto(user);
+			return ResponseEntity.ok(dto);
+		}
+		catch(Exception e){
+			System.out.println("'UserController.current':"+e.getMessage());
+			return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
+		}
 	}
 }
