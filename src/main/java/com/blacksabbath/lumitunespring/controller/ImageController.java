@@ -67,7 +67,7 @@ public class ImageController {
 		return ResponseEntity.ok(image);
 	}
 
-	@PostMapping("/delete/{id}")
+	@DeleteMapping("/delete/{id}") 
 	public ResponseEntity<?> delete(@RequestParam String id, HttpServletRequest request, HttpServletResponse response) {
 		UUID ownerId = azureBlobService.getById(id).map(p -> UUID.fromString(p.getOwner())).orElse(null);
 		if (!accessChecker.Check(request, ownerId)) {

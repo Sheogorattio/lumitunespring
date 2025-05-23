@@ -2,6 +2,8 @@ package com.blacksabbath.lumitunespring.security;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,8 +41,9 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-						.requestMatchers("/auth/**", "/users/username/", "/swagger-ui.html", "/swagger-ui/**", "/users/username/", "/regions/countries", "/regions/cities", "/regions/parent/*", "/regions", "/v3/**", "/v2/**")
-						.permitAll().anyRequest().authenticated())
+						.requestMatchers("/auth/**", "/users/username/", "/swagger-ui.html", "/swagger-ui/**", "/users/username/", "/regions/countries", "/regions/cities", "/regions/parent/*", "/regions", "/v3/**", "/v2/**").permitAll()
+						.requestMatchers("/error").anonymous()
+						.anyRequest().authenticated())
 				.addFilterBefore(jwtFilter,
 						org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
