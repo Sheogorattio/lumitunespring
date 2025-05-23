@@ -13,6 +13,7 @@ import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.security.JwtUtil;
 import com.blacksabbath.lumitunespring.service.ImageBlobService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/images")
 @CrossOrigin
+@Tag(name = "Images", description = "Операції із зображеннями")
 public class ImageController {
 
 	private final ImageBlobService azureBlobService;

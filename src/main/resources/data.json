@@ -1,0 +1,77 @@
+{
+  "carousel": [
+    {
+      "im1": "https://lumitunestorageaccount.blob.core.windows.net/images/b6f425ea-8be2-4895-80eb-5380248dbbae.png"
+    },
+    {
+      "im2": "https://lumitunestorageaccount.blob.core.windows.net/images/3445bdc4-9297-40c7-be1b-7e9e18ad5f44.png"
+    },
+    {
+      "im3": "https://lumitunestorageaccount.blob.core.windows.net/images/75552aec-1c11-48c5-a749-68de9c9cff9e.png"
+    }
+  ],
+  "recommendations": [
+    {
+      "albumName": "albumName1",
+      "author": "authorName1",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/e66aa57f-4199-431f-9827-01005f79a586.png",
+      "tracksQnt": 0
+    },
+    {
+      "albumName": "albumName2",
+      "author": "authorName2",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/2b927419-1f3c-4c4a-86a1-4510ed55ea70.png",
+      "tracksQnt": 1
+    },
+    {
+      "albumName": "albumName3",
+      "author": "authorName3",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/4781c0d9-0f82-402f-822f-470b9139a1e5.png",
+      "tracksQnt": 1
+    }
+  ],
+  "newReleases" : [
+    {
+      "albumName": "albumName1",
+      "author": "authorName1",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/af5e1623-3447-461a-97d7-503e7389bb14.png",
+      "tracksQnt": 0
+    },
+    {
+      "albumName": "albumName2",
+      "author": "authorName2",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/9a18cfb0-7557-4441-a06b-fa1b3f9c467d.png",
+      "tracksQnt": 1
+    },
+    {
+      "albumName": "albumName2",
+      "author": "authorName2",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/4855b565-e43b-40e3-9446-9b48e2c07ea6.png",
+      "tracksQnt": 1
+    },
+    {
+      "albumName": "albumName2",
+      "author": "authorName2",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/ab218f0d-13aa-46b8-9bb9-3de2670bdf88.png",
+      "tracksQnt": 1
+    },
+    {
+      "albumName": "albumName2",
+      "author": "authorName2",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/9c17d585-cddd-447b-a811-b8aac0455b79.png",
+      "tracksQnt": 1
+    },
+    {
+      "albumName": "albumName2",
+      "author": "authorName2",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/a4aeece3-2fd9-4354-9cb0-ce0580304c0b.png",
+      "tracksQnt": 1
+    },
+    {
+      "albumName": "albumName2",
+      "author": "authorName2",
+      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/2e794240-ee30-4585-a0c8-8bf498f3946d.png",
+      "tracksQnt": 1
+    }
+  ]
+}
