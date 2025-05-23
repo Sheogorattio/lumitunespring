@@ -2,11 +2,14 @@ package com.blacksabbath.lumitunespring.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blacksabbath.lumitunespring.dto.ImageDto;
 import com.blacksabbath.lumitunespring.misc.AccessChecker;
+import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.security.JwtUtil;
 import com.blacksabbath.lumitunespring.service.ImageBlobService;
 
@@ -14,6 +17,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -37,22 +41,18 @@ public class ImageController {
 	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
-			Cookie cookie = null;
-			for (Cookie c : request.getCookies()) {
-				if (c.getName().equals("jwt")) {
-					cookie = c;
-					break;
-				}
-			}
-			String ownerName = null;
-			if (cookie != null && cookie.getValue() != null) {
-				ownerName = jwtUtil.getSubject(cookie.getValue());
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			String ownerName = ((User)auth.getPrincipal()).getUsername();
+			if(ownerName.length()>0) {
 				ImageDto image = azureBlobService.uploadImage(file, ownerName);
-				return ResponseEntity.ok(image);
-			} else {
-				throw new Exception("invalid token");
+				return ResponseEntity.ok(image); 
 			}
-		} catch (Exception e) {
+			else {
+				return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+			}
+		}
+		catch(IOException e){
+			System.out.println(e.getMessage());
 			return ResponseEntity.status(500).body("Upload failed: " + e.getMessage());
 		}
 	}
