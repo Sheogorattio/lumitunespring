@@ -1,5 +1,6 @@
 package com.blacksabbath.lumitunespring.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +37,10 @@ public class Artist {
 	private List<Album> albums;
 	
 	
-	public Artist() {}
+	public Artist() {
+		this.bioPics = new ArrayList<>();
+		this.albums = new ArrayList<>();
+	}
 	
 	public Artist(UUID id, User user, String bio, int monthlyListeners, List<Image> bioPics, List<Album> albums ) {
 		this.id = id;

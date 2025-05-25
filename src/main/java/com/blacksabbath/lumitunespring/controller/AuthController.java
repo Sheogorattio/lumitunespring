@@ -19,8 +19,10 @@ import com.blacksabbath.lumitunespring.mapper.RegisterRequestMapper;
 import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.LoginRequestBody;
 import com.blacksabbath.lumitunespring.misc.RegisterRequestBody;
+import com.blacksabbath.lumitunespring.model.Artist;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.security.JwtUtil;
+import com.blacksabbath.lumitunespring.service.ArtistService;
 import com.blacksabbath.lumitunespring.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,6 +44,9 @@ public class AuthController {
 
 	@Autowired
 	private RegisterRequestMapper registerRequestMapper;
+	
+	@Autowired 
+	private ArtistService artistService;
 
 	@Autowired
 	private JwtUtil jwt;
@@ -79,6 +84,12 @@ public class AuthController {
 		User createdUser;
 		try {
 			createdUser = userService.createUser(registerRequestMapper.toUserEntity(user));
+			
+			   if (user.getUserData() != null && Boolean.TRUE.equals(user.getUserData().getIsArtist())) {
+		            Artist artist = new Artist();
+		            artist.setUser(createdUser);
+		            artistService.createArtist(artist);
+		        }
 		} catch (Exception e) {
 			System.out.println(e.fillInStackTrace());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
