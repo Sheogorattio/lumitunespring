@@ -1,5 +1,6 @@
 package com.blacksabbath.lumitunespring.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class ArtistDto {
 		this.user = user;
 		this.bio = bio;
 		this.monthlyListeners = monthlyListeners;
-		this.bioPics = bioPics;
+		this.bioPics = bioPics == null ? new ArrayList<>(): bioPics;
 		this.albums = albums;
 	}
 	
@@ -65,7 +66,7 @@ public class ArtistDto {
 	}
 	
 	public void setBioPics(List<ImageDto> bioPics){
-		this.bioPics = bioPics;
+		this.bioPics = bioPics == null ? new ArrayList<>(): bioPics;
 	}
 	
 	public List<AlbumDto> getAlbums() {

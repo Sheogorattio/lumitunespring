@@ -1,5 +1,9 @@
 package com.blacksabbath.lumitunespring.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -12,7 +16,9 @@ import com.blacksabbath.lumitunespring.dto.ArtistDto;
 import com.blacksabbath.lumitunespring.mapper.AlbumMapper;
 import com.blacksabbath.lumitunespring.mapper.ArtistMapper;
 import com.blacksabbath.lumitunespring.mapper.ImageMapper;
+import com.blacksabbath.lumitunespring.model.Album;
 import com.blacksabbath.lumitunespring.model.Artist;
+import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 
@@ -57,16 +63,54 @@ public class ArtistService {
 		
 		existingArtist.setBio(updatedArtistDto.getBio());
 		existingArtist.setMonthlyListeners(updatedArtistDto.getMonthlyListeners());
-		existingArtist.setBioPics(updatedArtistDto.getBioPics().stream().map(t -> {
-			try {
-				return ImageMapper.toEntity(t);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		}).collect(Collectors.toList()));
-		existingArtist.setAlbums(updatedArtistDto.getAlbums().stream().map(AlbumMapper::toEntity).collect(Collectors.toList()));
+		existingArtist.setBioPics(Optional.ofNullable(updatedArtistDto.getBioPics())
+		        .orElse(Collections.emptyList()) 
+		        .stream()
+		        .map(t -> {
+		            try {
+		                return ImageMapper.toEntity(t);
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		                return null;
+		            }
+		        })
+		        .filter(Objects::nonNull)
+		        .collect(Collectors.toList()));
+		existingArtist.setAlbums(Optional.ofNullable(updatedArtistDto.getAlbums())
+				.orElse(Collections.emptyList())
+				.stream().map(AlbumMapper::toEntity)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList()));
 		Artist saved = repository.save(existingArtist);
 		return ArtistMapper.toDto(saved);
 	}
+	
+	@Transactional
+	public ArtistDto addAlbumToArtist(UUID artistId, Album album) {
+	    Artist artist = repository.findById(artistId)
+	        .orElseThrow(() -> new EntityNotFoundException("Artist with ID " + artistId + " not found"));
+
+	    album.setArtist(artist);
+	    artist.getAlbums().add(album);
+
+	    Artist saved = repository.save(artist);
+	    return ArtistMapper.toDto(saved);
+	}
+	
+	@Transactional
+	public ArtistDto addBioPicToArtist(UUID artistId, Image image) {
+	    Artist artist = repository.findById(artistId)
+	        .orElseThrow(() -> new EntityNotFoundException("Artist with ID " + artistId + " not found"));
+
+	    artist.getBioPics().add(image);
+
+	    Artist saved = repository.save(artist);
+	    return ArtistMapper.toDto(saved);
+	}
+
+	@Transactional(readOnly = true)
+	public List<ArtistDto> findAll(){
+		return repository.findAll().stream().map(ArtistMapper::toDto).collect(Collectors.toList());
+	}
+
 }

@@ -3,6 +3,7 @@ package com.blacksabbath.lumitunespring.model;
 import java.util.UUID;
 
 import com.blacksabbath.lumitunespring.misc.RegionType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +31,8 @@ public class Region {
 	@Column(nullable = false)
 	private RegionType type;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
+	@JsonManagedReference
 	@JoinColumn(name = "parent_id")
 	private Region parent;
 
