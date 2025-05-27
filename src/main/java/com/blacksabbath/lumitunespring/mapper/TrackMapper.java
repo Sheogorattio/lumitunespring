@@ -5,31 +5,41 @@ import com.blacksabbath.lumitunespring.model.Track;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 import com.blacksabbath.lumitunespring.repository.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrackMapper {
 
-    @Autowired
-    static ArtistRepository artistRepository;
+    private final ArtistRepository artistRepository;
 
-    @Autowired
-    private static AlbumRepository albumRepository;
+    private final AlbumRepository albumRepository;
+    
+    private final AlbumMapper albumMapper;
+    
+    private final ArtistMapper artistMapper;
+    
+    public TrackMapper( ArtistRepository artistRepository,  AlbumRepository albumRepository, @Lazy AlbumMapper albumMapper, ArtistMapper artistMapper) {
+    	this.artistRepository = artistRepository;
+    	this.albumRepository = albumRepository;
+    	this.albumMapper = albumMapper;
+    	this.artistMapper = artistMapper;
+    }
 
-    public static TrackDto toDto(Track track) {
+    public TrackDto toDto(Track track, boolean  includeNested) {
         return new TrackDto(
             track.getId().toString(),
             track.getName(),
-            ArtistMapper.toDto(track.getArtist()),
+            artistMapper.toDto(track.getArtist(),false),
             track.getDuration(),
             track.getSegNumber(),
             track.getPlaysNumber(),
             track.isExplicit(),
-            AlbumMapper.toDto(track.getAlbum())
+            albumMapper.toDto(track.getAlbum(),includeNested)
         );
     }
 
-    public static Track toEntity(TrackDto dto) {
+    public Track toEntity(TrackDto dto) {
         Track track = new Track();
         track.setId(java.util.UUID.fromString(dto.getId()));
         track.setName(dto.getName());

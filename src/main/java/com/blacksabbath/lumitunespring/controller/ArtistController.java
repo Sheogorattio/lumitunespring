@@ -6,6 +6,7 @@ import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.AccessChecker;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.repository.UserDataRepository;
+import com.blacksabbath.lumitunespring.service.AlbumService;
 import com.blacksabbath.lumitunespring.service.ArtistService;
 import com.blacksabbath.lumitunespring.service.UserService;
 
@@ -27,18 +28,25 @@ import java.util.UUID;
 @Tag(name = "Artist related operations", description = "Операції над артистами")
 public class ArtistController {
 
-    @Autowired
-    private AccessChecker accessChecker;
+    private final AccessChecker accessChecker;
 
-    @Autowired
-    private ArtistService artistService;
+    private final ArtistService artistService;
     
-    @Autowired 
-    private UserService userService;
+    private final UserService userService;
+    
+    private final ArtistMapper artistMapper;
+    
+    @Autowired
+	public ArtistController(AccessChecker accessChecker, ArtistService artistService, UserService userService, ArtistMapper artistMapper) {
+		this.artistService = artistService;
+		this.artistMapper = artistMapper;
+		this.userService= userService;
+		this.accessChecker = accessChecker;
+	}
 
     @PostMapping
     public ResponseEntity<ArtistDto> createArtist(@RequestBody @Valid ArtistDto artistDto) {
-        ArtistDto created = artistService.createArtist(ArtistMapper.toEntity(artistDto));
+        ArtistDto created = artistService.createArtist(artistMapper.toEntity(artistDto));
         return ResponseEntity.ok(created);
     }
 

@@ -5,36 +5,49 @@ import com.blacksabbath.lumitunespring.model.Album;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class AlbumMapper {
 
-	@Autowired
-    static ArtistRepository artistRepository;
+    private final ArtistRepository artistRepository;
 
-    @Autowired
-    static ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
+    
+    private final ArtistMapper artistMapper;
+    
+    private final TrackMapper trackMapper;
+    
+    public AlbumMapper(ArtistRepository artistRepository, ImageRepository imageRepository, ArtistMapper artistMapper, TrackMapper trackMapper, SecurityFilterChain filterChain) {
+    	this.artistRepository = artistRepository;
+        this.imageRepository = imageRepository;
+        this.artistMapper = artistMapper;
+        this.trackMapper = trackMapper;
+    }
 
-    public static AlbumDto toDto(Album album) {
+    public AlbumDto toDto(Album album, boolean includeNested) {
         return new AlbumDto(
             album.getId().toString(),
             album.getName(),
-            ArtistMapper.toDto(album.getArtist()),
+            artistMapper.toDto(album.getArtist(),false),
             album.getDuration(),
             album.getRelDate(),
             album.getType(),
             album.getLabel(),
             ImageMapper.toDto(album.getCover()),
-            album.getTracks().stream().map(TrackMapper::toDto).collect(Collectors.toList())
+            includeNested && album.getTracks() !=null ? album.getTracks().stream().map(track -> trackMapper.toDto(track, false)).filter(Objects::nonNull).collect(Collectors.toList()) : List.of()
         );
     }
 
-    public static Album toEntity(AlbumDto dto) {
+    public Album toEntity(AlbumDto dto) {
         Album album = new Album();
-        album.setId(java.util.UUID.fromString(dto.getId()));
+        album.setId(dto.getId() == null ? null : java.util.UUID.fromString(dto.getId()));
         album.setName(dto.getName());
         album.setDuration(dto.getDuration());
         album.setRelDate(dto.getRelDate());

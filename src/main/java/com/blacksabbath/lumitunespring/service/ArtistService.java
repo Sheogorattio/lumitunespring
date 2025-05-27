@@ -29,12 +29,21 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ArtistService {
 	
-	@Autowired 
-	ArtistRepository repository;
+	private final ArtistRepository repository;
+	
+	private final AlbumMapper albumMapper;
+	
+	private final ArtistMapper artistMapper;
+    
+    public ArtistService(AlbumMapper albumMapper, ArtistRepository repository, ArtistMapper artistMapper) {
+    	this.albumMapper = albumMapper;
+    	this.repository= repository;
+    	this.artistMapper = artistMapper;
+    }
 	
 	@Transactional
 	public ArtistDto createArtist(Artist artist) {
-		return ArtistMapper.toDto(repository.save(artist));
+		return artistMapper.toDto(repository.save(artist),true);
 	}
 	
 	@Transactional
@@ -49,12 +58,12 @@ public class ArtistService {
 	 
 	@Transactional
 	public Optional<ArtistDto> findById(UUID id) { 
-		return repository.findById(id).map(ArtistMapper::toDto);
+		return repository.findById(id).map(artist -> artistMapper.toDto(artist, true));
 	}
 	
 	@Transactional(readOnly = true)
 	public Optional<ArtistDto> findByUser(User user) {
-		return repository.findByUser(user).map(ArtistMapper::toDto);
+		return repository.findByUser(user).map(artist -> artistMapper.toDto(artist, true));
 	}
 	
 	@Transactional
@@ -78,11 +87,11 @@ public class ArtistService {
 		        .collect(Collectors.toList()));
 		existingArtist.setAlbums(Optional.ofNullable(updatedArtistDto.getAlbums())
 				.orElse(Collections.emptyList())
-				.stream().map(AlbumMapper::toEntity)
+				.stream().map(albumMapper::toEntity)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList()));
 		Artist saved = repository.save(existingArtist);
-		return ArtistMapper.toDto(saved);
+		return artistMapper.toDto(saved,true);
 	}
 	
 	@Transactional
@@ -94,7 +103,7 @@ public class ArtistService {
 	    artist.getAlbums().add(album);
 
 	    Artist saved = repository.save(artist);
-	    return ArtistMapper.toDto(saved);
+	    return artistMapper.toDto(saved, true);
 	}
 	
 	@Transactional
@@ -105,12 +114,12 @@ public class ArtistService {
 	    artist.getBioPics().add(image);
 
 	    Artist saved = repository.save(artist);
-	    return ArtistMapper.toDto(saved);
+	    return artistMapper.toDto(saved,true);
 	}
 
 	@Transactional(readOnly = true)
 	public List<ArtistDto> findAll(){
-		return repository.findAll().stream().map(ArtistMapper::toDto).collect(Collectors.toList());
+		return repository.findAll().stream().map(artist -> artistMapper.toDto(artist, true)).collect(Collectors.toList());
 	}
 
 }
