@@ -3,10 +3,12 @@ package com.blacksabbath.lumitunespring.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.blacksabbath.lumitunespring.dto.ImageDto;
 import com.blacksabbath.lumitunespring.dto.UserDataDto;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.model.Image;
@@ -72,16 +74,19 @@ public class UserMapper {
 		}
 
 		try {
+			List<UUID> exIds = user.getImages().stream().map(Image::getId).collect(Collectors.toList());
 			List<Image> images = imageMapper.toEntity(dto.getImages());
-			if(user.getImages() == null) {
-				user.setImages(new ArrayList<>(images));
-			}
-			else {
-				user.getImages().clear();
-				if(images != null) {
-					user.getImages().addAll(images);
+			List<Image> newImages = List.of();
+			for(Image i: images) {
+				if(!exIds.contains(i.getId())) {
+					newImages.add(i);
+					System.out.println("NEW Image");
 				}
 			}
+			if(newImages.size()>0) {
+				user.getImages().addAll(newImages);
+			}
+			
 		} catch (Exception e) {
 			user.setAvatar(null);
 			e.printStackTrace();
@@ -105,5 +110,6 @@ public class UserMapper {
 			data.setEmail(dataDto.getEmail());
 			data.setIsArtist(dataDto.getIsArtist());
 		}
+		System.out.println("Update ended");
 	}
 }

@@ -3,6 +3,8 @@ package com.blacksabbath.lumitunespring.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +12,9 @@ import org.springframework.stereotype.Component;
 import com.blacksabbath.lumitunespring.dto.ImageDto;
 import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
+import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
+
 
 
 @Component
@@ -18,9 +22,12 @@ public class ImageMapper {
 
 	private final UserRepository userRepo;
 	
+	private final ImageRepository imageRepo;
+	
 	@Autowired
-	public ImageMapper(UserRepository userRepo) {
+	public ImageMapper(UserRepository userRepo, ImageRepository imageRepo) {
 		this.userRepo =userRepo;
+		this.imageRepo= imageRepo;
 	}
 
 	public ImageDto toDto(Image entity) {
@@ -56,10 +63,9 @@ public class ImageMapper {
 	}
 
 	public List<Image> toEntity(List<ImageDto> dtos) throws Exception {
-		List<Image> images = new ArrayList<Image>();
-		for (ImageDto d : dtos) {
-			images.add(toEntity(d));
-		}
-		return images;
+		return dtos.stream() 
+				.map(dto -> imageRepo.findById(UUID.fromString(dto.getId())).orElse(null))
+				.filter(Objects::nonNull)
+				.toList();
 	}
 }

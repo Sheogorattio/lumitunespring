@@ -21,7 +21,7 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner", orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Image> images;
 
 	@OneToOne
