@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blacksabbath.lumitunespring.dto.UserDto;
+import com.blacksabbath.lumitunespring.mapper.ImageMapper;
 import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.Roles;
 import com.blacksabbath.lumitunespring.model.Image;
@@ -29,6 +30,9 @@ public class UserService {
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	UserMapper userMapper;
+	
 	@Transactional(readOnly = true)
 	public User findUserById(UUID id) {
 		return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
@@ -91,12 +95,13 @@ public class UserService {
 		return userRepository.findByUsername(username);
 	}
 
+	@Transactional
 	public Optional<User> editUserById(UserDto userDto) {
 		if (userDto == null || userDto.getId() == null) {
 			return Optional.empty();
 		}
 		return userRepository.findById(UUID.fromString(userDto.getId())).map(user -> {
-			UserMapper.updateEntity(user, userDto);
+			userMapper.updateEntity(user, userDto);
 			return userRepository.save(user);
 		});
 	}

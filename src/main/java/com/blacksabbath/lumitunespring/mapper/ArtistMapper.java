@@ -18,21 +18,26 @@ public class ArtistMapper {
 
     private final UserRepository userRepository;
     
+    private final ImageMapper imageMapper;
 
     private final AlbumMapper albumMapper;
     
-    public ArtistMapper (UserRepository userRepository, @Lazy AlbumMapper albumMapper) {
+    private final UserMapper userMapper;
+    
+    public ArtistMapper (UserRepository userRepository, @Lazy AlbumMapper albumMapper, ImageMapper imageMapper, UserMapper userMapper) {
     	this.userRepository = userRepository;
     	this.albumMapper = albumMapper;
+    	this.imageMapper = imageMapper;
+    	this.userMapper = userMapper;
     }
 
     public ArtistDto toDto(Artist artist, boolean  includeNested) {
         return new ArtistDto(
             artist.getId().toString(),
-            UserMapper.toDto(artist.getUser()),
+            userMapper.toDto(artist.getUser()),
             artist.getBio(),
             artist.getMonthlyListeners(),
-            artist.getBioPics().stream().map(ImageMapper::toDto).collect(Collectors.toList()),
+            artist.getBioPics().stream().map(imageMapper::toDto).collect(Collectors.toList()),
             includeNested ? artist.getAlbums().stream().map(album -> albumMapper.toDto(album, false)).collect(Collectors.toList()) : List.of()
         );
     }
@@ -45,7 +50,7 @@ public class ArtistMapper {
         artist.setMonthlyListeners(dto.getMonthlyListeners());
         artist.setBioPics(dto.getBioPics().stream().map(t -> {
 			try {
-				return ImageMapper.toEntity(t);
+				return imageMapper.toEntity(t);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;

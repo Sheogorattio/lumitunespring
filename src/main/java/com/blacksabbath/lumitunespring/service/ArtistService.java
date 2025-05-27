@@ -34,11 +34,14 @@ public class ArtistService {
 	private final AlbumMapper albumMapper;
 	
 	private final ArtistMapper artistMapper;
+	
+	private final ImageMapper imageMapper;
     
-    public ArtistService(AlbumMapper albumMapper, ArtistRepository repository, ArtistMapper artistMapper) {
+    public ArtistService(AlbumMapper albumMapper, ArtistRepository repository, ArtistMapper artistMapper, ImageMapper imageMapper) {
     	this.albumMapper = albumMapper;
     	this.repository= repository;
     	this.artistMapper = artistMapper;
+    	this.imageMapper = imageMapper;
     }
 	
 	@Transactional
@@ -77,7 +80,7 @@ public class ArtistService {
 		        .stream()
 		        .map(t -> {
 		            try {
-		                return ImageMapper.toEntity(t);
+		                return imageMapper.toEntity(t);
 		            } catch (Exception e) {
 		                e.printStackTrace();
 		                return null;

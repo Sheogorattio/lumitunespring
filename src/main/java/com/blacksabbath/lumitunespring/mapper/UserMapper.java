@@ -1,26 +1,36 @@
 package com.blacksabbath.lumitunespring.mapper;
 
-import java.awt.List;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.blacksabbath.lumitunespring.dto.UserDataDto;
 import com.blacksabbath.lumitunespring.dto.UserDto;
+import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import com.blacksabbath.lumitunespring.repository.RegionRepository;
 
+@Component
 public class UserMapper {
 
-	@Autowired
-	static RegionRepository regionRep;
+	private final RegionRepository regionRep;
 
-	@Autowired
-	static ImageRepository imageRep;
+	private final ImageRepository imageRep;
+	
+	private final ImageMapper imageMapper;
+	
+	public UserMapper(RegionRepository regionRep, ImageRepository imageRep, ImageMapper imageMapper) {
+		this.imageRep = imageRep;
+		this.regionRep = regionRep;
+		this.imageMapper = imageMapper;
+	}
 
-	public static UserDto toDto(User user) {
+	public UserDto toDto(User user) {
 		if (user == null)
 			return null;
 
@@ -28,8 +38,8 @@ public class UserMapper {
 		dto.setId(user.getId().toString());
 		dto.setUsername(user.getUsername());
 		dto.setPassword(user.getPassword());
-		dto.setAvatar(ImageMapper.toDto(user.getAvatar()));
-		dto.setImages(ImageMapper.toDto(user.getImages()));
+		dto.setAvatar(imageMapper.toDto(user.getAvatar()));
+		dto.setImages(imageMapper.toDto(user.getImages()));
 		dto.setRole(user.getRole());
 		dto.setAccSubscribers(user.getAccSubscribers());
 		dto.setAccFollowings(user.getAccFollowings());
@@ -47,7 +57,7 @@ public class UserMapper {
 		return dto;
 	}
 
-	public static void updateEntity(User user, UserDto dto) {
+	public void updateEntity(User user, UserDto dto) {
 		if (user == null || dto == null) {
 			return;
 		}
@@ -56,16 +66,22 @@ public class UserMapper {
 		user.setPassword(dto.getPassword());
 
 		try {
-			user.setAvatar(ImageMapper.toEntity(dto.getAvatar()));
+			user.setAvatar(imageMapper.toEntity(dto.getAvatar()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		try {
-			if (dto.getImages() == null || dto.getImages().size() == 0) {
-				user.setImages(null);
+			List<Image> images = imageMapper.toEntity(dto.getImages());
+			if(user.getImages() == null) {
+				user.setImages(new ArrayList<>(images));
 			}
-			user.setImages(ImageMapper.toEntity(dto.getImages()));
+			else {
+				user.getImages().clear();
+				if(images != null) {
+					user.getImages().addAll(images);
+				}
+			}
 		} catch (Exception e) {
 			user.setAvatar(null);
 			e.printStackTrace();

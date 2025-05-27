@@ -25,12 +25,14 @@ public class AlbumService {
     private final AlbumRepository repo;
     private final AlbumMapper albumMapper;
     private final TrackMapper trackMapper;
+    private final ImageMapper imageMapper;
 
     @Autowired
-    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper) {
+    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper, ImageMapper imageMapper) {
         this.repo = repo;
         this.albumMapper = albumMapper;
         this.trackMapper = trackMapper;
+        this.imageMapper = imageMapper;
     }
 	
 	public Optional<AlbumDto> getAlbumById(UUID id) {
@@ -48,7 +50,7 @@ public class AlbumService {
 	public AlbumDto editAlbum(AlbumDto newAlbumDto) throws Exception {
 		Album album = repo.findById(UUID.fromString(newAlbumDto.getId())).orElseThrow(() -> new Exception("Album with id "+ newAlbumDto.getId()+ " was not found."));
 		
-		album.setCover(ImageMapper.toEntity(newAlbumDto.getCover()));
+		album.setCover(imageMapper.toEntity(newAlbumDto.getCover()));
 		album.setLabel(newAlbumDto.getLabel());
 		album.setRelDate(newAlbumDto.getRelDate());
 		album.setType(newAlbumDto.getType());

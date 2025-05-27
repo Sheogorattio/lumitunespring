@@ -28,6 +28,9 @@ public class ImageBlobService {
 	@Autowired
 	private UserRepository userRepo;
 
+	@Autowired
+	private ImageMapper imageMapper;
+	
 	public ImageBlobService(@Value("${AZURE_STORAGE_CONNSTR}") String connectionString) {
 		String containerName = "images";
 		BlobServiceClient serviceClient = new BlobServiceClientBuilder().connectionString(connectionString)
@@ -46,7 +49,7 @@ public class ImageBlobService {
 		BlobClient blobClient = containerClient.getBlobClient(filename);
 		blobClient.upload(file.getInputStream(), file.getSize(), true);
 
-		return ImageMapper.toDto(
+		return imageMapper.toDto(
 				repo.save(new Image(null, blobClient.getBlobUrl(), userRepo.findByUsername(ownerUsername).get())));
 	}
 
@@ -62,7 +65,7 @@ public class ImageBlobService {
 		if (image == null) {
 			return Optional.empty();
 		}
-		return Optional.of(ImageMapper.toDto(image));
+		return Optional.of(imageMapper.toDto(image));
 	}
 
 	public Optional<ImageDto> getByUrl(String Url) {
@@ -70,7 +73,7 @@ public class ImageBlobService {
 		if (image == null) {
 			return Optional.empty();
 		}
-		return Optional.of(ImageMapper.toDto(image));
+		return Optional.of(imageMapper.toDto(image));
 	}
 
 	public Optional<ImageDto> update(ImageDto dto) {
@@ -79,7 +82,7 @@ public class ImageBlobService {
 			return Optional.empty();
 		}
 		image.setUrl(dto.getId());
-		return Optional.of(ImageMapper.toDto(repo.save(image)));
+		return Optional.of(imageMapper.toDto(repo.save(image)));
 	}
 
 	public void delete(String id) {

@@ -50,6 +50,9 @@ public class AuthController {
 
 	@Autowired
 	private JwtUtil jwt;
+	
+	@Autowired
+	private UserMapper userMapper;
 
 	@PostMapping("/sign-up")
 	@Operation(summary = "Реєстрація нового користувача", description = "Створює нового користувача з переданими даними")
@@ -103,7 +106,7 @@ public class AuthController {
 
 		response.setHeader("Set-Cookie", cookieHeader);
 
-		UserDto userDto = UserMapper.toDto(createdUser);
+		UserDto userDto = userMapper.toDto(createdUser);
 		return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
 	}
 
@@ -129,7 +132,7 @@ public class AuthController {
 			}
 
 			User existingUser = optionalUser.get();
-			UserDto userDto = UserMapper.toDto(existingUser);
+			UserDto userDto = userMapper.toDto(existingUser);
 
 			String token = jwt.generateToken(existingUser);
 			int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;

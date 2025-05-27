@@ -5,18 +5,25 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.blacksabbath.lumitunespring.dto.ImageDto;
 import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
 
+
+@Component
 public class ImageMapper {
 
+	private final UserRepository userRepo;
+	
 	@Autowired
-	private static UserRepository userRepo;
+	public ImageMapper(UserRepository userRepo) {
+		this.userRepo =userRepo;
+	}
 
-	public static ImageDto toDto(Image entity) {
+	public ImageDto toDto(Image entity) {
 		if (entity == null)
 			return null;
 		ImageDto dto = new ImageDto();
@@ -26,7 +33,7 @@ public class ImageMapper {
 		return dto;
 	}
 
-	public static List<ImageDto> toDto(List<Image> images) {
+	public List<ImageDto> toDto(List<Image> images) {
 		List<ImageDto> dtos = new ArrayList<ImageDto>();
 		for (Image e : images) {
 			dtos.add(toDto(e));
@@ -34,7 +41,7 @@ public class ImageMapper {
 		return dtos;
 	}
 
-	public static Image toEntity(ImageDto dto) throws Exception {
+	public Image toEntity(ImageDto dto) throws Exception {
 		if (dto == null)
 			return null;
 		if (dto.getId() == null || dto.getUrl() == null) {
@@ -48,7 +55,7 @@ public class ImageMapper {
 		return new Image(UUID.fromString(dto.getId()), dto.getUrl(), owner);
 	}
 
-	public static List<Image> toEntity(List<ImageDto> dtos) throws Exception {
+	public List<Image> toEntity(List<ImageDto> dtos) throws Exception {
 		List<Image> images = new ArrayList<Image>();
 		for (ImageDto d : dtos) {
 			images.add(toEntity(d));

@@ -24,11 +24,14 @@ public class AlbumMapper {
     
     private final TrackMapper trackMapper;
     
-    public AlbumMapper(ArtistRepository artistRepository, ImageRepository imageRepository, ArtistMapper artistMapper, TrackMapper trackMapper, SecurityFilterChain filterChain) {
+    private final ImageMapper imageMapper;
+    
+    public AlbumMapper(ArtistRepository artistRepository, ImageRepository imageRepository, ArtistMapper artistMapper, TrackMapper trackMapper, ImageMapper imageMapper) {
     	this.artistRepository = artistRepository;
         this.imageRepository = imageRepository;
         this.artistMapper = artistMapper;
         this.trackMapper = trackMapper;
+        this.imageMapper = imageMapper;
     }
 
     public AlbumDto toDto(Album album, boolean includeNested) {
@@ -40,7 +43,7 @@ public class AlbumMapper {
             album.getRelDate(),
             album.getType(),
             album.getLabel(),
-            ImageMapper.toDto(album.getCover()),
+            imageMapper.toDto(album.getCover()),
             includeNested && album.getTracks() !=null ? album.getTracks().stream().map(track -> trackMapper.toDto(track, false)).filter(Objects::nonNull).collect(Collectors.toList()) : List.of()
         );
     }

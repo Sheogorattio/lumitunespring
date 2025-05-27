@@ -44,10 +44,13 @@ public class UserController {
 	private final UserService userService;
 
 	private final AccessChecker accessChecker;
+	
+	private final UserMapper userMapper;
 
-	public UserController(UserService userService, AccessChecker accessChecker) {
+	public UserController(UserService userService, AccessChecker accessChecker, UserMapper userMapper) {
 		this.userService = userService;
 		this.accessChecker = accessChecker;
+		this.userMapper = userMapper;
 	}
 
 	@GetMapping("/all")
@@ -103,7 +106,7 @@ public class UserController {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
-		List<UserDto> userDtos = userService.getAllUsers().stream().map(UserMapper::toDto).toList();
+		List<UserDto> userDtos = userService.getAllUsers().stream().map(userMapper::toDto).toList();
 		System.out.println("Returning users: " + userDtos);
 
 		if (userDtos.isEmpty()) {
@@ -136,7 +139,7 @@ public class UserController {
 		}
 
 		User existingUser = user.get();
-		UserDto userDto = UserMapper.toDto(existingUser);
+		UserDto userDto = userMapper.toDto(existingUser);
 		if (!accessChecker.Check(request, userDto.getUsername())) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
@@ -171,7 +174,7 @@ public class UserController {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
-		return ResponseEntity.ok(UserMapper.toDto(existingUser));
+		return ResponseEntity.ok(userMapper.toDto(existingUser));
 	}
 
 	@PutMapping("/edit")
@@ -205,15 +208,15 @@ public class UserController {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
-		UserMapper.updateEntity(_user, user);
+		userMapper.updateEntity(_user, user);
 
-		Optional<User> editedUserOpt = userService.editUserById(UserMapper.toDto(_user));
+		Optional<User> editedUserOpt = userService.editUserById(userMapper.toDto(_user));
 		if (!editedUserOpt.isPresent()) {
 			return ResponseEntity.status(500).body("Somesing went wrong. Try later.");
 		}
 		User editedUser = editedUserOpt.get();
 
-		return ResponseEntity.ok(UserMapper.toDto(editedUser));
+		return ResponseEntity.ok(userMapper.toDto(editedUser));
 	}
   
 	@PostMapping("/logout")
@@ -255,7 +258,7 @@ public class UserController {
 			if(user == null) {
 				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).body("Invalid user data.");
 			}
-			UserDto dto = UserMapper.toDto(user);
+			UserDto dto = userMapper.toDto(user);
 			return ResponseEntity.ok(dto);
 		}
 		catch(Exception e){
