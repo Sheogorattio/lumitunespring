@@ -4,6 +4,7 @@ import com.azure.storage.blob.*;
 import com.azure.storage.blob.models.*;
 import com.blacksabbath.lumitunespring.dto.ImageDto;
 import com.blacksabbath.lumitunespring.mapper.ImageMapper;
+import com.blacksabbath.lumitunespring.misc.FileOperations;
 import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
@@ -43,7 +44,7 @@ public class ImageBlobService {
 
 	public ImageDto uploadImage(MultipartFile file, String ownerUsername) throws IOException {
 
-		String ext = getExtension(file.getOriginalFilename());
+		String ext = FileOperations.getExtension(file.getOriginalFilename());
 		String filename = UUID.randomUUID() + ext;
 
 		BlobClient blobClient = containerClient.getBlobClient(filename);
@@ -51,13 +52,6 @@ public class ImageBlobService {
 
 		return imageMapper.toDto(
 				repo.save(new Image(null, blobClient.getBlobUrl(), userRepo.findByUsername(ownerUsername).get())));
-	}
-
-	private String getExtension(String originalFilename) {
-		if (originalFilename != null && originalFilename.contains(".")) {
-			return originalFilename.substring(originalFilename.lastIndexOf("."));
-		}
-		return "";
 	}
 
 	public Optional<ImageDto> getById(String id) {

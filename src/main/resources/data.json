@@ -1,77 +1,97 @@
 {
-  "carousel": [
+  "id": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+  "username": "admin",
+  "password": "admin",
+  "images": [
     {
-      "im1": "https://lumitunestorageaccount.blob.core.windows.net/images/b6f425ea-8be2-4895-80eb-5380248dbbae.png"
+      "id": "09c3dfba-aea7-46c7-9afd-3f9b8b643e7b",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/4b299eed-f701-40c9-be49-faaa2a9278b5.jpg"
     },
     {
-      "im2": "https://lumitunestorageaccount.blob.core.windows.net/images/3445bdc4-9297-40c7-be1b-7e9e18ad5f44.png"
+      "id": "12766594-4856-4c3e-bc1c-043432cf368a",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/5086503d-5c7f-4953-a802-6fdc880b35c6.mp3"
     },
     {
-      "im3": "https://lumitunestorageaccount.blob.core.windows.net/images/75552aec-1c11-48c5-a749-68de9c9cff9e.png"
+      "id": "14573738-920d-46dd-a03a-4f81f7c4d616",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/12d60f67-1a9f-4c18-a7a1-0ef7ee7bcea6.mp3"
+    },
+    {
+      "id": "1bc56e30-9819-4c12-8276-2f5f0f417f80",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/55b3d784-655a-403b-99c6-1fb3b082d44c.mp3"
+    },
+    {
+      "id": "404b5063-dab4-46df-9a04-a8f11a799835",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/cb23878e-e16f-4b31-a550-8f98d01fca36.jpg"
+    },
+    {
+      "id": "5cc3c5f5-3646-4395-922f-5b3fda92342e",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/7eab262a-1dba-40c5-9afc-80f9f8a84ffa.mp3"
+    },
+    {
+      "id": "62e17ad9-815e-470f-9548-91d9eee005bd",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/acc994a6-eb22-4dba-88cb-06ef27b96f56.jpg"
+    },
+    {
+      "id": "74a0be80-d483-4951-9832-19793b9383c1",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/89b3156a-74d0-4ed1-9f84-e89e58aaec6f.mp3"
+    },
+    {
+      "id": "905d91f3-395c-42f4-9b82-5745d5c9b65c",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/cd2cf775-1543-4a55-aca5-0278da8e478a.jpg"
+    },
+    {
+      "id": "9d7098bb-6456-436d-bb24-da270b7010d4",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/adb572da-fa0c-4aab-911e-0fadee2a7702.mp3"
+    },
+    {
+      "id": "abf98446-085a-496d-86b7-67c92a70935a",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/34c81ffd-c608-43e2-b933-a2324a90ba44.jpg"
+    },
+    {
+      "id": "ae248548-fec0-49ee-9918-ac878d293cef",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/36db33d3-3955-45e3-9897-4a88d57ceaf0.mp3"
+    },
+    {
+      "id": "b34b27c5-c601-4064-baf6-b2e6baadf520",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/2a57b632-78f5-425b-81bf-9b12b71ff0c0.mp3"
+    },
+    {
+      "id": "c74caa89-ff38-4f9c-9ab4-a680cb24e624",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/ad3b6ec7-461e-41c9-bf8f-3e600914901e.mp3"
+    },
+    {
+      "id": "dbfef9df-3098-4029-ab4a-dcc2a7d19b05",
+      "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/a9cf0f65-3ed9-4c8d-9ce2-da41a621f7af.mp3"
     }
   ],
-  "recommendations": [
-    {
-      "albumName": "albumName1",
-      "author": "authorName1",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/e66aa57f-4199-431f-9827-01005f79a586.png",
-      "tracksQnt": 0
-    },
-    {
-      "albumName": "albumName2",
-      "author": "authorName2",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/2b927419-1f3c-4c4a-86a1-4510ed55ea70.png",
-      "tracksQnt": 1
-    },
-    {
-      "albumName": "albumName3",
-      "author": "authorName3",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/4781c0d9-0f82-402f-822f-470b9139a1e5.png",
-      "tracksQnt": 1
-    }
-  ],
-  "newReleases" : [
-    {
-      "albumName": "albumName1",
-      "author": "authorName1",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/af5e1623-3447-461a-97d7-503e7389bb14.png",
-      "tracksQnt": 0
-    },
-    {
-      "albumName": "albumName2",
-      "author": "authorName2",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/9a18cfb0-7557-4441-a06b-fa1b3f9c467d.png",
-      "tracksQnt": 1
-    },
-    {
-      "albumName": "albumName2",
-      "author": "authorName2",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/4855b565-e43b-40e3-9446-9b48e2c07ea6.png",
-      "tracksQnt": 1
-    },
-    {
-      "albumName": "albumName2",
-      "author": "authorName2",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/ab218f0d-13aa-46b8-9bb9-3de2670bdf88.png",
-      "tracksQnt": 1
-    },
-    {
-      "albumName": "albumName2",
-      "author": "authorName2",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/9c17d585-cddd-447b-a811-b8aac0455b79.png",
-      "tracksQnt": 1
-    },
-    {
-      "albumName": "albumName2",
-      "author": "authorName2",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/a4aeece3-2fd9-4354-9cb0-ce0580304c0b.png",
-      "tracksQnt": 1
-    },
-    {
-      "albumName": "albumName2",
-      "author": "authorName2",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/2e794240-ee30-4585-a0c8-8bf498f3946d.png",
-      "tracksQnt": 1
-    }
-  ]
+  "avatar": {
+    "id": "09c3dfba-aea7-46c7-9afd-3f9b8b643e7b",
+    "owner": "15f72327-27ee-47ad-bb07-d95b3b1af0fa",
+    "url": "https://lumitunestorageaccount.blob.core.windows.net/images/4b299eed-f701-40c9-be49-faaa2a9278b5.jpg"
+  },
+  "role": "ADMIN",
+  "accSubscribers": 0,
+  "accFollowings": 0,
+  "userData": {
+    "id": "8af8a244-fe41-4259-b4e7-a4ac40851d09",
+    "birthDate": "2025-05-24",
+    "regionId": "384a531d-6879-478c-bcbc-292a7d50470d",
+    "isArtist": true,
+    "email": "admin@gmail.com"
+  }
 }

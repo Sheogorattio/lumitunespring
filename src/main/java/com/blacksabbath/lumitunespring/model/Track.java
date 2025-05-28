@@ -33,10 +33,13 @@ public class Track {
     @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album;
+    
+    @Column(nullable = false)
+    private String url;
 
     public Track() {}
 
-    public Track(UUID id, String name, Artist artist, int duration, int segNumber, int playsNumber, boolean isExplicit, Album album) {
+    public Track(UUID id, String name, Artist artist, int duration, int segNumber, int playsNumber, boolean isExplicit, Album album, String url) {
         this.id = id;
         this.name = name;
         this.artist = artist;
@@ -45,6 +48,7 @@ public class Track {
         this.playsNumber = playsNumber;
         this.isExplicit = isExplicit;
         this.album = album;
+        this.url = url;
     }
 
     public UUID getId() {
@@ -53,6 +57,14 @@ public class Track {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+    
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getName() {

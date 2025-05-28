@@ -17,10 +17,12 @@ public class TrackDto {
     private boolean isExplicit;
 
     private AlbumDto album;
+    
+    private String url;
 
     public TrackDto() {}
 
-    public TrackDto(String id, String name, ArtistDto artist, int duration, int segNumber, int playsNumber, boolean isExplicit, AlbumDto album) {
+    public TrackDto(String id, String name, ArtistDto artist, int duration, int segNumber, int playsNumber, boolean isExplicit, AlbumDto album, String url) {
         this.id = id;
         this.name = name;
         this.artist = artist;
@@ -29,6 +31,7 @@ public class TrackDto {
         this.playsNumber = playsNumber;
         this.isExplicit = isExplicit;
         this.album = album;
+        this.url = url;
     }
 
     public String getId() {
@@ -37,6 +40,14 @@ public class TrackDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+    
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getName() {

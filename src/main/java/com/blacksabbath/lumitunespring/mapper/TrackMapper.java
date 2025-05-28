@@ -35,7 +35,8 @@ public class TrackMapper {
             track.getSegNumber(),
             track.getPlaysNumber(),
             track.isExplicit(),
-            albumMapper.toDto(track.getAlbum(),includeNested)
+            albumMapper.toDto(track.getAlbum(),includeNested),
+            track.getUrl()
         );
     }
 
@@ -55,6 +56,7 @@ public class TrackMapper {
         if (dto.getAlbum() != null) {
             track.setAlbum(albumRepository.findById(java.util.UUID.fromString(dto.getAlbum().getId())).orElse(null));
         }
+        track.setUrl(dto.getUrl());
 
         return track;
     }
