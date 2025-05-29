@@ -11,6 +11,108 @@
     }
   ],
   "recommendations": [
+	  {
+	  "id": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
+	  "name": "Microplastics 1",
+	  "artist": {
+	    "id": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+	    "user": {
+	      "id": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+	      "username": "button with background",
+	      "password": "microplastics12",
+	      "images": [],
+	      "avatar": null,
+	      "role": "USER",
+	      "accSubscribers": 0,
+	      "accFollowings": 0,
+	      "userData": {
+	        "id": "4200c080-4610-4e36-92ca-555364771a0a",
+	        "birthDate": "2012-03-31",
+	        "regionId": "0947c596-37be-4228-894e-b786b12cac43",
+	        "isArtist": true,
+	        "email": "a@a.a"
+	      }
+	    },
+	    "bio": null,
+	    "monthlyListeners": 0,
+	    "bioPics": [],
+	    "albums": []
+	  },
+	  "duration": 0,
+	  "relDate": "2025-05-28",
+	  "type": "album",
+	  "label": "microplastics Label",
+	  "cover": null,
+	  "tracks": [
+	    {
+	      "id": "17e03b31-82a7-4178-b714-67a6ffab1057",
+	      "name": "all twisted",
+	      "artist": {
+	        "id": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+	        "user": {
+	          "id": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+	          "username": "button with background",
+	          "password": "microplastics12",
+	          "images": [],
+	          "avatar": null,
+	          "role": "USER",
+	          "accSubscribers": 0,
+	          "accFollowings": 0,
+	          "userData": {
+	            "id": "4200c080-4610-4e36-92ca-555364771a0a",
+	            "birthDate": "2012-03-31",
+	            "regionId": "0947c596-37be-4228-894e-b786b12cac43",
+	            "isArtist": true,
+	            "email": "a@a.a"
+	          }
+	        },
+	        "bio": null,
+	        "monthlyListeners": 0,
+	        "bioPics": [],
+	        "albums": []
+	      },
+	      "duration": 250,
+	      "segNumber": 1,
+	      "playsNumber": 0,
+	      "album": {
+	        "id": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
+	        "name": "Microplastics 1",
+	        "artist": {
+	          "id": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+	          "user": {
+	            "id": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+	            "username": "button with background",
+	            "password": "microplastics12",
+	            "images": [],
+	            "avatar": null,
+	            "role": "USER",
+	            "accSubscribers": 0,
+	            "accFollowings": 0,
+	            "userData": {
+	              "id": "4200c080-4610-4e36-92ca-555364771a0a",
+	              "birthDate": "2012-03-31",
+	              "regionId": "0947c596-37be-4228-894e-b786b12cac43",
+	              "isArtist": true,
+	              "email": "a@a.a"
+	            }
+	          },
+	          "bio": null,
+	          "monthlyListeners": 0,
+	          "bioPics": [],
+	          "albums": []
+	        },
+	        "duration": 0,
+	        "relDate": "2025-05-28",
+	        "type": "album",
+	        "label": "microplastics Label",
+	        "cover": null,
+	        "tracks": []
+	      },
+	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/3847aa16-fb62-48fb-b905-d396db0cbd4a.mp3",
+	      "explicit": false
+	    }
+	  ]
+	},
     {
       "albumName": "albumName1",
       "author": "authorName1",
