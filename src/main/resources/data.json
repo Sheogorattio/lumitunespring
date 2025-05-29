@@ -11,125 +11,36 @@
     }
   ],
   "recommendations": [
-	  {
-	  "id": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
-	  "name": "Microplastics 1",
-	  "artist": {
-	    "id": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	    "user": {
-	      "id": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
-	      "username": "button with background",
-	      "password": "microplastics12",
-	      "images": [],
-	      "avatar": null,
-	      "role": "USER",
-	      "accSubscribers": 0,
-	      "accFollowings": 0,
-	      "userData": {
-	        "id": "4200c080-4610-4e36-92ca-555364771a0a",
-	        "birthDate": "2012-03-31",
-	        "regionId": "0947c596-37be-4228-894e-b786b12cac43",
-	        "isArtist": true,
-	        "email": "a@a.a"
-	      }
-	    },
-	    "bio": null,
-	    "monthlyListeners": 0,
-	    "bioPics": [],
-	    "albums": []
-	  },
-	  "duration": 0,
-	  "relDate": "2025-05-28",
-	  "type": "album",
-	  "label": "microplastics Label",
-	  "cover": null,
-	  "tracks": [
-	    {
-	      "id": "17e03b31-82a7-4178-b714-67a6ffab1057",
-	      "name": "all twisted",
-	      "artist": {
-	        "id": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	        "user": {
-	          "id": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
-	          "username": "button with background",
-	          "password": "microplastics12",
-	          "images": [],
-	          "avatar": null,
-	          "role": "USER",
-	          "accSubscribers": 0,
-	          "accFollowings": 0,
-	          "userData": {
-	            "id": "4200c080-4610-4e36-92ca-555364771a0a",
-	            "birthDate": "2012-03-31",
-	            "regionId": "0947c596-37be-4228-894e-b786b12cac43",
-	            "isArtist": true,
-	            "email": "a@a.a"
-	          }
-	        },
-	        "bio": null,
-	        "monthlyListeners": 0,
-	        "bioPics": [],
-	        "albums": []
-	      },
-	      "duration": 250,
-	      "segNumber": 1,
-	      "playsNumber": 0,
-	      "album": {
-	        "id": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
-	        "name": "Microplastics 1",
-	        "artist": {
-	          "id": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	          "user": {
-	            "id": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
-	            "username": "button with background",
-	            "password": "microplastics12",
-	            "images": [],
-	            "avatar": null,
-	            "role": "USER",
-	            "accSubscribers": 0,
-	            "accFollowings": 0,
-	            "userData": {
-	              "id": "4200c080-4610-4e36-92ca-555364771a0a",
-	              "birthDate": "2012-03-31",
-	              "regionId": "0947c596-37be-4228-894e-b786b12cac43",
-	              "isArtist": true,
-	              "email": "a@a.a"
-	            }
-	          },
-	          "bio": null,
-	          "monthlyListeners": 0,
-	          "bioPics": [],
-	          "albums": []
-	        },
-	        "duration": 0,
-	        "relDate": "2025-05-28",
-	        "type": "album",
-	        "label": "microplastics Label",
-	        "cover": null,
-	        "tracks": []
-	      },
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/3847aa16-fb62-48fb-b905-d396db0cbd4a.mp3",
-	      "explicit": false
-	    }
-	  ]
-	},
     {
       "albumName": "albumName1",
       "author": "authorName1",
       "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/e66aa57f-4199-431f-9827-01005f79a586.png",
-      "tracksQnt": 0
+      "tracksQnt": 1,
+      "tracks" : [
+	    {
+	      "id": "17e03b31-82a7-4178-b714-67a6ffab1057",
+	      "name": "all twisted",
+	      "duration": 250,
+	      "segNumber": 1,
+	      "playsNumber": 0,
+	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/3847aa16-fb62-48fb-b905-d396db0cbd4a.mp3",
+	      "explicit": false
+	    }
+	  ]
     },
     {
       "albumName": "albumName2",
       "author": "authorName2",
       "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/2b927419-1f3c-4c4a-86a1-4510ed55ea70.png",
-      "tracksQnt": 1
+      "tracksQnt": 1,
+      "tracks" : []
     },
     {
       "albumName": "albumName3",
       "author": "authorName3",
       "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/4781c0d9-0f82-402f-822f-470b9139a1e5.png",
-      "tracksQnt": 1
+      "tracksQnt": 1,
+      "tracks" : []
     }
   ],
   "newReleases" : [
