@@ -107,7 +107,7 @@ public class AuthController {
 		response.setHeader("Set-Cookie", cookieHeader);
 
 		UserDto userDto = userMapper.toDto(createdUser);
-		return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("user", userDto, "token", token));
 	}
 
 	@PostMapping("/login")
@@ -142,7 +142,7 @@ public class AuthController {
 
 			response.setHeader("Set-Cookie", cookieHeader);
 
-			return ResponseEntity.ok(Map.of("user", Map.of("username", userDto.getUsername())));
+			return ResponseEntity.ok(Map.of("user", Map.of("username", userDto.getUsername(), "token", token)));
 		} catch (Exception ex) {
 			System.out.println(this.getClass().getName() + ":login: " + ex.getMessage());
 			return ResponseEntity.status(500).body(ex.getMessage());

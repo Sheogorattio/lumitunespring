@@ -34,6 +34,9 @@ public class AccessChecker {
 				}
 			}
 		}
+		else if(request.getHeader("Authorization") != null) {
+			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
+		}
 		String roleAttr = jwtUtil.getRole(token);
 		String nameAttr = jwtUtil.getSubject(token);
 

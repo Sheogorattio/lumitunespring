@@ -46,6 +46,10 @@ public class JwtFilter extends OncePerRequestFilter {
 				}
 			}
 		}
+		
+		if(request.getHeader("Authorization") != null) {
+			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
+		}
 
 		if (token != null && jwtUtil.isTokenValid(token)) {
 			String username = jwtUtil.getSubject(token);
