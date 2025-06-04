@@ -23,6 +23,7 @@ import com.blacksabbath.lumitunespring.model.Artist;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.security.JwtUtil;
 import com.blacksabbath.lumitunespring.service.ArtistService;
+import com.blacksabbath.lumitunespring.service.EmailService;
 import com.blacksabbath.lumitunespring.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,6 +54,9 @@ public class AuthController {
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@PostMapping("/sign-up")
 	@Operation(summary = "Реєстрація нового користувача", description = "Створює нового користувача з переданими даними")
@@ -107,6 +111,7 @@ public class AuthController {
 		response.setHeader("Set-Cookie", cookieHeader);
 
 		UserDto userDto = userMapper.toDto(createdUser);
+		emailService.sendSimpleMaessage(user.getUserData().getEmail(), "Account verification", "test text");
 		return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("user", userDto, "token", token));
 	}
 
