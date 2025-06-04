@@ -3,6 +3,7 @@ package com.blacksabbath.lumitunespring.mapper;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.blacksabbath.lumitunespring.dto.PlaylistDto;
@@ -17,7 +18,7 @@ public class PlaylistMapper {
 	private final UserService userService;
 	private final PlaylistTrackMapper playlistTrackMapper;
 	
-	public PlaylistMapper(UserMapper userMapper,  ImageMapper imageMapper, UserService userService, PlaylistTrackMapper playlistTrackMapper) {
+	public PlaylistMapper(UserMapper userMapper,  ImageMapper imageMapper, UserService userService, @Lazy PlaylistTrackMapper playlistTrackMapper) {
 		this.userMapper = userMapper;
 		this.imageMapper = imageMapper;
 		this.userService = userService;
