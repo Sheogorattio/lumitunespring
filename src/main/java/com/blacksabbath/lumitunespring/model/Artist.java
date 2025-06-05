@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +25,7 @@ public class Artist {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	
-	@OneToOne
+	@OneToOne ()
 	@JoinColumn(name = "user_id")
 	private User user;
 	
@@ -30,7 +33,7 @@ public class Artist {
 	
 	private int monthlyListeners;
 	
-	@OneToMany
+	@OneToMany( cascade = CascadeType.REMOVE)
 	private List<Image> bioPics;
 	
 	@OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)

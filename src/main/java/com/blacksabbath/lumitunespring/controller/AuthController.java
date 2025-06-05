@@ -2,8 +2,10 @@ package com.blacksabbath.lumitunespring.controller;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,10 +22,12 @@ import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.LoginRequestBody;
 import com.blacksabbath.lumitunespring.misc.RegisterRequestBody;
 import com.blacksabbath.lumitunespring.model.Artist;
+import com.blacksabbath.lumitunespring.model.EmailVerification;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.security.JwtUtil;
 import com.blacksabbath.lumitunespring.service.ArtistService;
 import com.blacksabbath.lumitunespring.service.EmailService;
+import com.blacksabbath.lumitunespring.service.EmailVerificationService;
 import com.blacksabbath.lumitunespring.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,6 +61,9 @@ public class AuthController {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private EmailVerificationService emailVerificationService;
 
 	@PostMapping("/sign-up")
 	@Operation(summary = "Реєстрація нового користувача", description = "Створює нового користувача з переданими даними")
@@ -111,7 +118,19 @@ public class AuthController {
 		response.setHeader("Set-Cookie", cookieHeader);
 
 		UserDto userDto = userMapper.toDto(createdUser);
-		emailService.sendSimpleMaessage(user.getUserData().getEmail(), "Account verification", "test text");
+		EmailVerification emailVerification = emailVerificationService.createNew(createdUser);
+		String messageText = String.format("""
+				Hi %s,
+
+				Please verify your email address to activate your Lumitune account. This link is valid for 1 hour. If you don’t complete the verification, your account will be permanently deleted.
+				
+				👉 %s
+				
+				Thank you for choosing Lumitune!
+				
+				— The Lumitune Team
+				""", userDto.getUsername(), System.getenv("WEB_FRONTEND_LINK")+"/emailVerification/"+ emailVerification.getId().toString());
+		emailService.sendSimpleMessage(user.getUserData().getEmail(), "Account verification",messageText);
 		return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("user", userDto, "token", token));
 	}
 
@@ -159,5 +178,16 @@ public class AuthController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Результат перевірки унікальності") })
 	public ResponseEntity<Boolean> isNicknameUnique(@PathVariable String nickname, HttpServletResponse response) {
 		return ResponseEntity.ok(userService.isNicknameUnique(nickname));
+	}
+	
+	@GetMapping("/email-verification/{recordId}")
+	public ResponseEntity<?> verifyEmail(@PathVariable UUID recordId, HttpServletResponse response){
+		try {
+			emailVerificationService.verifyAccount(recordId);
+			return ResponseEntity.ok().build();
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.notFound().build();
+		}
 	}
 }

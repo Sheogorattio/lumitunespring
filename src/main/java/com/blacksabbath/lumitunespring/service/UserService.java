@@ -15,6 +15,7 @@ import com.blacksabbath.lumitunespring.misc.Roles;
 import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
+import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,9 @@ public class UserService {
 
 	@Autowired
 	UserMapper userMapper;
+	
+	@Autowired 
+	ArtistRepository artistRepository;
 	
 	@Transactional(readOnly = true)
 	public User findUserById(UUID id) {
@@ -104,6 +108,17 @@ public class UserService {
 			userMapper.updateEntity(user, userDto);
 			return userRepository.save(user);
 		});
+	}
+	
+	@Transactional
+	public void delete(User user) throws Exception {
+		if(!userRepository.existsById(user.getId())) throw new Exception("User with ID '" + user.getId().toString() +"' does not exist.");
+		if(user.getUserData().getIsArtist()) {
+			artistRepository.delete(artistRepository.findByUser(user).orElseThrow(()-> new Exception("Unable to find artist by provided user with ID '" + user.getId().toString() +"'.")));
+		}
+		else {
+			userRepository.delete(user);
+		}
 	}
 	
 }

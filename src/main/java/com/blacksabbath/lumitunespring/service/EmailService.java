@@ -12,7 +12,7 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
-	public void sendSimpleMaessage(String to, String subject, String text) {
+	public void sendSimpleMessage(String to, String subject, String text) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom("noreply@lumitune.com");
 		message.setTo(to);
