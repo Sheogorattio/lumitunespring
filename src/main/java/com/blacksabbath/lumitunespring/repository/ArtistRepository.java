@@ -10,4 +10,5 @@ import com.blacksabbath.lumitunespring.model.User;
 
 public interface ArtistRepository extends JpaRepository<Artist, UUID> {
 	public Optional<Artist> findByUser(User user);
+	public Optional<Artist> findByUserUsername(String username);
 }

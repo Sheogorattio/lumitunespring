@@ -101,4 +101,16 @@ public class ArtistController {
     	List<ArtistDto> list = artistService.findAll();
     	return ResponseEntity.status(list.size() > 0 ? HttpServletResponse.SC_OK : HttpServletResponse.SC_NO_CONTENT ).body(list);
     } 
+    
+    @GetMapping("/username/{username}")
+    public ResponseEntity<?> getByUsername(@PathVariable String username){
+    	Optional<ArtistDto> optArtist = artistService.findByUsername(username);
+    	if(optArtist.isPresent()) {
+    		return ResponseEntity.ok(optArtist.get());
+    	}
+    	else {
+    		return ResponseEntity.notFound().build();
+    	}
+    	
+    } 
 }

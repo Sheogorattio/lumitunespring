@@ -2,7 +2,9 @@ package com.blacksabbath.lumitunespring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -249,20 +251,15 @@ public class UserController {
 	@Operation(summary = "Отримати поточного користувача")
 	public ResponseEntity<?> current(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Object p = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if(p == null) {
-				return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized. Principal is not present.");
-			}
-			User user = ((User)p);
-			user = userService.getById(user.getId().toString()).orElse(null);
-			if(user == null) {
-				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).body("Invalid user data.");
-			}
-			UserDto dto = userMapper.toDto(user);
-			return ResponseEntity.ok(dto);
+			return ResponseEntity.ok(userService.getCurrentUser());
 		}
-		catch(Exception e){
-			System.out.println("'UserController.current':"+e.getMessage());
+		catch(AccessDeniedException ex) { 
+			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).body("Invalid user data.");
+		}
+		catch(AuthenticationCredentialsNotFoundException ex) {
+			return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized. Principal is not present.");
+		}
+		catch(RuntimeException ex) {
 			return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
 		}
 	}

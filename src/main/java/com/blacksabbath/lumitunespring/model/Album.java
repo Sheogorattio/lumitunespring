@@ -36,7 +36,7 @@ public class Album {
     @JoinColumn(name = "cover_id")
     private Image cover;
     
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "album", cascade = CascadeType.REMOVE)
     private List<Track> tracks;
 
     public Album() {}

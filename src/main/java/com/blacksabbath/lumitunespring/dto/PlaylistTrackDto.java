@@ -7,18 +7,18 @@ import com.blacksabbath.lumitunespring.model.Track;
 
 public class PlaylistTrackDto {
 	private UUID id;
-	private PlaylistDto playlist;
-	private  TrackDto track;
+	private UUID playlistId;
+	private  UUID trackId;
 	private int trackOrder;
 	
 	public PlaylistTrackDto() {
 		
 	}
 	
-	public PlaylistTrackDto(UUID id, PlaylistDto playlist, TrackDto track, int trackOrder) {
+	public PlaylistTrackDto(UUID id, UUID playlistId, UUID trackId, int trackOrder) {
 		this.id = id;
-		this.playlist = playlist;
-		this.track = track;
+		this.playlistId = playlistId;
+		this.trackId = trackId;
 		this.trackOrder = trackOrder;
 	}
 	
@@ -30,20 +30,20 @@ public class PlaylistTrackDto {
 		this.id = id;
 	}
 	
-	public PlaylistDto getPlaylist() {
-		return this.playlist;
+	public UUID getPlaylistId() {
+		return this.playlistId;
 	}
 	
-	public void setPlaylist(PlaylistDto playlist) {
-		this.playlist = playlist;
+	public void setPlaylistId(UUID playlistId) {
+		this.playlistId = playlistId;
 	}
 	
-	public TrackDto getTrack() {
-		return this.track;
+	public UUID getTrackId() {
+		return this.trackId;
 	}
 	
-	public void setTrack(TrackDto track) {
-		this.track = track;
+	public void setTrackId(UUID trackId) {
+		this.trackId = trackId;
 	}
 	
 	public int getTrackOrder() {

@@ -1,9 +1,13 @@
 package com.blacksabbath.lumitunespring.mapper;
 
 import com.blacksabbath.lumitunespring.dto.TrackDto;
+import com.blacksabbath.lumitunespring.dto.TrackResponseDto;
 import com.blacksabbath.lumitunespring.model.Track;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 import com.blacksabbath.lumitunespring.repository.AlbumRepository;
+
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -38,6 +42,34 @@ public class TrackMapper {
             albumMapper.toDto(track.getAlbum(),includeNested),
             track.getUrl()
         );
+    }
+    
+    public TrackResponseDto toResponseDto(Track track) {
+        return new TrackResponseDto( 
+            track.getId().toString(),
+            track.getName(),
+            track.getArtist().getId(),
+            track.getDuration(),
+            track.getSegNumber(),
+            track.getPlaysNumber(),
+            track.isExplicit(),
+            track.getAlbum().getId(),
+            track.getUrl()
+        );
+    }
+    
+    public TrackResponseDto toResponseDto(TrackDto track) {
+    	TrackResponseDto response = new TrackResponseDto();
+    	response.setId(track.getId());
+    	response.setName(track.getName());
+    	response.setArtist(UUID.fromString(track.getArtist().getId()));
+    	response.setDuration(track.getDuration());
+    	response.setSegNumber(track.getSegNumber());
+    	response.setExplicit(track.isExplicit());
+    	response.setAlbum(UUID.fromString(track.getAlbum().getId()));
+    	response.setUrl(track.getUrl());
+    	
+    	return response;
     }
 
     public Track toEntity(TrackDto dto) {

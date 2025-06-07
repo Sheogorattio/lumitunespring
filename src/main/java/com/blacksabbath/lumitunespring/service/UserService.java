@@ -5,6 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import io.swagger.v3.core.util.Json;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class UserService {
@@ -120,5 +125,25 @@ public class UserService {
 			userRepository.delete(user);
 		}
 	}
+	
+	@Transactional(readOnly = true)
+	public UserDto getCurrentUser(){
+		try {
+			Object p = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(p == null) {
+				throw new AuthenticationCredentialsNotFoundException("Unauthorized. Principal is not present.");
+			}
+			User user = ((User)p);
+			user = getById(user.getId().toString()).orElse(null);
+			if(user == null) {
+				throw new AccessDeniedException("Invalid user data.");
+			}
+			return userMapper.toDto(user);
+		}
+		catch(Exception e){
+			System.out.println("'UserController.current':"+e.getMessage());
+			throw new RuntimeException();
+		}
+	} 
 	
 }

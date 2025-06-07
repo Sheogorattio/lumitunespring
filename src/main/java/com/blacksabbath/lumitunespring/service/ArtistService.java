@@ -124,5 +124,10 @@ public class ArtistService {
 	public List<ArtistDto> findAll(){
 		return repository.findAll().stream().map(artist -> artistMapper.toDto(artist, true)).collect(Collectors.toList());
 	}
+	
+	@Transactional(readOnly= true)
+	public Optional<ArtistDto> findByUsername(String username) {
+		return repository.findByUserUsername(username).map((e) -> artistMapper.toDto(e, true));
+	}
 
 }

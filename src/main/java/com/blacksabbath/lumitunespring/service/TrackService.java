@@ -99,6 +99,11 @@ public class TrackService {
 		return trackMapper.toDto(track, false);
 	}
 	
+	public Track findEntityById(UUID id) throws Exception { 
+		Track track = trackRepo.findById(id).orElseThrow(()-> new Exception("Track with id '" + id.toString() +"' does not exist."));
+		return track;
+	}
+	
 	public List<TrackDto> findByName(String name){
 		List<TrackDto> tracks = trackRepo.findByName(name).stream().filter(Objects::nonNull).map((t) -> trackMapper.toDto(t, false)).collect(Collectors.toList());
 		return tracks;
