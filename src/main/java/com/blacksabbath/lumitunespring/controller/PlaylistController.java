@@ -15,11 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blacksabbath.lumitunespring.dto.PlaylistDto;
@@ -134,6 +136,49 @@ public class PlaylistController {
 			return ResponseEntity.internalServerError().build();
 		}
 	}
+	
+	@PostMapping("/remove-song")
+	public ResponseEntity<?> removeSong(@RequestBody AddRemoveSongRequest body){
+	    try {
+	    	Playlist playlist = playlistService.findEntityPlaylistById(body.getPlaylistId());
+	    	Track track = trackService.findEntityById(body.getSongId());
+	        PlaylistDto dto = playlistService.removeTrackById( track,playlist);
+	        PlaylistResponseDto result = playlistMapper.toResponseDto(dto);
+	        return ResponseEntity.ok(result);
+	    } catch (NotFoundException ex) {
+	        return ResponseEntity.notFound().build();
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	        return ResponseEntity.internalServerError().build(); 
+	    }
+	}
+	
+	@PostMapping("/set-cover")
+	public ResponseEntity<?> setCover(@RequestParam UUID playlistId, @RequestParam UUID imageId){
+		try {
+            PlaylistDto dto = playlistService.changeCover( imageId, playlistId);
+            return ResponseEntity.ok(playlistMapper.toResponseDto(dto));
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+	}
+	
+	@DeleteMapping("/{playlistId}")
+    public ResponseEntity<?> deletePlaylist(@PathVariable UUID playlistId) {
+        try {
+            playlistService.deletePlaylist(playlistId);
+            return ResponseEntity.noContent().build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+	
 }
 
 class AddRemoveSongRequest{

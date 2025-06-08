@@ -1,6 +1,7 @@
 package com.blacksabbath.lumitunespring.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.blacksabbath.lumitunespring.dto.PlaylistDto;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.mapper.PlaylistMapper;
+import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.Playlist;
 import com.blacksabbath.lumitunespring.model.PlaylistTrack;
 import com.blacksabbath.lumitunespring.model.Track;
 import com.blacksabbath.lumitunespring.model.User;
+import com.blacksabbath.lumitunespring.repository.ImageRepository;
 import com.blacksabbath.lumitunespring.repository.PlaylistRepository;
 import com.blacksabbath.lumitunespring.repository.PlaylistTrackRepository;
 
@@ -34,10 +37,13 @@ public class PlaylistService {
 	
 	private final PlaylistTrackRepository playlistTrackRepository;
 	
-	public PlaylistService(PlaylistRepository playlistRepository, PlaylistMapper playlistMapper, PlaylistTrackRepository playlistTrackRepository) {
+	private final ImageRepository imageRepository;
+	
+	public PlaylistService(PlaylistRepository playlistRepository, PlaylistMapper playlistMapper, PlaylistTrackRepository playlistTrackRepository, ImageRepository imageRepository) {
 		this.playlistRepository= playlistRepository;
 		this.playlistMapper= playlistMapper;
 		this.playlistTrackRepository= playlistTrackRepository;
+		this.imageRepository = imageRepository;
 	}
 	
 	@Transactional(readOnly= true)
@@ -96,20 +102,22 @@ public class PlaylistService {
 	
 	@Transactional
 	public PlaylistDto removeTrack(Track track, Playlist playlist) {
-		List<PlaylistTrack> pl_tr = playlist.getTracks();
+		List<PlaylistTrack> pl_tr = new ArrayList<>(playlist.getTracks());
 		Iterator<PlaylistTrack> iterator = pl_tr.iterator();
 		int newOrder = 0;
 		while(iterator.hasNext()) {
 			PlaylistTrack e = iterator.next();
 			if(e.getTrack().equals(track)) {
+				playlistTrackRepository.delete(e);
 				iterator.remove();
+				break;
 			}
 			else {
 				e.setTrackOrder(++newOrder);
 			}
 		}
 		playlistRepository.save(playlist);
-		return playlistMapper.toDto(playlist, false);
+		return playlistMapper.toDto(playlist, true);
 	}
 	
 	@Transactional
@@ -125,5 +133,45 @@ public class PlaylistService {
 		Playlist result = playlistRepository.save(entity);
 
 		return playlistMapper.toDto(result, true);
+	}
+	
+	/*@Transactional
+	public PlaylistDto removeTrackById(UUID trackId, UUID playlistId) throws NotFoundException {
+		PlaylistTrack track = playlistTrackRepository.findByPlaylistIdAndTrackId(playlistId, trackId).orElseThrow(() -> new NotFoundException());
+		return removeTrack(track.getTrack(), track.getPlaylist());
+	}*/
+	
+	@Transactional
+	public PlaylistDto removeTrackById(Track track, Playlist playlist) throws NotFoundException {
+	    PlaylistTrack pt = playlistTrackRepository.findByPlaylistAndTrack(playlist, track)
+	            .orElseThrow(() -> new NotFoundException());
+
+	        playlistTrackRepository.delete(pt);
+
+	        List<PlaylistTrack> tracks = playlistTrackRepository.findByPlaylist(playlist);
+	        tracks.sort(Comparator.comparingInt(PlaylistTrack::getTrackOrder));
+	        int order = 1;
+	        for (PlaylistTrack t : tracks) {
+	            t.setTrackOrder(order++);
+	        }
+
+	        playlistRepository.save(playlist);
+
+	        return playlistMapper.toDto(playlist, true);
+
+	}
+	
+	@Transactional
+	public PlaylistDto changeCover(UUID imageId, UUID playlistId) throws Exception {
+		Image image = imageRepository.findById(imageId).orElseThrow(() -> new NotFoundException());
+		Playlist playlist = playlistRepository.findById(playlistId).orElseThrow(() -> new NotFoundException());
+		playlist.setCover(image);
+		return playlistMapper.toDto(playlistRepository.save(playlist), true); 
+	}
+	
+	@Transactional
+	public void deletePlaylist(UUID playlistId) throws Exception {
+		Playlist playlist = playlistRepository.findById(playlistId).orElseThrow(() -> new NotFoundException());
+		playlistRepository.delete(playlist);
 	}
 }

@@ -29,7 +29,7 @@ public class Playlist {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JoinColumn(name = "cover_id")
 	private Image cover;
 	
