@@ -179,6 +179,21 @@ public class PlaylistController {
         }
     }
 	
+	@GetMapping("/favourites")
+	public ResponseEntity<?> getFavourites(){
+		try {
+			UserDto userDto = userService.getCurrentUser();
+			PlaylistDto playlistDto =  playlistService.getFavourites(UUID.fromString(userDto.getId()));
+			return ResponseEntity.ok(playlistMapper.toResponseDto(playlistDto));
+		}
+		catch (NotFoundException ex){
+			return ResponseEntity.notFound().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().build();
+		} 
+	}
+	
 }
 
 class AddRemoveSongRequest{

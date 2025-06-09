@@ -174,4 +174,10 @@ public class PlaylistService {
 		Playlist playlist = playlistRepository.findById(playlistId).orElseThrow(() -> new NotFoundException());
 		playlistRepository.delete(playlist);
 	}
+	
+	@Transactional
+	public PlaylistDto getFavourites(UUID id) throws NotFoundException {
+		Playlist playlist = playlistRepository.findByUserIdAndName(id, "Улюблені треки").orElseThrow(() -> new NotFoundException());
+		return playlistMapper.toDto(playlist, true);
+	}
 }

@@ -28,6 +28,7 @@ import com.blacksabbath.lumitunespring.security.JwtUtil;
 import com.blacksabbath.lumitunespring.service.ArtistService;
 import com.blacksabbath.lumitunespring.service.EmailService;
 import com.blacksabbath.lumitunespring.service.EmailVerificationService;
+import com.blacksabbath.lumitunespring.service.PlaylistService;
 import com.blacksabbath.lumitunespring.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,6 +65,9 @@ public class AuthController {
 	
 	@Autowired
 	private EmailVerificationService emailVerificationService;
+	
+	@Autowired
+	private PlaylistService playlistService;
 
 	@PostMapping("/sign-up")
 	@Operation(summary = "Реєстрація нового користувача", description = "Створює нового користувача з переданими даними")
@@ -130,7 +134,19 @@ public class AuthController {
 				
 				— The Lumitune Team
 				""", userDto.getUsername(), System.getenv("WEB_FRONTEND_LINK")+"/emailVerification/"+ emailVerification.getId().toString());
-		emailService.sendSimpleMessage(user.getUserData().getEmail(), "Account verification",messageText);
+		try {
+			emailService.sendSimpleMessage(user.getUserData().getEmail(), "Account verification",messageText);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email");
+		}
+		try {
+			playlistService.createPlaylist("Улюблені треки", createdUser);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating favourites playlist");
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("user", userDto, "token", token));
 	}
 
