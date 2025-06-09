@@ -28,7 +28,7 @@ public class SecurityConfig {
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOriginPatterns(List.of("https://lumitune.vercel.app", "http://127.0.0.1:*", "http://localhost:*", "https://sheogorattio.github.io/"));
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
 
