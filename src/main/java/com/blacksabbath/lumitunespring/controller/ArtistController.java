@@ -115,8 +115,8 @@ public class ArtistController {
     	
     } 
     
-    @PatchMapping("/add-listener")
-    public ResponseEntity<?> addListener(UUID artistId) {
+    @PatchMapping("/add-listener/{artistId}")
+    public ResponseEntity<?> addListener(@PathVariable UUID artistId) {
     	try {
         	artistService.addListener(artistId);
         	return ResponseEntity.ok().build();
