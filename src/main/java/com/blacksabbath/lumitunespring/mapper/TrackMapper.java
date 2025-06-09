@@ -70,6 +70,7 @@ public class TrackMapper {
     	response.setAlbumId(track.getAlbum() != null ? UUID.fromString(track.getAlbum().getId()) : null);
     	response.setUrl(track.getUrl());
     	response.setCoverUrl(track.getAlbum().getCover().getUrl());
+    	response.setPlaysNumber(track.getPlaysNumber());
     	
     	return response;
     }

@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.azure.storage.blob.BlobClient;
@@ -60,7 +62,8 @@ public class TrackService {
 		this.albumRepo = albumRepo;
 	}
 	
-	
+
+	@Transactional
 	public TrackDto createTrack(MultipartFile file, trackCreateRequest trackReq) throws Exception {
 		
 		String ownerUsername = ((User)(SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
@@ -93,24 +96,35 @@ public class TrackService {
 		
 		return trackMapper.toDto(trackRepo.save(track), true);
 	}
-	
+
+	@Transactional
 	public TrackDto findById(UUID id) throws Exception { 
 		Track track = trackRepo.findById(id).orElseThrow(()-> new Exception("Track with id '" + id.toString() +"' does not exist."));
 		return trackMapper.toDto(track, false);
 	}
-	
+
+	@Transactional
 	public Track findEntityById(UUID id) throws Exception { 
 		Track track = trackRepo.findById(id).orElseThrow(()-> new Exception("Track with id '" + id.toString() +"' does not exist."));
 		return track;
 	}
 	
+	@Transactional
 	public List<TrackDto> findByName(String name){
 		List<TrackDto> tracks = trackRepo.findByName(name).stream().filter(Objects::nonNull).map((t) -> trackMapper.toDto(t, false)).collect(Collectors.toList());
 		return tracks;
 	} 
 	
+	@Transactional
 	public void delete(UUID id) {
 		trackRepo.deleteById(id);
 	}
 	
+	@Transactional
+	public TrackDto addOneListening(UUID trackId) throws Exception {
+		Track track = trackRepo.findById(trackId).orElseThrow(() -> new NotFoundException());
+		track.setPlaysNumber(track.getPlaysNumber() +1);
+		System.out.println("new plays number is " + track.getPlaysNumber());
+		return trackMapper.toDto(trackRepo.save(track), true);
+	}
 }

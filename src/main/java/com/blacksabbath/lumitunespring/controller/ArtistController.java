@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -113,4 +114,19 @@ public class ArtistController {
     	}
     	
     } 
+    
+    @PatchMapping("/add-listener")
+    public ResponseEntity<?> addListener(UUID artistId) {
+    	try {
+        	artistService.addListener(artistId);
+        	return ResponseEntity.ok().build();
+    	}
+    	catch(NotFoundException ex) {
+    		return ResponseEntity.notFound().build();
+    	}
+    	catch(Exception e) {
+    		return ResponseEntity.internalServerError().build();
+    	}
+    	
+    }
 }

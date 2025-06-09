@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -128,6 +129,13 @@ public class ArtistService {
 	@Transactional(readOnly= true)
 	public Optional<ArtistDto> findByUsername(String username) {
 		return repository.findByUserUsername(username).map((e) -> artistMapper.toDto(e, true));
+	}
+	
+	@Transactional
+	public void addListener(UUID artistId) throws NotFoundException {
+		Artist artist = repository.findById(artistId).orElseThrow(() -> new NotFoundException());
+		artist.setMonthlyListeners(artist.getMonthlyListeners() +1);
+		repository.save(artist);
 	}
 
 }

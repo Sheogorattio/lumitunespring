@@ -10,6 +10,7 @@ import com.blacksabbath.lumitunespring.service.TrackService;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class TrackController {
     public ResponseEntity<?> getTrackById(@PathVariable UUID id) {
         try {
             TrackDto track = trackService.findById(id);
+            System.out.println("current plays number is " + track.getPlaysNumber());
             return ResponseEntity.ok(trackMapper.toResponseDto(track));
         } catch (Exception e) { 
             return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(e.getLocalizedMessage());
@@ -65,5 +67,20 @@ public class TrackController {
     public ResponseEntity<Void> deleteTrack(@PathVariable UUID id) {
         trackService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @PatchMapping("/add-listening/{songId}")
+    public ResponseEntity<?> addListening(@PathVariable UUID songId){
+    	try {
+    		trackService.addOneListening(songId);
+    		return ResponseEntity.ok().build();
+    	}
+    	catch(NotFoundException e) {
+    		return ResponseEntity.notFound().build();
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    		return ResponseEntity.internalServerError().build();
+    	}
     }
 }
