@@ -54,7 +54,8 @@ public class TrackMapper {
             track.getPlaysNumber(),
             track.isExplicit(),
             track.getAlbum().getId(),
-            track.getUrl()
+            track.getUrl(),
+            track.getAlbum().getCover() == null? null : track.getAlbum().getCover().getUrl()
         );
     }
     
@@ -68,6 +69,7 @@ public class TrackMapper {
     	response.setExplicit(track.isExplicit());
     	response.setAlbum(track.getAlbum() != null ? UUID.fromString(track.getAlbum().getId()) : null);
     	response.setUrl(track.getUrl());
+    	response.setCoverUrl(track.getAlbum().getCover().getUrl());
     	
     	return response;
     }

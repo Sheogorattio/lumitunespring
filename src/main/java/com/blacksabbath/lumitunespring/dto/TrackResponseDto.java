@@ -20,10 +20,12 @@ public class TrackResponseDto {
 	    private UUID albumId;
 	    
 	    private String url;
+	    
+	    private String coverUrl;
 
 	    public TrackResponseDto() {}
 
-	    public TrackResponseDto(String id, String name, UUID artistId, int duration, int segNumber, int playsNumber, boolean isExplicit, UUID albumId, String url) {
+	    public TrackResponseDto(String id, String name, UUID artistId, int duration, int segNumber, int playsNumber, boolean isExplicit, UUID albumId, String url, String coverUrl) {
 	        this.id = id;
 	        this.name = name;
 	        this.artistId = artistId;
@@ -33,6 +35,7 @@ public class TrackResponseDto {
 	        this.isExplicit = isExplicit;
 	        this.albumId = albumId;
 	        this.url = url;
+	        this.coverUrl = coverUrl;
 	    }
 
 	    public String getId() {
@@ -49,6 +52,14 @@ public class TrackResponseDto {
 
 	    public void setUrl(String url) {
 	        this.url = url;
+	    }
+	    
+	    public String getCoverUrl() {
+	        return coverUrl;
+	    }
+
+	    public void setCoverUrl(String coverUrl) {
+	        this.coverUrl = coverUrl;
 	    }
 
 	    public String getName() {
