@@ -94,13 +94,14 @@ public class PlaylistController {
 	    } 
 	}
 	
+	
 	@PostMapping("/")
-	public ResponseEntity<?> create(@RequestBody String name){
+	public ResponseEntity<?> create(@RequestBody CreateRequest name){
 		PlaylistDto dto = null;
 		try {
 			UserDto userDto =userService.getCurrentUser();
 			User user = userService.findUserById(UUID.fromString(userDto.getId()));
-			dto = playlistService.createPlaylist(name, user);
+			dto = playlistService.createPlaylist(name.getName(), user);
 		}
 		catch(AccessDeniedException ex) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).body("Invalid user data.");
@@ -194,6 +195,15 @@ public class PlaylistController {
 		} 
 	}
 	
+}
+
+class CreateRequest{
+	private String name;
+	
+	public CreateRequest() {}
+	public CreateRequest(String name) {this.name = name;}
+	public String getName() {return this.name;}
+	public void setName(String name) {this.name = name;}
 }
 
 class AddRemoveSongRequest{
