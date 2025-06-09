@@ -70,11 +70,11 @@ public class TrackResponseDto {
 	        this.name = name;
 	    }
 
-	    public UUID getArtist() {
+	    public UUID getArtistId() {
 	        return artistId;
 	    }
 
-	    public void setArtist(UUID artistId) {
+	    public void setArtistId(UUID artistId) {
 	        this.artistId = artistId;
 	    }
 
@@ -110,11 +110,11 @@ public class TrackResponseDto {
 	        this.isExplicit = isExplicit;
 	    }
 
-	    public UUID getAlbum() {
+	    public UUID getAlbumId() {
 	        return albumId;
 	    }
 
-	    public void setAlbum(UUID albumId) {
+	    public void setAlbumId(UUID albumId) {
 	        this.albumId = albumId;
 	    }
 }

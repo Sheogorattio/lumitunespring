@@ -63,11 +63,11 @@ public class TrackMapper {
     	TrackResponseDto response = new TrackResponseDto();
     	response.setId(track.getId());
     	response.setName(track.getName());
-    	response.setArtist(UUID.fromString(track.getArtist().getId()));
+    	response.setArtistId(UUID.fromString(track.getArtist().getId()));
     	response.setDuration(track.getDuration());
     	response.setSegNumber(track.getSegNumber());
     	response.setExplicit(track.isExplicit());
-    	response.setAlbum(track.getAlbum() != null ? UUID.fromString(track.getAlbum().getId()) : null);
+    	response.setAlbumId(track.getAlbum() != null ? UUID.fromString(track.getAlbum().getId()) : null);
     	response.setUrl(track.getUrl());
     	response.setCoverUrl(track.getAlbum().getCover().getUrl());
     	
