@@ -66,7 +66,7 @@ public class TrackMapper {
     	response.setDuration(track.getDuration());
     	response.setSegNumber(track.getSegNumber());
     	response.setExplicit(track.isExplicit());
-    	response.setAlbum(UUID.fromString(track.getAlbum().getId()));
+    	response.setAlbum(track.getAlbum() != null ? UUID.fromString(track.getAlbum().getId()) : null);
     	response.setUrl(track.getUrl());
     	
     	return response;
