@@ -40,7 +40,9 @@ public class TrackMapper {
             track.getPlaysNumber(),
             track.isExplicit(),
             albumMapper.toDto(track.getAlbum(),includeNested),
-            track.getUrl()
+            track.getUrl(),
+            track.getGenres(),
+            track.getMoods()
         );
     }
     
@@ -55,7 +57,9 @@ public class TrackMapper {
             track.isExplicit(),
             track.getAlbum().getId(),
             track.getUrl(),
-            track.getAlbum().getCover() == null? null : track.getAlbum().getCover().getUrl()
+            track.getAlbum().getCover() == null? null : track.getAlbum().getCover().getUrl(),
+            track.getGenres(),
+            track.getMoods()
         );
     }
     
@@ -71,6 +75,9 @@ public class TrackMapper {
     	response.setUrl(track.getUrl());
     	response.setCoverUrl(track.getAlbum().getCover().getUrl());
     	response.setPlaysNumber(track.getPlaysNumber());
+    	
+    	response.setMoods(track.getMoods());
+    	response.setGenres(track.getGenres());
     	
     	return response;
     }
@@ -92,6 +99,9 @@ public class TrackMapper {
             track.setAlbum(albumRepository.findById(java.util.UUID.fromString(dto.getAlbum().getId())).orElse(null));
         }
         track.setUrl(dto.getUrl());
+        
+        track.setMoods(dto.getMoods());
+        track.setGenres(dto.getGenres());
 
         return track;
     }

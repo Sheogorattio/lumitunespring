@@ -25,7 +25,7 @@ public class Artist {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	
-	@OneToOne ()
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "user_id")
 	private User user;
 	

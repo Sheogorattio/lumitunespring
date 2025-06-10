@@ -24,7 +24,7 @@ public class User {
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner", orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Image> images;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "avatar_id")
 	private Image avatar;
 

@@ -32,7 +32,7 @@ public class Album {
     @Column(nullable = false)
     private String label;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "cover_id")
     private Image cover;
     

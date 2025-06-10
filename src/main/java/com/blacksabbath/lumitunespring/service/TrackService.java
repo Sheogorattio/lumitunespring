@@ -20,6 +20,8 @@ import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.blacksabbath.lumitunespring.dto.TrackDto;
 import com.blacksabbath.lumitunespring.mapper.TrackMapper;
 import com.blacksabbath.lumitunespring.misc.FileOperations;
+import com.blacksabbath.lumitunespring.misc.Genre;
+import com.blacksabbath.lumitunespring.misc.Moods;
 import com.blacksabbath.lumitunespring.misc.trackCreateRequest;
 import com.blacksabbath.lumitunespring.repository.AlbumRepository;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
@@ -124,7 +126,33 @@ public class TrackService {
 	public TrackDto addOneListening(UUID trackId) throws Exception {
 		Track track = trackRepo.findById(trackId).orElseThrow(() -> new NotFoundException());
 		track.setPlaysNumber(track.getPlaysNumber() +1);
-		System.out.println("new plays number is " + track.getPlaysNumber());
 		return trackMapper.toDto(trackRepo.save(track), true);
+	}
+	
+	
+	@Transactional
+	public TrackDto setGenres(UUID trackId, List<Genre> genres) throws NotFoundException {
+		Track track = trackRepo.findById(trackId).orElseThrow(() -> new NotFoundException());
+		track.setGenres(genres);
+		return trackMapper.toDto(trackRepo.save(track), true);
+	}
+	
+	@Transactional
+	public TrackDto setMoods(UUID trackId, List<Moods> moods) throws NotFoundException {
+		Track track = trackRepo.findById(trackId).orElseThrow(() -> new NotFoundException());
+		track.setMoods(moods);
+		return trackMapper.toDto(trackRepo.save(track), true);
+	}
+	
+	@Transactional
+	public List<TrackDto> findByGenre(Genre genre){
+		List<Track> tracks = trackRepo.findByGenresContaining(genre);
+		return tracks.stream().filter(Objects::nonNull).map(e -> trackMapper.toDto(e, true)).toList();
+	}
+	
+	@Transactional
+	public List<TrackDto> findByMood(Moods mood){
+		List<Track> tracks = trackRepo.findByMoodsContaining(mood);
+		return tracks.stream().filter(Objects::nonNull).map(e -> trackMapper.toDto(e, true)).toList();
 	}
 }

@@ -1,6 +1,10 @@
 package com.blacksabbath.lumitunespring.dto;
 
+import java.util.List;
 import java.util.UUID;
+
+import com.blacksabbath.lumitunespring.misc.Genre;
+import com.blacksabbath.lumitunespring.misc.Moods;
 
 public class TrackResponseDto {
 	  private String id;
@@ -22,10 +26,14 @@ public class TrackResponseDto {
 	    private String url;
 	    
 	    private String coverUrl;
+	    
+	    private List<Genre> genres;
+	    
+	    private List<Moods> moods;
 
 	    public TrackResponseDto() {}
 
-	    public TrackResponseDto(String id, String name, UUID artistId, int duration, int segNumber, int playsNumber, boolean isExplicit, UUID albumId, String url, String coverUrl) {
+	    public TrackResponseDto(String id, String name, UUID artistId, int duration, int segNumber, int playsNumber, boolean isExplicit, UUID albumId, String url, String coverUrl, List<Genre> genres, List<Moods> moods) {
 	        this.id = id;
 	        this.name = name;
 	        this.artistId = artistId;
@@ -36,6 +44,8 @@ public class TrackResponseDto {
 	        this.albumId = albumId;
 	        this.url = url;
 	        this.coverUrl = coverUrl;
+	        this.genres= genres;
+	        this.moods = moods;
 	    }
 
 	    public String getId() {
@@ -44,6 +54,22 @@ public class TrackResponseDto {
 
 	    public void setId(String id) {
 	        this.id = id;
+	    }
+	    
+	    public List<Genre> getGenres(){
+	    	return this.genres;
+	    }
+	    
+	    public void setGenres(List<Genre> genres) {
+	    	this.genres = genres;
+	    }
+	    
+	    public List<Moods> getMoods(){
+	    	return this.moods;
+	    }
+	    
+	    public void setMoods(List<Moods> moods) {
+	    	this.moods = moods;
 	    }
 	    
 	    public String getUrl() {

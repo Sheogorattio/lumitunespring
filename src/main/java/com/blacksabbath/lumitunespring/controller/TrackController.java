@@ -3,6 +3,8 @@ package com.blacksabbath.lumitunespring.controller;
 import com.blacksabbath.lumitunespring.dto.TrackDto;
 import com.blacksabbath.lumitunespring.dto.TrackResponseDto;
 import com.blacksabbath.lumitunespring.mapper.TrackMapper;
+import com.blacksabbath.lumitunespring.misc.Genre;
+import com.blacksabbath.lumitunespring.misc.Moods;
 import com.blacksabbath.lumitunespring.misc.trackCreateRequest;
 import com.blacksabbath.lumitunespring.model.Track;
 import com.blacksabbath.lumitunespring.service.TrackService;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -83,4 +86,105 @@ public class TrackController {
     		return ResponseEntity.internalServerError().build();
     	}
     }
+    
+    @PatchMapping("/set-genres")
+    public ResponseEntity<?> setGenres(@RequestBody SetGenresRequest body){
+    	try {
+    		List<Genre> genres = new ArrayList<>(body.getGenres().stream()
+    				.map(Genre::valueOf)
+    				.toList());
+    		TrackDto dto = trackService.setGenres(body.getSongId(), genres);
+			return ResponseEntity.ok(trackMapper.toResponseDto(dto));
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.notFound().build();
+		}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    		return ResponseEntity.internalServerError().build();
+    	}
+    }
+    
+    @PatchMapping("/set-mooods")
+    public ResponseEntity<?> setMoods(@RequestBody SetMoodsRequest body){
+    	try {
+    		List<Moods> moods = new ArrayList<>(body.getMoods().stream()
+    				.map(Moods::valueOf)
+    				.toList());
+    		TrackDto dto = trackService.setMoods(body.getSongId(), moods);
+			return ResponseEntity.ok(trackMapper.toResponseDto(dto));
+		} catch (NotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} 
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    		return ResponseEntity.internalServerError().build();
+    	}
+    } 
+    
+    @GetMapping("/mood/{mood}")
+    public ResponseEntity<?> getByMood(@PathVariable String mood){
+    	try {
+    		List<TrackDto> dtos = trackService.findByMood(Moods.valueOf(mood));
+    		if(dtos.size() > 0) {
+    			return ResponseEntity.ok(dtos.stream().map(e -> trackMapper.toResponseDto(e)).toList());
+    		}
+    		return ResponseEntity.noContent().build();
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    		return ResponseEntity.internalServerError().build();
+    	}
+    } 
+    
+    @GetMapping("/genre/{genre}")
+    public ResponseEntity<?> getByGenre(@PathVariable String genre){
+    	try {
+    		List<TrackDto> dtos = trackService.findByGenre(Genre.valueOf(genre));
+    		if(dtos.size() > 0) {
+    			return ResponseEntity.ok(dtos.stream().map(e -> trackMapper.toResponseDto(e)).toList());
+    		}
+    		return ResponseEntity.noContent().build();
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    		return ResponseEntity.internalServerError().build();
+    	}
+    }
+}
+
+class SetGenresRequest{
+	private UUID songId;
+	private List<String> genres;
+	
+	public SetGenresRequest(UUID songId, List<String> genres) {
+		this.songId = songId;
+		this.genres = genres;
+	}
+	
+	public SetGenresRequest() {};
+	
+	public UUID getSongId() {return this.songId;}
+	public void setSongId(UUID songId) {this.songId = songId;}
+	
+	public List<String> getGenres() {return this.genres;}
+	public void setGenres(List<String> genres) {this.genres = genres;}
+}
+
+class SetMoodsRequest{
+	private UUID songId;
+	private List<String> moods;
+	
+	public SetMoodsRequest(UUID songId, List<String> moods) {
+		this.songId = songId;
+		this.moods = moods;
+	}
+	
+	public SetMoodsRequest() {};
+	
+	public UUID getSongId() {return this.songId;}
+	public void setSongId(UUID songId) {this.songId = songId;}
+	
+	public List<String> getMoods() {return this.moods;}
+	public void setMoods(List<String> moods) {this.moods = moods;}
 }

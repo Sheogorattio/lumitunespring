@@ -1,7 +1,12 @@
 package com.blacksabbath.lumitunespring.model;
 
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
+
+import com.blacksabbath.lumitunespring.misc.Genre;
+import com.blacksabbath.lumitunespring.misc.Moods;
 
 @Entity
 @Table(name = "Track")
@@ -36,7 +41,17 @@ public class Track {
     
     @Column(nullable = false)
     private String url;
-
+    
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private List<Genre> genres;
+    
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private List<Moods> moods;
+    
     public Track() {}
 
     public Track(UUID id, String name, Artist artist, int duration, int segNumber, int playsNumber, boolean isExplicit, Album album, String url) {
@@ -57,6 +72,22 @@ public class Track {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+    
+    public List<Genre> getGenres(){
+    	return this.genres;
+    }
+    
+    public void setGenres(List<Genre> genres) {
+    	this.genres = genres;
+    }
+    
+    public List<Moods> getMoods(){
+    	return this.moods;
+    }
+    
+    public void setMoods(List<Moods> moods) {
+    	this.moods = moods;
     }
     
     public String getUrl() {

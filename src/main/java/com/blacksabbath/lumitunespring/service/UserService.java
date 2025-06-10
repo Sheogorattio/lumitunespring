@@ -1,10 +1,12 @@
 package com.blacksabbath.lumitunespring.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.mapper.ImageMapper;
+import com.blacksabbath.lumitunespring.mapper.PlaylistMapper;
 import com.blacksabbath.lumitunespring.mapper.UserMapper;
 import com.blacksabbath.lumitunespring.misc.Roles;
 import com.blacksabbath.lumitunespring.model.Image;
@@ -41,6 +44,14 @@ public class UserService {
 	
 	@Autowired 
 	ArtistRepository artistRepository;
+	
+	@Lazy
+	@Autowired
+	PlaylistService playlistService;
+	
+	@Lazy
+	@Autowired
+	PlaylistMapper playlistMapper;
 	
 	@Transactional(readOnly = true)
 	public User findUserById(UUID id) {
@@ -122,6 +133,12 @@ public class UserService {
 			artistRepository.delete(artistRepository.findByUser(user).orElseThrow(()-> new Exception("Unable to find artist by provided user with ID '" + user.getId().toString() +"'.")));
 		}
 		else {
+			playlistService.findPlaylistsByUser(user).stream().filter(Objects::nonNull).forEach((e) -> {try {
+				playlistService.deletePlaylist(playlistService.findEntityPlaylistById(e.getId()));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return;
+			}});
 			userRepository.delete(user);
 		}
 	}
