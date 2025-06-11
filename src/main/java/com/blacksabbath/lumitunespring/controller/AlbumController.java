@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +61,13 @@ public class AlbumController {
 
     @PostMapping
     public ResponseEntity<AlbumDto> createAlbum(@RequestBody AlbumDto albumDto) {
-        AlbumDto created = albumService.createAlbum(albumDto);
+        AlbumDto created;
+		try {
+			created = albumService.createAlbum(albumDto);
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().build();
+		} 
         return ResponseEntity
                 .created(URI.create("/api/albums/" + created.getId()))
                 .body(created);

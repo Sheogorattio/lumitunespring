@@ -65,6 +65,11 @@ public class ArtistService {
 		return repository.findById(id).map(artist -> artistMapper.toDto(artist, true));
 	}
 	
+	@Transactional
+	public Optional<Artist> findEntityById(UUID id) { 
+		return repository.findById(id);
+	}
+	
 	@Transactional(readOnly = true)
 	public Optional<ArtistDto> findByUser(User user) {
 		return repository.findByUser(user).map(artist -> artistMapper.toDto(artist, true));

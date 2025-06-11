@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.blacksabbath.lumitunespring.dto.AlbumDto;
@@ -17,6 +18,7 @@ import com.blacksabbath.lumitunespring.mapper.ImageMapper;
 import com.blacksabbath.lumitunespring.mapper.TrackMapper;
 import com.blacksabbath.lumitunespring.model.Album;
 import com.blacksabbath.lumitunespring.model.Artist;
+import com.blacksabbath.lumitunespring.model.Track;
 import com.blacksabbath.lumitunespring.repository.AlbumRepository;
 
 @Service
@@ -26,13 +28,15 @@ public class AlbumService {
     private final AlbumMapper albumMapper;
     private final TrackMapper trackMapper;
     private final ImageMapper imageMapper;
+    private final ArtistService artistService;
 
     @Autowired
-    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper, ImageMapper imageMapper) {
+    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper, ImageMapper imageMapper, ArtistService artistService) {
         this.repo = repo;
         this.albumMapper = albumMapper;
         this.trackMapper = trackMapper;
         this.imageMapper = imageMapper;
+        this.artistService = artistService;
     }
 	
 	public Optional<AlbumDto> getAlbumById(UUID id) {
@@ -43,8 +47,19 @@ public class AlbumService {
 		return repo.findByArtist(artist).stream().map(album -> albumMapper.toDto(album, false)).toList();
 	}
 	
-	public AlbumDto createAlbum(AlbumDto album) {
-		return albumMapper.toDto(repo.save(albumMapper.toEntity(album)),true);
+	public AlbumDto createAlbum(AlbumDto albumDto) throws NotFoundException {
+		Album album = new Album();
+		album.setName(albumDto.getName());
+		album.setLabel(albumDto.getLabel());
+		album.setType(albumDto.getType());
+		album.setDuration(0);
+		album.setRelDate(albumDto.getRelDate());
+		album.setTracks(new ArrayList<Track>());
+		album.setCover(null);
+		album.setArtist(artistService.findEntityById(UUID.fromString(albumDto.getArtist().getId())).orElseThrow(() -> new NotFoundException()));
+		
+		
+		return albumMapper.toDto(repo.save(album),true);
 	}
 	
 	public AlbumDto editAlbum(AlbumDto newAlbumDto) throws Exception {
