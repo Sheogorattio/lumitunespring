@@ -1,5 +1,7 @@
 package com.blacksabbath.lumitunespring.service;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,6 +29,7 @@ import com.blacksabbath.lumitunespring.repository.AlbumRepository;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 import com.blacksabbath.lumitunespring.repository.TrackRepository;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
+import com.mpatric.mp3agic.Mp3File;
 import com.blacksabbath.lumitunespring.model.Album;
 import com.blacksabbath.lumitunespring.model.Artist;
 import com.blacksabbath.lumitunespring.model.Track;
@@ -89,7 +92,14 @@ public class TrackService {
 		track.setName(trackReq.name);
 		track.setUrl(blobClient.getBlobUrl());
 		track.setArtist(artist);
-		track.setDuration(trackReq.duration);
+		File audioFile = File.createTempFile("temp-audio", ".mp3");
+		file.transferTo(audioFile);
+		try {
+			track.setDuration(((int)new Mp3File(audioFile).getLengthInSeconds()));
+		}
+		finally {
+			 audioFile.delete();
+		}
 		track.setSegNumber(album.getTracks().size()+1);
 		track.setPlaysNumber(0);
 		track.setExplicit(trackReq.isExplicit);
