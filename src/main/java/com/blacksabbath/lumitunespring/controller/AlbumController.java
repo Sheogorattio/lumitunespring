@@ -9,6 +9,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blacksabbath.lumitunespring.dto.AlbumDto;
+import com.blacksabbath.lumitunespring.dto.PlaylistDto;
+import com.blacksabbath.lumitunespring.mapper.AlbumMapper;
 import com.blacksabbath.lumitunespring.mapper.ArtistMapper;
 import com.blacksabbath.lumitunespring.service.AlbumService;
 import com.blacksabbath.lumitunespring.service.ArtistService;
@@ -35,6 +38,7 @@ public class AlbumController {
 	private final ArtistService artistService;
 	
 	private final ArtistMapper artistMapper;
+	
 	
 	@Autowired
 	public AlbumController(AlbumService albumService, ArtistService artistService, ArtistMapper artistMapper) {
@@ -72,6 +76,19 @@ public class AlbumController {
                 .created(URI.create("/api/albums/" + created.getId()))
                 .body(created);
     }
+     
+	@PatchMapping("/set-cover")
+	public ResponseEntity<?> setCover(@RequestParam UUID playlistId, @RequestParam UUID imageId){
+		try {
+            AlbumDto dto = albumService.changeCover( imageId, playlistId);
+            return ResponseEntity.ok(dto);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+	}
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateAlbum(@PathVariable UUID id, @RequestBody AlbumDto albumDto) {

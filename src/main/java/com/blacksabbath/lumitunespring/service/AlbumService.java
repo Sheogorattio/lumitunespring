@@ -11,15 +11,20 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.blacksabbath.lumitunespring.dto.AlbumDto;
+import com.blacksabbath.lumitunespring.dto.PlaylistDto;
 import com.blacksabbath.lumitunespring.mapper.AlbumMapper;
 import com.blacksabbath.lumitunespring.mapper.ImageMapper;
 import com.blacksabbath.lumitunespring.mapper.TrackMapper;
 import com.blacksabbath.lumitunespring.model.Album;
 import com.blacksabbath.lumitunespring.model.Artist;
+import com.blacksabbath.lumitunespring.model.Image;
+import com.blacksabbath.lumitunespring.model.Playlist;
 import com.blacksabbath.lumitunespring.model.Track;
 import com.blacksabbath.lumitunespring.repository.AlbumRepository;
+import com.blacksabbath.lumitunespring.repository.ImageRepository;
 
 @Service
 public class AlbumService {
@@ -29,14 +34,16 @@ public class AlbumService {
     private final TrackMapper trackMapper;
     private final ImageMapper imageMapper;
     private final ArtistService artistService;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper, ImageMapper imageMapper, ArtistService artistService) {
+    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper, ImageMapper imageMapper, ArtistService artistService, ImageRepository imageRepository) {
         this.repo = repo;
         this.albumMapper = albumMapper;
         this.trackMapper = trackMapper;
         this.imageMapper = imageMapper;
         this.artistService = artistService;
+        this.imageRepository = imageRepository;
     }
 	
 	public Optional<AlbumDto> getAlbumById(UUID id) {
@@ -60,6 +67,14 @@ public class AlbumService {
 		
 		
 		return albumMapper.toDto(repo.save(album),true);
+	}
+	
+	@Transactional
+	public AlbumDto changeCover(UUID imageId, UUID albumId) throws Exception {
+		Image image = imageRepository.findById(imageId).orElseThrow(() -> new NotFoundException());
+		Album album = repo.findById(albumId).orElseThrow(() -> new NotFoundException());
+		album.setCover(image);
+		return albumMapper.toDto(repo.save(album), true); 
 	}
 	
 	public AlbumDto editAlbum(AlbumDto newAlbumDto) throws Exception {
