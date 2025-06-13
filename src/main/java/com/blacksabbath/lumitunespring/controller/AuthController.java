@@ -197,6 +197,8 @@ public class AuthController {
 	}
 	
 	@GetMapping("/email-verification/{recordId}")
+	@Operation(summary = "Підтвердити пошту", description = "Іикористовужться для верифікації пошти")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200"), @ApiResponse(responseCode = "404") })
 	public ResponseEntity<?> verifyEmail(@PathVariable UUID recordId, HttpServletResponse response){
 		try {
 			emailVerificationService.verifyAccount(recordId);
