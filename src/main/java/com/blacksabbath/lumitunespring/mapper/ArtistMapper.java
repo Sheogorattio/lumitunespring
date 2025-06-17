@@ -34,7 +34,7 @@ public class ArtistMapper {
     public ArtistDto toDto(Artist artist, boolean  includeNested) {
         return new ArtistDto(
             artist.getId().toString(),
-            userMapper.toDto(artist.getUser()),
+            userMapper.toDto(artist.getUser(), false),
             artist.getBio(),
             artist.getMonthlyListeners(),
             artist.getBioPics().stream().map(imageMapper::toDto).collect(Collectors.toList()),

@@ -1,5 +1,6 @@
 package com.blacksabbath.lumitunespring.controller;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -101,7 +102,10 @@ public class AuthController {
 		System.out.println("Username is valid");
 		User createdUser;
 		try {
-			createdUser = userService.createUser(registerRequestMapper.toUserEntity(user));
+			createdUser = registerRequestMapper.toUserEntity(user);
+			createdUser.setSubscribers(new ArrayList<User>());
+			createdUser.setSubscriptions(new ArrayList<User>());
+			createdUser = userService.createUser(createdUser);
 			
 			   if (user.getUserData() != null && Boolean.TRUE.equals(user.getUserData().getIsArtist())) {
 		            Artist artist = new Artist();
@@ -121,7 +125,7 @@ public class AuthController {
 
 		response.setHeader("Set-Cookie", cookieHeader);
 
-		UserDto userDto = userMapper.toDto(createdUser);
+		UserDto userDto = userMapper.toDto(createdUser, true);
 		EmailVerification emailVerification = emailVerificationService.createNew(createdUser);
 		String messageText = String.format("""
 				Hi %s,
@@ -172,7 +176,7 @@ public class AuthController {
 			}
 
 			User existingUser = optionalUser.get();
-			UserDto userDto = userMapper.toDto(existingUser);
+			UserDto userDto = userMapper.toDto(existingUser,true);
 
 			String token = jwt.generateToken(existingUser);
 			int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;
@@ -197,7 +201,7 @@ public class AuthController {
 	}
 	
 	@GetMapping("/email-verification/{recordId}")
-	@Operation(summary = "Підтвердити пошту", description = "Іикористовужться для верифікації пошти")
+	@Operation(summary = "Підтвердити пошту", description = "Використовужться для верифікації пошти")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200"), @ApiResponse(responseCode = "404") })
 	public ResponseEntity<?> verifyEmail(@PathVariable UUID recordId, HttpServletResponse response){
 		try {

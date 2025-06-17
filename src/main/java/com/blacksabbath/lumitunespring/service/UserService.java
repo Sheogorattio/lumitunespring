@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -155,7 +156,7 @@ public class UserService {
 			if(user == null) {
 				throw new AccessDeniedException("Invalid user data.");
 			}
-			return userMapper.toDto(user);
+			return userMapper.toDto(user,true);
 		}
 		catch(Exception e){
 			System.out.println("'UserController.current':"+e.getMessage());
@@ -163,4 +164,12 @@ public class UserService {
 		}
 	} 
 	
+	
+	@Transactional
+	public UserDto subscribeTo(UUID subscriberId, UUID subscribeToId) throws NotFoundException {
+		User subscriber = userRepository.findById(subscriberId).orElseThrow(() -> new NotFoundException());
+		User subscribeTo = userRepository.findById(subscribeToId).orElseThrow(() -> new NotFoundException());
+		subscriber.getSubscriptions().add(subscribeTo);
+		return userMapper.toDto(userRepository.save(subscriber), true);
+	}
 }

@@ -32,7 +32,7 @@ public class UserMapper {
 		this.imageMapper = imageMapper;
 	}
 
-	public UserDto toDto(User user) {
+	public UserDto toDto(User user, boolean includeNested) {
 		if (user == null)
 			return null;
 
@@ -46,16 +46,29 @@ public class UserMapper {
 		dto.setAccSubscribers(user.getAccSubscribers());
 		dto.setAccFollowings(user.getAccFollowings());
 
-		UserDataDto dataDto = new UserDataDto();
-		if (user.getUserData() != null) {
-			dataDto.setId(user.getUserData().getId().toString());
-			dataDto.setBirthDate(user.getUserData().getBirthDate());
-			dataDto.setEmail(user.getUserData().getEmail());
-			dataDto.setIsArtist(user.getUserData().getIsArtist());
-			dataDto.setRegionId(user.getUserData().getRegion().getId().toString());
+		if(includeNested == true) {
+			if (user.getUserData() != null ) { 
+				UserDataDto dataDto = new UserDataDto();
+				dataDto.setId(user.getUserData().getId().toString());
+				dataDto.setBirthDate(user.getUserData().getBirthDate());
+				dataDto.setEmail(user.getUserData().getEmail());
+				dataDto.setIsArtist(user.getUserData().getIsArtist());
+				dataDto.setRegionId(user.getUserData().getRegion().getId().toString());
+				dto.setUserData(dataDto);
+			}
+			
+			List<User> subscribers;
+			if((subscribers = user.getSubscribers()).size() != 0) {
+				dto.setSubscribers(subscribers.stream().map(s -> toDto(s, false)).collect(Collectors.toList()));
+			}
+			
+			List<User> subscriptions;
+			if((subscriptions = user.getSubscriptions()).size() != 0) {
+				dto.setSubscriptions(subscriptions.stream().map(s -> toDto(s, false)).collect(Collectors.toList()));
+			}
 		}
-		dto.setUserData(dataDto);
-
+	
+			
 		return dto;
 	}
 

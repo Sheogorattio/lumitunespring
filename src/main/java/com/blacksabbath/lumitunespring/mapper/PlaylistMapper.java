@@ -42,7 +42,7 @@ public class PlaylistMapper {
 		dto.setName(entity.getName());
 		dto.setPrivate(entity.isPrivate());
 		if(includeNested) {
-			dto.setUser(userMapper.toDto(entity.getUser()));
+			dto.setUser(userMapper.toDto(entity.getUser(), false));
 		}
 		else {
 			dto.setUser(null);

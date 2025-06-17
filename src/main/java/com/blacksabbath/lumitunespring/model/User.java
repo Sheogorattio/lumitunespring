@@ -3,7 +3,9 @@ package com.blacksabbath.lumitunespring.model;
 import java.util.List;
 import java.util.UUID;
 
+import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.misc.Roles;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -41,6 +43,17 @@ public class User {
 	@JoinColumn(name = "data_id", referencedColumnName = "id")
 	@JsonManagedReference
 	private UserData userData;
+	
+	@ManyToMany
+	@JsonManagedReference
+	@JoinTable(name = "user_subscriptions",
+	joinColumns = @JoinColumn(name = "subscriber_id"),
+	inverseJoinColumns = @JoinColumn(name = "subscribed_to_id"))
+	private List<User> subscriptions;
+	
+	@ManyToMany(mappedBy = "subscriptions")
+	@JsonBackReference
+	private List<User> subscribers;
 
 	public User() {
 	}
@@ -127,6 +140,22 @@ public class User {
 
 	public void setAvatar(Image avatar) {
 		this.avatar = avatar;
+	}
+	
+	public List<User> getSubscribers(){
+		return this.subscribers;
+	}
+	
+	public void setSubscribers(List<User> subscribers) {
+		this.subscribers = subscribers;
+	}
+	
+	public List<User> getSubscriptions(){
+		return this.subscriptions;
+	}
+	
+	public void setSubscriptions(List<User> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 
 }

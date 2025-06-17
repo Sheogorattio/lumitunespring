@@ -3,6 +3,7 @@ package com.blacksabbath.lumitunespring.dto;
 import java.util.List;
 
 import com.blacksabbath.lumitunespring.misc.Roles;
+import com.blacksabbath.lumitunespring.model.User;
 
 public class UserDto {
 	public String id;
@@ -14,6 +15,8 @@ public class UserDto {
 	public int accSubscribers;
 	public int accFollowings;
 	public UserDataDto userData;
+	private List<UserDto> subscribers;
+	private List<UserDto> subscriptions;
 
 	public String getId() {
 		return id;
@@ -21,6 +24,22 @@ public class UserDto {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public List<UserDto> getSubscribers(){
+		return this.subscribers;
+	}
+	
+	public void setSubscribers(List<UserDto> subscribers) {
+		this.subscribers = subscribers;
+	}
+	
+	public List<UserDto> getSubscriptions(){
+		return this.subscriptions;
+	}
+	
+	public void setSubscriptions(List<UserDto> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 
 	public String getUsername() {

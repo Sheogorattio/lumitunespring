@@ -1,6 +1,7 @@
 package com.blacksabbath.lumitunespring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -108,7 +110,7 @@ public class UserController {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
-		List<UserDto> userDtos = userService.getAllUsers().stream().map(userMapper::toDto).toList();
+		List<UserDto> userDtos = userService.getAllUsers().stream().map(e -> userMapper.toDto(e, true)).toList();
 		System.out.println("Returning users: " + userDtos);
 
 		if (userDtos.isEmpty()) {
@@ -132,8 +134,7 @@ public class UserController {
 					  "Error: response status is 404"
 					}
 					"""))) })
-	public ResponseEntity<User> getById(@PathVariable String id, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ResponseEntity<UserDto> getById(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
 		Optional<User> user = userService.getById(id);
 
 		if (!user.isPresent()) {
@@ -141,12 +142,12 @@ public class UserController {
 		}
 
 		User existingUser = user.get();
-		UserDto userDto = userMapper.toDto(existingUser);
+		UserDto userDto = userMapper.toDto(existingUser, true);
 		if (!accessChecker.Check(request, userDto.getUsername())) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
-		return ResponseEntity.ok(existingUser);
+		return ResponseEntity.ok(userDto);
 	}
 
 	@GetMapping("/username/{username}")
@@ -176,7 +177,7 @@ public class UserController {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
-		return ResponseEntity.ok(userMapper.toDto(existingUser));
+		return ResponseEntity.ok(userMapper.toDto(existingUser,false));
 	}
 
 	@PutMapping("/edit")
@@ -212,13 +213,13 @@ public class UserController {
 
 		userMapper.updateEntity(_user, user);
 
-		Optional<User> editedUserOpt = userService.editUserById(userMapper.toDto(_user));
+		Optional<User> editedUserOpt = userService.editUserById(userMapper.toDto(_user,true));
 		if (!editedUserOpt.isPresent()) {
 			return ResponseEntity.status(500).body("Somesing went wrong. Try later.");
 		}
 		User editedUser = editedUserOpt.get();
 
-		return ResponseEntity.ok(userMapper.toDto(editedUser));
+		return ResponseEntity.ok(userMapper.toDto(editedUser,true));
 	}
   
 	@PostMapping("/logout")
@@ -263,4 +264,20 @@ public class UserController {
 			return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	
+	 @PostMapping("/{subscriberId}/subscribe/{targetUserId}")
+	 @Operation(summary = "Підписатися на користувача")
+	    public ResponseEntity<?> subscribe(@PathVariable UUID subscriberId, @PathVariable UUID targetUserId) {
+	        UserDto updatedUser;
+			try {
+				updatedUser = userService.subscribeTo(subscriberId, targetUserId);
+			} catch (NotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.notFound().build();
+			}
+			catch (Exception e) { 
+				return ResponseEntity.status(500).body(e.getMessage());
+			}
+	        return ResponseEntity.ok(updatedUser);
+	    }
 }
