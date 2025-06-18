@@ -170,6 +170,10 @@ public class UserService {
 		User subscriber = userRepository.findById(subscriberId).orElseThrow(() -> new NotFoundException());
 		User subscribeTo = userRepository.findById(subscribeToId).orElseThrow(() -> new NotFoundException());
 		subscriber.getSubscriptions().add(subscribeTo);
+		subscriber.setAccFollowings(subscriber.getAccFollowings() + 1);
+		
+		subscribeTo.setAccSubscribers(subscribeTo.getAccSubscribers() +1);
+		userRepository.save(subscribeTo);
 		return userMapper.toDto(userRepository.save(subscriber), true);
 	}
 }

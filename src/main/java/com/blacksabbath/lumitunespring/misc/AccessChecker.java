@@ -23,7 +23,7 @@ public class AccessChecker {
 		this.jwtUtil = jwtUtil;
 	}
 
-	public boolean Check(HttpServletRequest request, String nickname) {
+	public boolean Check(HttpServletRequest request, UUID id) {
 		String token = null;
 
 		if (request.getCookies() != null) {
@@ -38,14 +38,14 @@ public class AccessChecker {
 			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
 		}
 		String roleAttr = jwtUtil.getRole(token);
-		String nameAttr = jwtUtil.getSubject(token);
+		String idAttr = jwtUtil.getSubject(token);
 
-		if (roleAttr == null || nameAttr == null) {
+		if (roleAttr == null || idAttr == null) {
 			return false;
 		}
 
 		String role = roleAttr.toString();
-		String userNickname = nameAttr.toString();
+		String userId = idAttr.toString();
 
 		System.out.println(AccessChecker.class.getName() + ":Check: role attribute is: " + role);
 
@@ -53,13 +53,13 @@ public class AccessChecker {
 			return true;
 		}
 
-		return userNickname.equals(nickname);
+		return userId.equals(id.toString());
 	}
 
-	public boolean Check(HttpServletRequest request, UUID userId) {
+	/*public boolean Check(HttpServletRequest request, UUID userId) {
 		String userNickname = userRepo.findById(userId).map(u -> u.getUsername()).orElse(null);
 		if (userNickname == null)
 			return false;
 		return Check(request, userNickname);
-	}
+	}*/
 }

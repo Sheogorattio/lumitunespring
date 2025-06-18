@@ -106,7 +106,7 @@ public class UserController {
 					"""))) })
 	public ResponseEntity<List<UserDto>> getAllUsers(HttpServletRequest request, HttpServletResponse response) {
 
-		if (!accessChecker.Check(request, "")) {
+		if (!accessChecker.Check(request, null)) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
@@ -143,7 +143,7 @@ public class UserController {
 
 		User existingUser = user.get();
 		UserDto userDto = userMapper.toDto(existingUser, true);
-		if (!accessChecker.Check(request, userDto.getUsername())) {
+		if (!accessChecker.Check(request, UUID.fromString(id))) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
@@ -173,7 +173,7 @@ public class UserController {
 		}
 
 		User existingUser = user.get();
-		if (!accessChecker.Check(request, username)) {
+		if (!accessChecker.Check(request, existingUser.getId())) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 
@@ -207,7 +207,7 @@ public class UserController {
 
 		User _user = userOpt.get();
 
-		if (!accessChecker.Check(request, user.getUsername())) {
+		if (!accessChecker.Check(request, UUID.fromString(user.getId()))) {
 			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 		}
 

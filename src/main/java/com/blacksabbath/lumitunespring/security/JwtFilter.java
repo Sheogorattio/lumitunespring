@@ -3,6 +3,7 @@ package com.blacksabbath.lumitunespring.security;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -52,8 +53,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		if (token != null && jwtUtil.isTokenValid(token)) {
-			String username = jwtUtil.getSubject(token);
-			User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException());
+			UUID id = UUID.fromString(jwtUtil.getSubject(token));
+			User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
 
 			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null,
 					List.of(new SimpleGrantedAuthority(jwtUtil.getRole(token)))));

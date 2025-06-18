@@ -31,7 +31,7 @@ public class JwtUtil {
 		claims.put("role", "ROLE_" + user.getRole().name().toUpperCase());
 		return Jwts.builder()
 				.claims(claims)
-				.subject(user.getUsername())
+				.subject(user.getId().toString())
 				.issuedAt(new Date())
 				.expiration(new Date(System.currentTimeMillis() + expirationMs))
 				.signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).compact();
