@@ -138,7 +138,7 @@ public class AuthController {
 				Thank you for choosing Lumitune!
 				
 				— The Lumitune Team
-				""", userDto.getUsername(), System.getenv("BACKEND_LINK")+"/email-verification/"+ emailVerification.getId().toString());
+				""", userDto.getUsername(), System.getenv("BACKEND_LINK")+"auth/email-verification/"+ emailVerification.getId().toString());
 		try {
 			emailService.sendSimpleMessage(user.getUserData().getEmail(), "Account verification",messageText);
 		}
