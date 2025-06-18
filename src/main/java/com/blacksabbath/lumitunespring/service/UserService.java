@@ -173,7 +173,7 @@ public class UserService {
 		subscriber.setAccFollowings(subscriber.getAccFollowings() + 1);
 		
 		subscribeTo.setAccSubscribers(subscribeTo.getAccSubscribers() +1);
-		userRepository.save(subscribeTo);
+		userRepository.save(subscribeTo); 
 		return userMapper.toDto(userRepository.save(subscriber), true);
 	}
 }
