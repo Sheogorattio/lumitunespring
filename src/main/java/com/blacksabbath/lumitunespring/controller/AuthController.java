@@ -1,5 +1,6 @@
 package com.blacksabbath.lumitunespring.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -137,11 +138,11 @@ public class AuthController {
 				Thank you for choosing Lumitune!
 				
 				— The Lumitune Team
-				""", userDto.getUsername(), System.getenv("WEB_FRONTEND_LINK")+"/emailVerification/"+ emailVerification.getId().toString());
+				""", userDto.getUsername(), System.getenv("BACKEND_LINK")+"/email-verification/"+ emailVerification.getId().toString());
 		try {
 			emailService.sendSimpleMessage(user.getUserData().getEmail(), "Account verification",messageText);
 		}
-		catch(Exception ex) {
+		catch(Exception ex) { 
 			ex.printStackTrace();
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email");
 		}
@@ -206,7 +207,7 @@ public class AuthController {
 	public ResponseEntity<?> verifyEmail(@PathVariable UUID recordId, HttpServletResponse response){
 		try {
 			emailVerificationService.verifyAccount(recordId);
-			return ResponseEntity.ok().build();
+			return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(System.getenv("WEB_FRONTEND_LINK"))).build();
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			return ResponseEntity.notFound().build();
