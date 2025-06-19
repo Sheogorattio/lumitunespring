@@ -11,11 +11,16 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Aes {
 	
-	@Value("${AES_KEY}")
 	private static String key;
+	
+	public Aes(	@Value("${AES_KEY}") String key) {
+		Aes.key = key;
+	}
 	
 	public static String encrypt(String plainText) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		Cipher cipher = Cipher.getInstance("AES");
