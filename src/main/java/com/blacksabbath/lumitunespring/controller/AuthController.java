@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.mapper.RegisterRequestMapper;
 import com.blacksabbath.lumitunespring.mapper.UserMapper;
+import com.blacksabbath.lumitunespring.misc.Aes;
 import com.blacksabbath.lumitunespring.misc.LoginRequestBody;
 import com.blacksabbath.lumitunespring.misc.RegisterRequestBody;
 import com.blacksabbath.lumitunespring.model.Artist;
@@ -103,6 +104,7 @@ public class AuthController {
 		System.out.println("Username is valid");
 		User createdUser;
 		try {
+			user.setPassword(Aes.decrypt(user.getPassword()));
 			createdUser = registerRequestMapper.toUserEntity(user);
 			createdUser.setSubscribers(new ArrayList<User>());
 			createdUser.setSubscriptions(new ArrayList<User>());
@@ -113,19 +115,20 @@ public class AuthController {
 		            artist.setUser(createdUser);
 		            artistService.createArtist(artist);
 		        }
-		} catch (Exception e) {
-			System.out.println(e.fillInStackTrace());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
-		}
+		
 		
 		String token = jwt.generateToken(createdUser);
+		token = Aes.encrypt(token);
+		
 		int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;
 
 		String cookieHeader = "jwt=" + token + "; Max-Age=" + maxAge + "; Path=/" + "; HttpOnly" + "; Secure"
 				+ "; SameSite=None";
-
+		
 		response.setHeader("Set-Cookie", cookieHeader);
-
+		
+		
+		
 		UserDto userDto = userMapper.toDto(createdUser, true);
 		EmailVerification emailVerification = emailVerificationService.createNew(createdUser);
 		String messageText = String.format("""
@@ -139,20 +142,19 @@ public class AuthController {
 				
 				— The Lumitune Team
 				""", userDto.getUsername(), System.getenv("BACKEND_LINK")+"auth/email-verification/"+ emailVerification.getId().toString());
-		try {
+		
 			emailService.sendSimpleMessage(user.getUserData().getEmail(), "Account verification",messageText);
-		}
-		catch(Exception ex) { 
-			ex.printStackTrace();
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email");
-		}
-		try {
-			playlistService.createPlaylist("Улюблені треки", createdUser);
+			
+			playlistService.createPlaylist("Улюблені треки", createdUser);		 
+
+			userDto.setPassword(null);
+			
+			return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("user", userDto, "token", token));
+			
 		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating favourites playlist");
+			System.out.println(e.fillInStackTrace());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("user", userDto, "token", token));
 	}
 
 	@PostMapping("/login")
@@ -172,7 +174,7 @@ public class AuthController {
 		try {
 			Optional<User> optionalUser = userService.findByUsername(user.getUsername());
 
-			if (optionalUser.isEmpty() || !optionalUser.get().getPassword().equals(user.getPassword())) {
+			if (optionalUser.isEmpty() || !optionalUser.get().getPassword().equals(Aes.decrypt(user.getPassword()))) {
 				throw new Exception("Invalid credenials");
 			}
 

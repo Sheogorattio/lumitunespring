@@ -1,9 +1,15 @@
 package com.blacksabbath.lumitunespring.security;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.blacksabbath.lumitunespring.misc.Aes;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
 
@@ -43,6 +50,12 @@ public class JwtFilter extends OncePerRequestFilter {
 			for (Cookie cookie : request.getCookies()) {
 				if ("jwt".equals(cookie.getName())) {
 					token = cookie.getValue();
+					try {
+						token = Aes.decrypt(token);
+					} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
+							| IllegalBlockSizeException | BadPaddingException e) {
+						e.printStackTrace();
+					}
 					break;
 				}
 			}
@@ -50,6 +63,12 @@ public class JwtFilter extends OncePerRequestFilter {
 		
 		if(request.getHeader("Authorization") != null) {
 			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
+			try {
+				token = Aes.decrypt(token);
+			} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
+					| BadPaddingException e) {
+				e.printStackTrace();
+			}
 		}
 
 		if (token != null && jwtUtil.isTokenValid(token)) {
