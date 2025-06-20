@@ -31,6 +31,7 @@ public class Aes {
 	}
 	
 	public static String decrypt(String encryptedText) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+			System.out.println("Decrypting: " + encryptedText);
 			SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "AES");
 			Cipher cipher = Cipher.getInstance("AES");
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
