@@ -79,6 +79,11 @@ public class JwtFilter extends OncePerRequestFilter {
 			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null,
 					List.of(new SimpleGrantedAuthority(jwtUtil.getRole(token)))));
 		}
+		else {
+			int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;
+			String cookieHeader = jwtUtil.getCookieHeader("jwt", "", maxAge);
+			response.setHeader("Set-Cookie", cookieHeader);	
+		}
 
 		filterChain.doFilter(request, response);
 	}
