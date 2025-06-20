@@ -44,9 +44,19 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		String token = null;
-
-		if (request.getCookies() != null) {
+		String token = null;	
+		
+		if(request.getHeader("Authorization") != null) {
+			System.out.println("Processing Authorization header...");
+			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
+			try {
+				token = Aes.decrypt(token);
+			} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
+					| BadPaddingException e) {
+				e.printStackTrace();
+			}
+		}
+		else if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if ("jwt".equals(cookie.getName())) {
 					System.out.println("Processing jwt cookie...");
@@ -59,17 +69,6 @@ public class JwtFilter extends OncePerRequestFilter {
 					}
 					break;
 				}
-			}
-		}
-		
-		if(request.getHeader("Authorization") != null) {
-			System.out.println("Processing Authorization header...");
-			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
-			try {
-				token = Aes.decrypt(token);
-			} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
-					| BadPaddingException e) {
-				e.printStackTrace();
 			}
 		}
 
