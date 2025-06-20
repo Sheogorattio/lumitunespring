@@ -182,6 +182,7 @@ public class AuthController {
 			UserDto userDto = userMapper.toDto(existingUser,true);
 
 			String token = jwt.generateToken(existingUser);
+			token = Aes.encrypt(token);
 			int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;
 
 			String cookieHeader = "jwt=" + token + "; Max-Age=" + maxAge + "; Path=/" + "; HttpOnly" + "; Secure"
