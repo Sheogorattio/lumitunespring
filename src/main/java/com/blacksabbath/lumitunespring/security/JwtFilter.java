@@ -49,6 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if ("jwt".equals(cookie.getName())) {
+					System.out.println("Processing jwt cookie...");
 					token = cookie.getValue();
 					try {
 						token = Aes.decrypt(token);
@@ -62,6 +63,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 		
 		if(request.getHeader("Authorization") != null) {
+			System.out.println("Processing Authorization header...");
 			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
 			try {
 				token = Aes.decrypt(token);
