@@ -75,59 +75,25 @@ public class AuthController {
 	@PostMapping("/sign-up")
 	@Operation(summary = "Реєстрація нового користувача", description = "Створює нового користувача з переданими даними")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", description = "Користувача створено успішно", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class), examples = @ExampleObject(name = "userExample", summary = "Приклад відповіді на коректний запит", value = """
-					{
-					    "id": "6fa459ea-ee8a-3ca4-894e-db77e160355e",
-					    "username": "john_doe1",
-					    "password": "pass1234",
-					    "avatarId": "avatar123",
-					    "role": "USER",
-					    "accSubscribers": 10,
-					    "accFollowings": 5,
-					    "userData": {
-					        "birthDate": "1990-01-01",
-					        "regionId": "region001",
-					        "isArtist": true,
-					        "email": "john.doe@example.com"
-					    }
-					}
-					"""))),
-			@ApiResponse(responseCode = "400", description = "Некоректні дані користувача", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "errorResponse", summary = "Приклад відповіді при помилці", value = """
-					{
-					    "message": "Nickname already exists"
-					}
-					"""))) })
+			@ApiResponse(responseCode = "201", description = "Користувача створено успішно", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
+			@ApiResponse(responseCode = "400", description = "Некоректні дані користувача", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))) })
 	public ResponseEntity<?> createUser(@RequestBody RegisterRequestBody user, HttpServletResponse response) {
-		System.out.println("Entered user creation process");
 		if (!userService.isNicknameUnique(user.getUsername()))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Nickname already exists"));
-		System.out.println("Username is valid");
-		User createdUser;
 		try {
 			user.setPassword(Aes.decrypt(user.getPassword()));
-			createdUser = registerRequestMapper.toUserEntity(user);
-			createdUser.setSubscribers(new ArrayList<User>());
-			createdUser.setSubscriptions(new ArrayList<User>());
-			createdUser = userService.createUser(createdUser);
-			
+			User createdUser = userService.createUser(user);	
 			   if (user.getUserData() != null && Boolean.TRUE.equals(user.getUserData().getIsArtist())) {
 		            Artist artist = new Artist();
 		            artist.setUser(createdUser);
 		            artistService.createArtist(artist);
 		        }
-		
-		
+			
 		String token = jwt.generateToken(createdUser);
-		token = Aes.encrypt(token);
-		
+		token = Aes.encrypt(token);	
 		int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;
-
-		String cookieHeader = "jwt=" + token + "; Max-Age=" + maxAge + "; Path=/" + "; HttpOnly" + "; Secure"
-				+ "; SameSite=None";
-		
-		response.setHeader("Set-Cookie", cookieHeader);
-		
-		
+		String cookieHeader = jwt.getCookieHeader("jwt", token, maxAge);
+		response.setHeader("Set-Cookie", cookieHeader);		
 		
 		UserDto userDto = userMapper.toDto(createdUser, true);
 		EmailVerification emailVerification = emailVerificationService.createNew(createdUser);
@@ -153,18 +119,19 @@ public class AuthController {
 			
 		} catch (Exception e) {
 			System.out.println(e.fillInStackTrace());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","Invalid data"));
 		}
 	}
-
+ 
 	@PostMapping("/login")
 	@Operation(summary = "Увійти", description = "Аутентифікує користувача за логіном і паролем та повертає JWT")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Успішна аутентифікація", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Successful login", summary = "Приклад відповіді при успішному логіні", value = """
 											{
 					  "user": {
-					    "username": "john_doe1"
-					  }
+					    "username": "string"
+					  },
+					  "token" : "string"
 					}
 											"""))),
 			@ApiResponse(responseCode = "401", description = "Невірне ім’я користувача або пароль", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Failed login", summary = "Приклад відповіді при провальному логіні", value = """
@@ -175,13 +142,10 @@ public class AuthController {
 			Optional<User> optionalUser = userService.findByUsername(user.getUsername());
 
 			if (optionalUser.isEmpty() || !optionalUser.get().getPassword().equals(Aes.decrypt(user.getPassword()))) {
-				throw new Exception("Invalid credenials");
+				return ResponseEntity.status(401).body("Invalid credenials");
 			}
-
-			User existingUser = optionalUser.get();
-			UserDto userDto = userMapper.toDto(existingUser,true);
-
-			String token = jwt.generateToken(existingUser);
+			
+			String token = jwt.generateToken(optionalUser.get());
 			token = Aes.encrypt(token);
 			int maxAge = Integer.parseInt(System.getenv("JWT_EXP_MS")) / 1000;
 
@@ -190,6 +154,7 @@ public class AuthController {
 
 			response.setHeader("Set-Cookie", cookieHeader);
 
+			UserDto userDto = userMapper.toDto(optionalUser.get(),true);
 			return ResponseEntity.ok(Map.of("user", Map.of("username", userDto.getUsername(), "token", token)));
 		} catch (Exception ex) {
 			System.out.println(this.getClass().getName() + ":login: " + ex.getMessage());
@@ -197,7 +162,7 @@ public class AuthController {
 		}
 	}
 
-	@GetMapping("/isunique/{nickname}")
+	@GetMapping("/isunique/{nickname}") 
 	@Operation(summary = "Перевірити унікальність нікнейму", description = "Повертає true, якщо нікнейм ще не використовується")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Результат перевірки унікальності") })
 	public ResponseEntity<Boolean> isNicknameUnique(@PathVariable String nickname, HttpServletResponse response) {

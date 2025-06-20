@@ -31,10 +31,12 @@ public class Aes {
 	}
 	
 	public static String decrypt(String encryptedText) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-		SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "AES");
-		Cipher cipher = Cipher.getInstance("AES");
-		cipher.init(Cipher.DECRYPT_MODE, secretKey);
-		byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
-		return new String(decrypted);
+			SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "AES");
+			Cipher cipher = Cipher.getInstance("AES");
+			cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
+			String r =  new String(decrypted);
+			System.out.println("Decrypted aes: " + r);
+			return r;
 	}
 }

@@ -1,5 +1,6 @@
 package com.blacksabbath.lumitunespring.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,14 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.blacksabbath.lumitunespring.dto.UserDto;
 import com.blacksabbath.lumitunespring.mapper.ImageMapper;
 import com.blacksabbath.lumitunespring.mapper.PlaylistMapper;
+import com.blacksabbath.lumitunespring.mapper.RegisterRequestMapper;
 import com.blacksabbath.lumitunespring.mapper.UserMapper;
+import com.blacksabbath.lumitunespring.misc.RegisterRequestBody;
 import com.blacksabbath.lumitunespring.misc.Roles;
 import com.blacksabbath.lumitunespring.model.Image;
 import com.blacksabbath.lumitunespring.model.User;
 import com.blacksabbath.lumitunespring.model.UserData;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 import com.blacksabbath.lumitunespring.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -54,6 +56,9 @@ public class UserService {
 	@Autowired
 	PlaylistMapper playlistMapper;
 	
+	@Autowired
+	RegisterRequestMapper registerRequestMapper;
+	
 	@Transactional(readOnly = true)
 	public User findUserById(UUID id) {
 		return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
@@ -68,16 +73,25 @@ public class UserService {
 	}
 
 	@Transactional
-	public User createUser(User user) throws JsonProcessingException {
+	public User createUser(User user) throws Exception {
 		if (user == null) {
 			System.out.println("User is null");
-			throw new IllegalArgumentException("User must not be null");
+			throw new IllegalArgumentException("User in not present.");
 		}
 		UserData userData = user.getUserData();
-		if (userData != null) {
-			userData.setUser(user);
+		if (userData == null) {
+			throw new IllegalArgumentException("User data in not present.");
 		}
+		userData.setUser(user);
 		return userRepository.save(user);
+	}
+	
+	@Transactional
+	public User createUser(RegisterRequestBody user) throws Exception{
+		User entity = registerRequestMapper.toUserEntity(user);
+		entity.setSubscribers(new ArrayList<User>());
+		entity.setSubscriptions(new ArrayList<User>());
+		return createUser(entity);
 	}
 
 	@Transactional(readOnly = true)

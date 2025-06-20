@@ -36,6 +36,11 @@ public class JwtUtil {
 				.expiration(new Date(System.currentTimeMillis() + expirationMs))
 				.signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes())).compact();
 	}
+	
+	public String getCookieHeader(String name, String value, int maxAge) {
+		return name + "=" + value + "; Max-Age=" + maxAge + "; Path=/" + "; HttpOnly" + "; Secure"
+				+ "; SameSite=None";
+	} 
 
 	public Claims extractAllClaims(String token) {
 		SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
@@ -45,7 +50,7 @@ public class JwtUtil {
 	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims = extractAllClaims(token);
 		return claimsResolver.apply(claims);
-	}
+	} 
 
 	public Date getExpirationDate(String token) {
 		return extractClaim(token, Claims::getExpiration);
