@@ -71,16 +71,22 @@ public class ImageController {
 
 	@DeleteMapping("/delete/{id}") 
 	public ResponseEntity<?> delete(@RequestParam String id, HttpServletRequest request, HttpServletResponse response) {
-		UUID ownerId = azureBlobService.getById(id).map(p -> UUID.fromString(p.getOwner())).orElse(null);
-		if (!accessChecker.Check(request, ownerId)) {
-			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+		try {
+			UUID ownerId = azureBlobService.getById(id).map(p -> UUID.fromString(p.getOwner())).orElse(null);
+			if (!accessChecker.Check(request, ownerId)) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+			}
+			ImageDto image = azureBlobService.getById(id).orElse(null);
+			if (image == null) {
+				return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).build();
+			}
+			azureBlobService.delete(id);
+			return ResponseEntity.ok(image);
 		}
-		ImageDto image = azureBlobService.getById(id).orElse(null);
-		if (image == null) {
-			return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).build();
-		}
-		azureBlobService.delete(id);
-		return ResponseEntity.ok(image);
+		catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return ResponseEntity.internalServerError().build();
+    	}
 	}
 
 	@PutMapping("/update")

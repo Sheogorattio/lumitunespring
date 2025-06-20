@@ -105,18 +105,23 @@ public class UserController {
 					}
 					"""))) })
 	public ResponseEntity<List<UserDto>> getAllUsers(HttpServletRequest request, HttpServletResponse response) {
-
-		if (!accessChecker.Check(request, null)) {
-			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+		try {
+			if (!accessChecker.Check(request, null)) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+			}
+	
+			List<UserDto> userDtos = userService.getAllUsers().stream().map(e -> userMapper.toDto(e, true)).toList();
+			System.out.println("Returning users: " + userDtos);
+	
+			if (userDtos.isEmpty()) {
+				return ResponseEntity.noContent().build();
+			}
+			return ResponseEntity.ok(userDtos);
 		}
-
-		List<UserDto> userDtos = userService.getAllUsers().stream().map(e -> userMapper.toDto(e, true)).toList();
-		System.out.println("Returning users: " + userDtos);
-
-		if (userDtos.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(userDtos);
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.internalServerError().build();
+	}
 
 	}
 
@@ -135,19 +140,25 @@ public class UserController {
 					}
 					"""))) })
 	public ResponseEntity<UserDto> getById(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
-		Optional<User> user = userService.getById(id);
-
-		if (!user.isPresent()) {
-			return ResponseEntity.notFound().build();
+		try {
+			Optional<User> user = userService.getById(id);
+	
+			if (!user.isPresent()) {
+				return ResponseEntity.notFound().build();
+			}
+	
+			User existingUser = user.get();
+			UserDto userDto = userMapper.toDto(existingUser, true);
+			if (!accessChecker.Check(request, UUID.fromString(id))) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+			}
+	
+			return ResponseEntity.ok(userDto);
 		}
-
-		User existingUser = user.get();
-		UserDto userDto = userMapper.toDto(existingUser, true);
-		if (!accessChecker.Check(request, UUID.fromString(id))) {
-			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
-		}
-
-		return ResponseEntity.ok(userDto);
+		catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return ResponseEntity.internalServerError().build();
+    	}
 	}
 
 	@GetMapping("/username/{username}")
@@ -166,18 +177,24 @@ public class UserController {
 					"""))) })
 	public ResponseEntity<?> getByUsername(@PathVariable String username, HttpServletRequest request,
 			HttpServletResponse response) {
-		Optional<User> user = userService.findByUsername(username);
-
-		if (!user.isPresent()) {
-			return ResponseEntity.notFound().build();
+		try {
+			Optional<User> user = userService.findByUsername(username);
+	
+			if (!user.isPresent()) {
+				return ResponseEntity.notFound().build();
+			}
+	
+			User existingUser = user.get();
+			if (!accessChecker.Check(request, existingUser.getId())) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+			}
+	
+			return ResponseEntity.ok(userMapper.toDto(existingUser,false));
 		}
-
-		User existingUser = user.get();
-		if (!accessChecker.Check(request, existingUser.getId())) {
-			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
-		}
-
-		return ResponseEntity.ok(userMapper.toDto(existingUser,false));
+		catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return ResponseEntity.internalServerError().build();
+    	}
 	}
 
 	@PutMapping("/edit")
@@ -196,30 +213,35 @@ public class UserController {
 					"""))),
 			@ApiResponse(responseCode = "500", description = "Помилка при зміні користувача") })
 	public ResponseEntity<?> editById(@RequestBody UserDto user, HttpServletRequest request,HttpServletResponse response) {
-
-		System.out.println(user.toString());
-
-		Optional<User> userOpt = userService.getById(user.getId().toString());
-
-		if (!userOpt.isPresent()) {
-			return ResponseEntity.notFound().build();
+		try {
+			System.out.println(user.toString());
+	
+			Optional<User> userOpt = userService.getById(user.getId().toString());
+	
+			if (!userOpt.isPresent()) {
+				return ResponseEntity.notFound().build();
+			}
+	
+			User _user = userOpt.get();
+	
+			if (!accessChecker.Check(request, UUID.fromString(user.getId()))) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+			}
+	
+			userMapper.updateEntity(_user, user);
+	
+			Optional<User> editedUserOpt = userService.editUserById(userMapper.toDto(_user,true));
+			if (!editedUserOpt.isPresent()) {
+				return ResponseEntity.status(500).body("Somesing went wrong. Try later.");
+			}
+			User editedUser = editedUserOpt.get();
+	
+			return ResponseEntity.ok(userMapper.toDto(editedUser,true));
 		}
-
-		User _user = userOpt.get();
-
-		if (!accessChecker.Check(request, UUID.fromString(user.getId()))) {
-			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
-		}
-
-		userMapper.updateEntity(_user, user);
-
-		Optional<User> editedUserOpt = userService.editUserById(userMapper.toDto(_user,true));
-		if (!editedUserOpt.isPresent()) {
-			return ResponseEntity.status(500).body("Somesing went wrong. Try later.");
-		}
-		User editedUser = editedUserOpt.get();
-
-		return ResponseEntity.ok(userMapper.toDto(editedUser,true));
+		catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return ResponseEntity.internalServerError().build();
+    	}
 	}
   
 	@PostMapping("/logout")

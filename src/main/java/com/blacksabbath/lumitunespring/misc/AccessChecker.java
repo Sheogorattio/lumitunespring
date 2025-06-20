@@ -1,6 +1,12 @@
 package com.blacksabbath.lumitunespring.misc;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +29,7 @@ public class AccessChecker {
 		this.jwtUtil = jwtUtil;
 	}
 
-	public boolean Check(HttpServletRequest request, UUID id) {
+	public boolean Check(HttpServletRequest request, UUID id) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		String token = null;
 
 		if (request.getCookies() != null) {
@@ -37,6 +43,7 @@ public class AccessChecker {
 		else if(request.getHeader("Authorization") != null) {
 			token = request.getHeader("Authorization").replaceAll("Bearer ", "");
 		}
+		token = Aes.decrypt(token);
 		String roleAttr = jwtUtil.getRole(token);
 		String idAttr = jwtUtil.getSubject(token);
 

@@ -22,7 +22,7 @@ public class RegisterRequestMapper {
 	@Autowired
 	private ImageRepository imageRep;
 
-	public User toUserEntity(RegisterRequestBody request) {
+	public User toUserEntity(RegisterRequestBody request) throws Exception {
 		System.out.println("Transformin register request into user entity");
 		UserData userData = null;
 		if (request.getUserData() != null) {
@@ -47,7 +47,12 @@ public class RegisterRequestMapper {
 		user.setPassword(request.getPassword());
 		user.setAvatar(null);
 		user.setImages(List.of());
-		user.setRoleId(request.getRole());
+		if(request.getRole() != null) {
+			user.setRoleId(request.getRole());
+		}
+		else {
+			throw new Exception("Invalid data. No role present.");
+		}
 		user.setAccSubscribers(request.getAccSubscribers());
 		user.setAccFollowings(request.getAccFollowings());
 		user.setUserData(userData);

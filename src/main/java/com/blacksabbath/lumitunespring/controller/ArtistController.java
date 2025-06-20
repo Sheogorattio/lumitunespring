@@ -75,26 +75,38 @@ public class ArtistController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteArtist(@PathVariable UUID id, HttpServletRequest request) {
-    	ArtistDto dto = artistService.findById(id).orElse(null);
-    	if (dto == null) {
-			return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body("Artist with id "+ id + " is not found.");
-		}
-    	UUID ownerId = UUID.fromString(dto.getUser().getId());
-		if (!accessChecker.Check(request, ownerId)) {
-			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
-		}
-        boolean deleted = artistService.deleteArtist(id);
-        return deleted ? ResponseEntity.status(200).body("Artist with id " + id + " was deleted.") : ResponseEntity.status(404).body("Artist with id "+ id + " is not found."); 
+    	try {
+	    	ArtistDto dto = artistService.findById(id).orElse(null);
+	    	if (dto == null) {
+				return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body("Artist with id "+ id + " is not found.");
+			}
+	    	UUID ownerId = UUID.fromString(dto.getUser().getId());
+			if (!accessChecker.Check(request, ownerId)) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+			}
+	        boolean deleted = artistService.deleteArtist(id);
+	        return deleted ? ResponseEntity.status(200).body("Artist with id " + id + " was deleted.") : ResponseEntity.status(404).body("Artist with id "+ id + " is not found."); 
+    	}
+    	catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return ResponseEntity.internalServerError().build();
+    	}
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ArtistDto> updateArtist(@PathVariable UUID id, @RequestBody @Valid ArtistDto updatedArtist, HttpServletRequest request) {
-    	UUID ownerId = UUID.fromString(updatedArtist.getUser().getId());
-		if (!accessChecker.Check(request, ownerId)) {
-			return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
-		}
-        ArtistDto updated = artistService.updateArtist(id, updatedArtist);
-        return ResponseEntity.ok(updated);
+    	try {
+	    	UUID ownerId = UUID.fromString(updatedArtist.getUser().getId());
+			if (!accessChecker.Check(request, ownerId)) {
+				return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
+			}
+	        ArtistDto updated = artistService.updateArtist(id, updatedArtist);
+	        return ResponseEntity.ok(updated);
+    	}
+    	catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return ResponseEntity.internalServerError().build();
+    	}
     } 
     
     @GetMapping("/all")
