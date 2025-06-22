@@ -62,7 +62,7 @@ public class AlbumService {
 		album.setDuration(0);
 		album.setRelDate(albumDto.getRelDate());
 		album.setTracks(new ArrayList<Track>());
-		album.setCover(null);
+		album.setCover(albumDto.getCover() != null && albumDto.getCover().getId() != null ? imageRepository.findById(UUID.fromString(albumDto.getCover().getId())).orElseThrow(() -> new NotFoundException()): null);
 		album.setArtist(artistService.findEntityById(UUID.fromString(albumDto.getArtist().getId())).orElseThrow(() -> new NotFoundException()));
 		
 		

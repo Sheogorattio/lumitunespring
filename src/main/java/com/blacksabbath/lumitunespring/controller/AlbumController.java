@@ -88,7 +88,7 @@ public class AlbumController {
 	public ResponseEntity<?> setCover(@RequestParam UUID playlistId, @RequestParam UUID imageId){
 		try {
             AlbumDto dto = albumService.changeCover( imageId, playlistId);
-            return ResponseEntity.ok(dto);
+            return ResponseEntity.ok(albumMapper.toResponseDto(dto));
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class AlbumController {
         }
 	}
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") 
     public ResponseEntity<?> updateAlbum(@PathVariable UUID id, @RequestBody AlbumDto albumDto) {
         if (!id.toString().equals(albumDto.getId())) {
             return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body("Id from path variable and from request body are not matching.");
