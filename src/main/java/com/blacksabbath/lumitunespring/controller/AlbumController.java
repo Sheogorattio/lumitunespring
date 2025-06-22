@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blacksabbath.lumitunespring.dto.AlbumDto;
+import com.blacksabbath.lumitunespring.dto.AlbumResponseDto;
 import com.blacksabbath.lumitunespring.dto.PlaylistDto;
 import com.blacksabbath.lumitunespring.mapper.AlbumMapper;
 import com.blacksabbath.lumitunespring.mapper.ArtistMapper;
@@ -39,42 +40,48 @@ public class AlbumController {
 	
 	private final ArtistMapper artistMapper;
 	
+	private final AlbumMapper albumMapper;
+	
 	
 	@Autowired
-	public AlbumController(AlbumService albumService, ArtistService artistService, ArtistMapper artistMapper) {
+	public AlbumController(AlbumService albumService, ArtistService artistService, ArtistMapper artistMapper,  AlbumMapper albumMapper) {
 		this.albumService = albumService;
 		this.artistService = artistService;
 		this.artistMapper = artistMapper;
+		this.albumMapper = albumMapper;
 	}
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlbumDto> getAlbumById(@PathVariable UUID id) {
-        return albumService.getAlbumById(id)
+    public ResponseEntity<AlbumResponseDto> getAlbumById(@PathVariable UUID id) {
+        return albumService.getAlbumById(id).map(albumMapper::toResponseDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<AlbumDto>> getAlbumsByArtist(@RequestParam UUID artistId) {
+    public ResponseEntity<List<AlbumResponseDto>> getAlbumsByArtist(@RequestParam UUID artistId) {
         return artistService.findById(artistId)
         		.map(artistMapper::toEntity)
         		.map(albumService::getByArtist)
+        		.map(albumMapper::toResponseDto)
         		.map(ResponseEntity::ok)
         		.orElse(ResponseEntity.notFound().build()); 
     }
 
     @PostMapping
-    public ResponseEntity<AlbumDto> createAlbum(@RequestBody AlbumDto albumDto) {
+    public ResponseEntity<AlbumResponseDto> createAlbum(@RequestBody AlbumDto albumDto) {
         AlbumDto created;
+        AlbumResponseDto response;
 		try {
 			created = albumService.createAlbum(albumDto);
+			response = albumMapper.toResponseDto(albumDto);
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().build();
 		} 
         return ResponseEntity
                 .created(URI.create("/api/albums/" + created.getId()))
-                .body(created);
+                .body(response);
     }
      
 	@PatchMapping("/set-cover")
@@ -98,7 +105,7 @@ public class AlbumController {
 
         try {
             AlbumDto updated = albumService.editAlbum(albumDto);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(albumMapper.toResponseDto(updated));
         } catch (Exception e) {
         	e.printStackTrace();
             return ResponseEntity.notFound().build();

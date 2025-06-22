@@ -98,47 +98,110 @@
     }
   ],
   "newReleases" : [
-    {
-      "albumName": "Microplastics 1",
-      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/af5e1623-3447-461a-97d7-503e7389bb14.png",
-      "tracksQnt": 11
+  {
+    "id": "0008453b-5fb0-406f-bb7d-2f9cc425c142",
+    "name": "Reflections in Dust",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 0,
+    "relDate": "2025-06-11",
+    "type": "album",
+    "label": "microplastics label",
+    "cover": {
+      "id": "ba6e8441-b52c-49bd-91c8-e691c2893ccd",
+      "owner": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/0d88807b-cc36-41f6-a2be-2d1cd015f303.jpg"
     },
-    {
-      "albumName": "Reflections in Dust",
-      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/9a18cfb0-7557-4441-a06b-fa1b3f9c467d.png",
-      "tracksQnt": 6
+    "tracks": []
+  },
+  {
+    "id": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
+    "name": "Microplastics 1",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 0,
+    "relDate": "2025-05-28",
+    "type": "album",
+    "label": "microplastics Label",
+    "cover": {
+      "id": "a6c7b1e1-608b-4b70-9440-ecec1a73ea40",
+      "owner": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg"
     },
-    {
-      "albumName": "albumName2",
-      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/4855b565-e43b-40e3-9446-9b48e2c07ea6.png",
-      "tracksQnt": 1
+    "tracks": []
+  },
+  {
+    "id": "236a9968-76d6-4e59-8b26-5f30a31ecea1",
+    "name": "Sense/No Sense",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 0,
+    "relDate": "2025-06-11",
+    "type": "album",
+    "label": "microplastics label",
+    "cover": {
+      "id": "19b899fb-8083-4101-9e55-61c4f8b470f7",
+      "owner": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/88bd2c65-3c97-448d-820c-d1636d9d837a.png"
     },
-    {
-      "albumName": "albumName2",
-      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/ab218f0d-13aa-46b8-9bb9-3de2670bdf88.png",
-      "tracksQnt": 1
+    "tracks": []
+  },
+  {
+    "id": "7fb44a8b-26d9-4f0d-a123-d846c33b1223",
+    "name": "Between the Stars",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 0,
+    "relDate": "2025-06-11",
+    "type": "album",
+    "label": "microplastics label",
+    "cover": {
+      "id": "5ab19469-14a0-44ac-b2c5-71c81e6b7cb6",
+      "owner": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/6f3b3d85-c36c-4fa3-9bc2-abdde5e4e1ff.png"
     },
-    {
-      "albumName": "albumName2",
-      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/9c17d585-cddd-447b-a811-b8aac0455b79.png",
-      "tracksQnt": 1
+    "tracks": []
+  },
+  {
+    "id": "c2159c6c-a37a-4e08-8ef9-19b0d1c70629",
+    "name": "Silent horizon",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 0,
+    "relDate": "2025-06-11",
+    "type": "album",
+    "label": "microplastics label",
+    "cover": {
+      "id": "b399cad2-0145-4410-83f3-e533ac939158",
+      "owner": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/7aca0d61-890d-42be-b6f5-ba8e5d981e07.png"
     },
-    {
-      "albumName": "albumName2",
-      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/a4aeece3-2fd9-4354-9cb0-ce0580304c0b.png",
-      "tracksQnt": 1
+    "tracks": []
+  },
+  {
+    "id": "d29d2a29-7a2b-47b1-8897-c72f4b600459",
+    "name": "Midnight voltage",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 0,
+    "relDate": "2025-06-11",
+    "type": "album",
+    "label": "microplastics label",
+    "cover": {
+      "id": "80348807-8183-42f2-8eec-129d18b786a2",
+      "owner": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/38874136-1391-48a2-ac35-7f1987b12cd7.png"
     },
-    {
-      "albumName": "albumName2",
-      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
-      "imageLink": "https://lumitunestorageaccount.blob.core.windows.net/images/2e794240-ee30-4585-a0c8-8bf498f3946d.png",
-      "tracksQnt": 1
-    }
-  ]
+    "tracks": []
+  },
+  {
+    "id": "f0e69a90-a9d4-4cb5-b491-21f00e9226c3",
+    "name": "Broken Patterns",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 0,
+    "relDate": "2025-06-11",
+    "type": "album",
+    "label": "microplastics label",
+    "cover": {
+      "id": "ec9651de-dbeb-477e-a226-70f8152f36b8",
+      "owner": "3adf9f79-f709-4c06-aecc-5fb696687ec7",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/images/2ae9877f-8d4b-4bde-890e-adf431756ecb.png"
+    },
+    "tracks": []
+  }
+]
 }

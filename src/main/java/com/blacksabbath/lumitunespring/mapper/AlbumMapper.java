@@ -1,6 +1,7 @@
 package com.blacksabbath.lumitunespring.mapper;
 
 import com.blacksabbath.lumitunespring.dto.AlbumDto;
+import com.blacksabbath.lumitunespring.dto.AlbumResponseDto;
 import com.blacksabbath.lumitunespring.model.Album;
 import com.blacksabbath.lumitunespring.repository.ArtistRepository;
 import com.blacksabbath.lumitunespring.repository.ImageRepository;
@@ -46,6 +47,24 @@ public class AlbumMapper {
             imageMapper.toDto(album.getCover()),
             includeNested && album.getTracks() !=null ? album.getTracks().stream().map(track -> trackMapper.toDto(track, false)).filter(Objects::nonNull).collect(Collectors.toList()) : List.of()
         );
+    }
+    
+    public AlbumResponseDto toResponseDto(AlbumDto dto) {
+    	AlbumResponseDto response = new AlbumResponseDto();
+    	response.setId(dto.getId());
+    	response.setArtistId(dto.getArtist().getId());
+    	response.setCover(dto.getCover());
+    	response.setDuration(dto.getDuration());
+    	response.setLabel(dto.getLabel());
+    	response.setName(dto.getName());
+    	response.setRelDate(dto.getRelDate());
+    	response.setTracks(dto.getTracks());
+    	response.setType(dto.getType());
+    	return response;
+    }
+    
+    public List<AlbumResponseDto> toResponseDto(List<AlbumDto> dtos) { 
+    	return dtos.stream().map(e -> toResponseDto(e) ).toList();
     }
 
     public Album toEntity(AlbumDto dto) {

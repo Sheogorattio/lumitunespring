@@ -61,44 +61,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@Operation(summary = "Отримання всіх користувачів", description = "Доступно тільки з обліковки адміна")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Успішне отримання користувачів", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Успішно виконаний запит", value = """
-					[
-					    {
-					        "id": "7360a2a6-1bb8-4dd4-aba1-c361c6f09fde",
-					        "username": "john_doew",
-					        "password": "pass1234",
-					        "avatarId": "avatar1223",
-					        "role": "USER",
-					        "accSubscribers": 0,
-					        "accFollowings": 0,
-					        "userData": {
-					            "id": "e6d12419-526a-4840-adef-79cdb04ba957",
-					            "birthDate": "1990-01-01",
-					            "regionId": "region001",
-					            "isArtist": true,
-					            "email": "john.doe!!!!!!!!!!!!!!!!!!!!@example.com",
-					            "deleteDate": null
-					        }
-					    },
-					    {
-					        "id": "ff9fd472-82f9-4ee3-aaf8-e4055a2bf4f7",
-					        "username": "admin",
-					        "password": "admin",
-					        "avatarId": "avatar123",
-					        "role": "ADMIN",
-					        "accSubscribers": 0,
-					        "accFollowings": 0,
-					        "userData": {
-					            "id": "88f992f7-9125-445d-ae30-34c5d52cb871",
-					            "birthDate": "1990-01-01",
-					            "regionId": "region001",
-					            "isArtist": true,
-					            "email": "admin@example.com",
-					            "deleteDate": null
-					        }
-					    }
-					]
-					"""))),
+			@ApiResponse(responseCode = "200", description = "Успішне отримання користувачів", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))),
 			@ApiResponse(responseCode = "403", description = "Спроба виконати запит не як адміністратор", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class), examples = @ExampleObject(name = "Немає прав доступу", value = """
 					{
 					  "error": "Unauthorized"
