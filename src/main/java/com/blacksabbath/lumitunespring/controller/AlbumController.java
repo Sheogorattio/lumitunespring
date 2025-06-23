@@ -26,6 +26,7 @@ import com.blacksabbath.lumitunespring.mapper.ArtistMapper;
 import com.blacksabbath.lumitunespring.service.AlbumService;
 import com.blacksabbath.lumitunespring.service.ArtistService;
 
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -74,14 +75,13 @@ public class AlbumController {
         AlbumResponseDto response;
 		try {
 			created = albumService.createAlbum(albumDto);
-			response = albumMapper.toResponseDto(albumDto);
+			response = albumMapper.toResponseDto(created);
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().build();
 		} 
         return ResponseEntity
-                .created(URI.create("/api/albums/" + created.getId()))
-                .body(response);
+                .status(HttpServletResponse.SC_CREATED).body(response);
     }
      
 	@PatchMapping("/set-cover")

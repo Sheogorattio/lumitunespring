@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+import com.blacksabbath.lumitunespring.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,6 +28,8 @@ import com.blacksabbath.lumitunespring.repository.ImageRepository;
 
 @Service
 public class AlbumService {
+
+    private final TrackRepository trackRepository;
 	
     private final AlbumRepository repo;
     private final AlbumMapper albumMapper;
@@ -37,13 +39,14 @@ public class AlbumService {
     private final ImageRepository imageRepository;
 
     @Autowired
-    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper, ImageMapper imageMapper, ArtistService artistService, ImageRepository imageRepository) {
+    public AlbumService(AlbumRepository repo, AlbumMapper albumMapper, TrackMapper trackMapper, ImageMapper imageMapper, ArtistService artistService, ImageRepository imageRepository, TrackRepository trackRepository) {
         this.repo = repo;
         this.albumMapper = albumMapper;
         this.trackMapper = trackMapper;
         this.imageMapper = imageMapper;
         this.artistService = artistService;
         this.imageRepository = imageRepository;
+        this.trackRepository = trackRepository;
     }
 	
 	public Optional<AlbumDto> getAlbumById(UUID id) {
@@ -65,8 +68,11 @@ public class AlbumService {
 		album.setCover(albumDto.getCover() != null && albumDto.getCover().getId() != null ? imageRepository.findById(UUID.fromString(albumDto.getCover().getId())).orElseThrow(() -> new NotFoundException()): null);
 		album.setArtist(artistService.findEntityById(UUID.fromString(albumDto.getArtist().getId())).orElseThrow(() -> new NotFoundException()));
 		
-		
-		return albumMapper.toDto(repo.save(album),true);
+		Album _album = repo.save(album);
+		System.out.println("CREATED ALBUM WITH ID: " + album.getId().toString());
+		AlbumDto albumdto = albumMapper.toDto(_album,true);
+		System.out.println("CREATED ALBUM DTO WITH ID: " + albumdto.getId().toString());
+		return albumdto;
 	}
 	
 	@Transactional

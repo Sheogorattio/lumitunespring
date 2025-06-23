@@ -58,7 +58,7 @@ public class AlbumMapper {
     	response.setLabel(dto.getLabel());
     	response.setName(dto.getName());
     	response.setRelDate(dto.getRelDate());
-    	response.setTracks(dto.getTracks());
+    	response.setTracks(dto.getTracks() == null && dto.getTracks().size() <= 0 ? null : dto.getTracks().stream().map(e -> trackMapper.toResponseDto(e)).toList());
     	response.setType(dto.getType());
     	return response;
     }

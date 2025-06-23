@@ -22,11 +22,11 @@ public class AlbumResponseDto {
 
     private ImageDto cover;
 
-    private List<TrackDto> tracks;
+    private List<TrackResponseDto> tracks;
 
     public AlbumResponseDto() {}
 
-    public AlbumResponseDto(String id, String name, String artistId, int duration, LocalDate relDate, String type, String label, ImageDto cover, List<TrackDto> tracks) {
+    public AlbumResponseDto(String id, String name, String artistId, int duration, LocalDate relDate, String type, String label, ImageDto cover, List<TrackResponseDto> tracks) {
         this.id = id;
         this.name = name;
         this.artistId = artistId;
@@ -102,11 +102,11 @@ public class AlbumResponseDto {
         this.cover = cover;
     }
 
-    public List<TrackDto> getTracks() {
+    public List<TrackResponseDto> getTracks() {
         return tracks;
     }
 
-    public void setTracks(List<TrackDto> tracks) {
+    public void setTracks(List<TrackResponseDto> tracks) {
         this.tracks = tracks;
     }
 }
