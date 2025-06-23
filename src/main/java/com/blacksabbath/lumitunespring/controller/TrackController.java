@@ -43,7 +43,7 @@ public class TrackController {
             @RequestPart("track") trackCreateRequest track) {
         try {
             TrackDto createdTrack = trackService.createTrack(file, track);
-            return ResponseEntity.ok(createdTrack);
+            return ResponseEntity.ok(trackMapper.toResponseDto(createdTrack));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getLocalizedMessage());
         } 
