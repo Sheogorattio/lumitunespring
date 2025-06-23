@@ -12,89 +12,121 @@
   ],
   "recommendations": [
 	    {
-	      "id": "17e03b31-82a7-4178-b714-67a6ffab1057",
-	      "name": "all twisted",
-	      "duration": 250,
-	      "segNumber": 1,
-	      "playsNumber": 0,
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/3847aa16-fb62-48fb-b905-d396db0cbd4a.mp3",
-	      "explicit": false,
-	      "artistId" : "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	      "coverUrl" : "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
-	      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305"
+      "id": "97e04a08-bc68-4052-a04f-f145fe8e2e82",
+      "name": "Melodic techno",
+      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+      "duration": 329,
+      "segNumber": 3,
+      "playsNumber": 0,
+      "albumId": "f0e69a90-a9d4-4cb5-b491-21f00e9226c3",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/f1e1f539-38b0-42b3-8061-ef942f07fc4d.mp3",
+      "coverUrl": "https://lumitunestorageaccount.blob.core.windows.net/images/2ae9877f-8d4b-4bde-890e-adf431756ecb.png",
+      "genres": [],
+      "moods": [],
+      "explicit": false
     },
-    {
-	      "id": "b0528b59-7146-4873-934e-354d9b56b3b6",
-	      "name": "Waltz in A-Flat Major Op 39 No 15",
-	      "duration": 103,
-	      "segNumber": 5,
-	      "playsNumber": 0,
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/ae786e0b-a5b5-4311-ba31-fafafc679362.mp3",
-	      "explicit": false,
-	      "artistId" : "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	      "coverUrl" : "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
-	      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305"
+     {
+      "id": "78098463-2cf2-4e66-b08f-943f96c47109",
+      "name": "Lounge jazz",
+      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+      "duration": 84,
+      "segNumber": 9,
+      "playsNumber": 19,
+      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/704af8b9-a787-4679-bee3-0da1cbcd7e13.mp3",
+      "coverUrl": "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
+      "genres": [
+        "CLASSIC"
+      ],
+      "moods": [
+        "CHILL"
+      ],
+      "explicit": false
     },
-    {
-	      "id": "706b8535-6073-4d15-9c96-bbe03482b87c",
-	      "name": "Dark heart",
-	      "duration": 139,
-	      "segNumber": 4,
-	      "playsNumber": 0,
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/8cfff9c8-bb20-4548-9207-3d2e82c22170.mp3",
-	      "explicit": false,
-	      "artistId" : "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	      "coverUrl" : "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
-	      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305"
+   {
+      "id": "b0528b59-7146-4873-934e-354d9b56b3b6",
+      "name": "Waltz in A-Flat Major Op 39 No 15",
+      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+      "duration": 103,
+      "segNumber": 5,
+      "playsNumber": 178,
+      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/ae786e0b-a5b5-4311-ba31-fafafc679362.mp3",
+      "coverUrl": "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
+      "genres": [
+        "CLASSIC"
+      ],
+      "moods": [
+        "CHILL"
+      ],
+      "explicit": false
     },
-    {
-	      "id": "b9d7dbc6-1010-4adb-9fcf-803d1fe039da",
-	      "name": "Nervous",
-	      "duration": 66,
-	      "segNumber": 6,
-	      "playsNumber": 0,
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/45c05414-00f9-485b-9498-1988330aa5d9.mp3",
-	      "explicit": false,
-	      "artistId" : "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	      "coverUrl" : "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
-	      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305"
+     {
+    "id": "b9d7dbc6-1010-4adb-9fcf-803d1fe039da",
+    "name": "Nervous",
+    "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+    "duration": 66,
+    "segNumber": 6,
+    "playsNumber": 79,
+    "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305",
+    "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/45c05414-00f9-485b-9498-1988330aa5d9.mp3",
+    "coverUrl": "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
+    "genres": [
+      "CLASSIC"
+    ],
+    "moods": [
+      "CHILL"
+    ],
+    "explicit": false
+  },
+     {
+      "id": "88d39556-11b2-411a-a7b1-ff86a4ba0844",
+      "name": "Implant cyberpunk sci-fi",
+      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+      "duration": 49,
+      "segNumber": 1,
+      "playsNumber": 0,
+      "albumId": "c2159c6c-a37a-4e08-8ef9-19b0d1c70629",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/0f4f5faf-7858-4e93-99a4-afbb088972f0.mp3",
+      "coverUrl": "https://lumitunestorageaccount.blob.core.windows.net/images/7aca0d61-890d-42be-b6f5-ba8e5d981e07.png",
+      "genres": [],
+      "moods": [],
+      "explicit": false
     },
-    {
-	      "id": "5206e325-2e73-44d9-9f32-932a83101612",
-	      "name": "Maui",
-	      "duration": 138,
-	      "segNumber": 7,
-	      "playsNumber": 0,
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/2028c0a7-c1a8-469f-8750-af3fa4dafe09.mp3",
-	      "explicit": false,
-	      "artistId" : "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	      "coverUrl" : "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
-	      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305"
-    },
-    {
-	      "id": "c1e54cde-7aff-4792-aa67-f438850e1771",
-	      "name": "Lo-Fi chill",
-	      "duration": 102,
-	      "segNumber": 8,
-	      "playsNumber": 0,
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/1be93b55-a42d-42ab-a5b3-c4127d8a496a.mp3",
-	      "explicit": false,
-	      "artistId" : "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	      "coverUrl" : "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
-	      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305"
+   {
+      "id": "42564b6e-b418-4f53-a9b1-a00163f9d48d",
+      "name": "Road to nowhere",
+      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+      "duration": 127,
+      "segNumber": 2,
+      "playsNumber": 0,
+      "albumId": "236a9968-76d6-4e59-8b26-5f30a31ecea1",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/bd23e523-3178-457b-8e2e-140fecc1ee25.mp3",
+      "coverUrl": "https://lumitunestorageaccount.blob.core.windows.net/images/88bd2c65-3c97-448d-820c-d1636d9d837a.png",
+      "genres": [],
+      "moods": [],
+      "explicit": false
     }
     ,
-    {
-	      "id": "78098463-2cf2-4e66-b08f-943f96c47109",
-	      "name": "Lounge jazz",
-	      "duration": 102,
-	      "segNumber": 9,
-	      "playsNumber": 0,
-	      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/704af8b9-a787-4679-bee3-0da1cbcd7e13.mp3",
-	      "explicit": false,
-	      "artistId" : "81a57049-6c39-4059-b6cf-22a1dacef73c",
-	      "coverUrl" : "https://lumitunestorageaccount.blob.core.windows.net/images/0277f81d-3730-4be3-9663-f0a2c0df62f6.jpg",
-	      "albumId": "0bfb063a-e60a-4119-a38a-11cb55bbd305"
+      {
+      "id": "2092e668-89a7-41a7-b4b2-4ba86f37e976",
+      "name": "Soul",
+      "artistId": "81a57049-6c39-4059-b6cf-22a1dacef73c",
+      "duration": 150,
+      "segNumber": 3,
+      "playsNumber": 3,
+      "albumId": "0008453b-5fb0-406f-bb7d-2f9cc425c142",
+      "url": "https://lumitunestorageaccount.blob.core.windows.net/audio/72d08b9e-6569-4c3b-b9d0-fd65631f44d6.mp3",
+      "coverUrl": "https://lumitunestorageaccount.blob.core.windows.net/images/0d88807b-cc36-41f6-a2be-2d1cd015f303.jpg",
+      "genres": [
+        "NEW",
+        "CLASSIC"
+      ],
+      "moods": [
+        "MELANCHOLY",
+        "ROMANTIC"
+      ],
+      "explicit": false
     }
   ],
   "newReleases" : [
